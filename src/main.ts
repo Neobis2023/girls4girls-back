@@ -9,7 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   const config = new DocumentBuilder()
     .setTitle('Girls4Girls')
-    .setDescription('API for girls4girls me')
+    .setDescription('API for girls4girls mentoring program')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
