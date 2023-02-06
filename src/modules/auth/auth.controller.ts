@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local/local-auth.guard';
@@ -6,11 +6,25 @@ import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 import { RoleGuard } from './roles/role.guard';
 import { Roles } from './roles/roles.decorator';
 import { UserRoleEnum } from '../user/enums/user-role.enum';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { ConfirmAccountDto } from './dto/confirm-account.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @ApiOperation({ summary: 'Регистрация пользователя' })
+  @Post('signup')
+  async signup(@Body() createUserDto: CreateUserDto) {
+    return this.authService.signup(createUserDto);
+  }
+
+  @Get('confirm')
+  @ApiOperation({ summary: 'Confirm the account' })
+  async confirm(@Query() query: ConfirmAccountDto) {
+    return this.authService.confirm(query.token);
+  }
 
   @Post('login')
   @UseGuards(LocalAuthGuard)

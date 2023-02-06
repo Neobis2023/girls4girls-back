@@ -4,6 +4,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/user/entities/user.entity';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { User } from './modules/user/entities/user.entity';
       }),
       inject: [ConfigService],
     }),
+    MailModule,
   ],
 })
 export class AppModule {}

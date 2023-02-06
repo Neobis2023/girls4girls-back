@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
 import { Hash } from '../../utils/hash.util';
 import { BaseService } from '../../base/base.service';
+import { StatusEnum } from './enums/user-status.enum';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -26,6 +27,15 @@ export class UserService extends BaseService<User> {
     const user = new User();
     user.absorbFromDto(createUserDto);
     return this.usersRepository.save(user);
+  }
+
+  async activateUser(id: number) {
+    const user: User = await this.get(id);
+    if (user && user.status === StatusEnum.PENDING) {
+      user.status = StatusEnum.ACTIVE;
+      return this.usersRepository.save(user);
+    }
+    throw new BadRequestException('Confirmation error');
   }
 
   findAll() {
