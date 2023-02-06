@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { UserGenderEnum } from '../enums/user-gender.enum';
+import { StatusEnum } from '../enums/user-status.enum';
 
 @Entity()
 export class User extends BaseEntity {
@@ -55,6 +56,13 @@ export class User extends BaseEntity {
     default: UserRoleEnum.USER,
   })
   role: UserRoleEnum;
+
+  @Column({
+    type: 'enum',
+    enum: StatusEnum,
+    default: StatusEnum.PENDING,
+  })
+  status: StatusEnum;
 
   // image: object;
 }

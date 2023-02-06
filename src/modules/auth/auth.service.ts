@@ -1,13 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Body, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Hash } from '../../utils/hash.util';
 import { JwtService } from '@nestjs/jwt';
+import { SignOptions } from 'jsonwebtoken';
+import { User } from '../user/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { MailService } from '../mail/mail.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
+    private configService: ConfigService,
+    private mailService: MailService,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -17,6 +24,24 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  async signup(createUserDto: CreateUserDto) {
+    const userExists = await this.usersService.findOne({
+      email: createUserDto.email,
+    });
+    if (userExists) {
+      throw new BadRequestException('User already exists');
+    }
+
+    const newUser = await this.usersService.create(createUserDto);
+    const emailResponse = await this.sendEmailConfirmation(newUser);
+    return newUser;
+  }
+
+  async confirm(token: string) {
+    const decoded = await this.verifyToken(token);
+    return this.usersService.activateUser(decoded.id);
   }
 
   async login(user: any) {
@@ -30,5 +55,39 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async sendEmailConfirmation(user: User) {
+    const expiresIn = 60 * 60 * 24;
+    const tokenPayload = {
+      id: user.id,
+      status: user.status,
+      role: user.role,
+    };
+
+    const token = await this.generateToken(tokenPayload, { expiresIn });
+    const confirmLink = `${this.configService.get(
+      'BASE_URL',
+    )}/auth/confirm?token=${token}`;
+
+    const response = await this.mailService.sendMail(
+      user.email,
+      confirmLink,
+      user.firstName,
+    );
+    return response;
+  }
+
+  private async generateToken(data, options?: SignOptions) {
+    return this.jwtService.sign(data, options);
+  }
+
+  private async verifyToken(token) {
+    try {
+      const data = this.jwtService.verify(token);
+      return data;
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
   }
 }
