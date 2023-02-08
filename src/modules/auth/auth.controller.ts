@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Redirect,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local/local-auth.guard';
@@ -9,7 +18,7 @@ import { UserRoleEnum } from '../user/enums/user-role.enum';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ConfirmAccountDto } from './dto/confirm-account.dto';
 
-@ApiTags('Auth')
+@ApiTags('Aвторизация')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

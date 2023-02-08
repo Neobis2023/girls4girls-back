@@ -37,7 +37,7 @@ export class CreateUserDto extends BaseDto {
   lastName: string;
 
   @ApiProperty({
-    example: '0555010101',
+    example: '996555010101',
   })
   @IsString()
   @IsNotEmpty()

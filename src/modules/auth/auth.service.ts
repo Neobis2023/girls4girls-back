@@ -1,4 +1,8 @@
-import { BadRequestException, Body, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Hash } from '../../utils/hash.util';
 import { JwtService } from '@nestjs/jwt';
@@ -7,6 +11,7 @@ import { User } from '../user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from '../mail/mail.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +38,30 @@ export class AuthService {
     if (userExists) {
       throw new BadRequestException('User already exists');
     }
+
+    const body = `<?xml version="1.0" encoding="UTF-8"?>
+                   <message>
+                    <login>begalievn</login>
+                    <pwd>Jda2XvVp</pwd>
+                    <id>${Math.random().toString().substr(2, 6)}</id>
+                    <sender>SMSPRO.KG</sender>
+                    <text>Код для подтверждения 1122</text>
+                    <time></time>
+                    <phones>
+                      <phone>${createUserDto.phoneNumber}</phone>
+                    </phones>
+                  </message>`;
+    const response = await axios.post(
+      'https://smspro.nikita.kg/api/message',
+      body,
+      {
+        headers: {
+          'Content-Type': 'text/xml',
+        },
+      },
+    );
+
+    console.log(response);
 
     const newUser = await this.usersService.create(createUserDto);
     const emailResponse = await this.sendEmailConfirmation(newUser);
