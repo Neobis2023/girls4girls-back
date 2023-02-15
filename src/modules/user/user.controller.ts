@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('User')
+@ApiTags('Пользователи')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -22,6 +22,7 @@ export class UserController {
   }
 
   @Delete()
+  @ApiOperation({ summary: 'Удаление пользователя' })
   async deleteUser(@Query('id') id: number) {
     console.log(id);
     return this.userService.deleteUser(id);

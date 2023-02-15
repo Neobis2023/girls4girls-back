@@ -8,7 +8,7 @@ import { ImageService } from './image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Image')
+@ApiTags('Картинки')
 @Controller('image')
 export class ImageController {
   constructor(private readonly imagesService: ImageService) {}
