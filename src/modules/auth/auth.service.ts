@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Hash } from '../../utils/hash.util';
 import { JwtService } from '@nestjs/jwt';
@@ -56,6 +52,10 @@ export class AuthService {
       userExists = await this.usersService.findOne({
         email: createUserDto.email,
       });
+      if (userExists && userExists.status === StatusEnum.PENDING) {
+        await this.usersService.deleteBy({ id: userExists.id });
+      }
+
       if (userExists) {
         throw new BadRequestException('User already exists');
       }
@@ -64,6 +64,10 @@ export class AuthService {
     userExists = await this.usersService.findOne({
       phoneNumber: createUserDto.phoneNumber,
     });
+
+    if (userExists && userExists.status === StatusEnum.PENDING) {
+      this.usersService.deleteBy({ id: userExists.id });
+    }
 
     if (userExists) {
       throw new BadRequestException('User already exists');
@@ -104,8 +108,8 @@ export class AuthService {
         phoneNumber: confirmAccountDto.phoneNumber,
       },
     });
-    if (!sentAccount) {
-      throw new BadRequestException('No record found');
+    if (!sentAccount || phoneNumber !== sentAccount.phoneNumber) {
+      throw new BadRequestException('Incorrect credentials');
     }
 
     const currentTime = new Date().getTime();
