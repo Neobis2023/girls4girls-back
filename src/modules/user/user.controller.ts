@@ -1,16 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -29,15 +19,5 @@ export class UserController {
   @ApiOperation({ summary: 'Получение списка пользователей' })
   async list(@Query() listParamsDto: ListParamsDto) {
     return this.userService.list(listParamsDto);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
   }
 }

@@ -3,20 +3,16 @@ import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {
-  }
+  constructor(private mailerService: MailerService) {}
 
-  async sendMail(email: string, confirmLink: string, username: string) {
+  async sendMail(email: string, username: string, code: string) {
     await this.mailerService.sendMail({
       to: `${email}`,
-      subject: 'Confirm the account',
+      subject: 'Подтвердите аккаунт',
       template: './confirmation',
-      html: `<p>Hey ${username},</p>
-             <p>Please click below to confirm your email</p>
-             <p>
-                <a href="${confirmLink}">Confirm</a>
-             </p>
-             <p>If you did not request this email you can safely ignore it.</p>`,
+      html: `<p>Здравствуйте ${username}!</p>
+             <p>Ваш код для подтверждения ${code}</p>
+             <p>Если вы не запрашивали это письмо, вы можете спокойно его игнорировать.</p>`,
       // context: {
       //   username: username,
       //   url: confirmLink,

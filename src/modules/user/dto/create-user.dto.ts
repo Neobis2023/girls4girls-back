@@ -9,7 +9,7 @@ export class CreateUserDto extends BaseDto {
     description: 'Email of a user',
   })
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email: string;
 
   @ApiProperty({

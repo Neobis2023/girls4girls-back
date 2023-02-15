@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -19,8 +18,11 @@ export class UserService extends BaseService<User> {
 
   async create(createUserDto: CreateUserDto) {
     const userExists = await this.findOne({ email: createUserDto.email });
-    if (userExists) {
+    if (userExists && userExists.status === StatusEnum.ACTIVE) {
       throw new BadRequestException('User already exists');
+    }
+    if (userExists && userExists.status === StatusEnum.PENDING) {
+      await this.usersRepository.remove(userExists);
     }
 
     createUserDto.password = Hash.make(createUserDto.password);
@@ -38,19 +40,7 @@ export class UserService extends BaseService<User> {
     throw new BadRequestException('Confirmation error');
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
   async findOne(searchUserDto: SearchUserDto) {
     return await this.usersRepository.findOneBy(searchUserDto);
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }
