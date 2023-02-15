@@ -27,9 +27,9 @@ import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        // ssl: {
-        //   rejectUnauthorized: false,
-        // },
+        ssl: {
+          rejectUnauthorized: false,
+        },
         entities: [User, Image, ConfirmCode],
         synchronize: true,
       }),
