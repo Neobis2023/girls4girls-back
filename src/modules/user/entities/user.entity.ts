@@ -13,7 +13,9 @@ import { StatusEnum } from '../enums/user-status.enum';
 
 @Entity()
 export class User extends BaseEntity {
-  @Column()
+  @Column({
+    unique: true,
+  })
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -23,7 +25,9 @@ export class User extends BaseEntity {
   @IsNotEmpty()
   password: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;

@@ -25,4 +25,12 @@ export class SearchUserDto {
   @IsString()
   @IsOptional()
   lastName?: string;
+
+  @ApiProperty({
+    example: '996553404406',
+    description: 'Phone number of a user',
+  })
+  @IsString()
+  @IsOptional()
+  phoneNumber?: string;
 }

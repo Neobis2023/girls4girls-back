@@ -8,6 +8,8 @@ import { MailModule } from './modules/mail/mail.module';
 import { ImageModule } from './modules/image/image.module';
 import { Image } from './modules/image/entities/image.entity';
 import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
+import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
+import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
 
 @Module({
   imports: [
@@ -25,10 +27,10 @@ import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        ssl: {
-          rejectUnauthorized: false,
-        },
-        entities: [User, Image],
+        // ssl: {
+        //   rejectUnauthorized: false,
+        // },
+        entities: [User, Image, ConfirmCode],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -36,6 +38,7 @@ import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
     MailModule,
     ImageModule,
     CloudinaryModule,
+    SmsNikitaModule,
   ],
 })
 export class AppModule {}
