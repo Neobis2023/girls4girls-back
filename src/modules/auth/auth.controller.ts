@@ -28,7 +28,7 @@ export class AuthController {
   }
 
   @Post('confirm')
-  @ApiOperation({ summary: 'Confirm the account' })
+  @ApiOperation({ summary: 'Активировать аккаунт' })
   async confirm(@Body() confirmAccountDto: ConfirmAccountDto) {
     return this.authService.confirm(confirmAccountDto);
   }

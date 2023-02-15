@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
@@ -19,5 +19,11 @@ export class UserController {
   @ApiOperation({ summary: 'Получение списка пользователей' })
   async list(@Query() listParamsDto: ListParamsDto) {
     return this.userService.list(listParamsDto);
+  }
+
+  @Delete()
+  async deleteUser(@Query('id') id: number) {
+    console.log(id);
+    return this.userService.deleteUser(id);
   }
 }

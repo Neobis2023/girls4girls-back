@@ -62,4 +62,12 @@ export class UserService extends BaseService<User> {
 
     return true;
   }
+
+  async deleteUser(id: number) {
+    const user = await this.get(id);
+    if (user) {
+      return this.usersRepository.remove(user);
+    }
+    return { message: `User with id ${id} nod found!` };
+  }
 }
