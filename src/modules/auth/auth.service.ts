@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Hash } from '../../utils/hash.util';
 import { JwtService } from '@nestjs/jwt';
@@ -13,7 +17,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ConfirmCode } from './entities/confirm-code.entity';
 import { Repository } from 'typeorm';
 import { ConfirmAccountDto } from './dto/confirm-account.dto';
-import { StatusEnum } from '../user/enums/user-status.enum';
 
 @Injectable()
 export class AuthService {
@@ -47,29 +50,11 @@ export class AuthService {
   }
 
   async signup(createUserDto: CreateUserDto) {
-    let userExists: User;
-    if (createUserDto.email) {
-      userExists = await this.usersService.findOne({
-        email: createUserDto.email,
-      });
-      if (userExists && userExists.status === StatusEnum.PENDING) {
-        await this.usersService.deleteBy({ id: userExists.id });
-      }
+    const isUserExists = await this.usersService.checkIfUserExists(
+      createUserDto,
+    );
 
-      if (userExists) {
-        throw new BadRequestException('User already exists');
-      }
-    }
-
-    userExists = await this.usersService.findOne({
-      phoneNumber: createUserDto.phoneNumber,
-    });
-
-    if (userExists && userExists.status === StatusEnum.PENDING) {
-      this.usersService.deleteBy({ id: userExists.id });
-    }
-
-    if (userExists) {
+    if (isUserExists) {
       throw new BadRequestException('User already exists');
     }
 
@@ -81,9 +66,9 @@ export class AuthService {
       createUserDto.phoneNumber,
       codeToConfirm,
     );
-    console.log(smsResponse);
 
     const newUser = await this.usersService.create(createUserDto);
+
     const emailResponse = await this.sendEmailConfirmation(
       newUser,
       codeToConfirm,
@@ -92,6 +77,14 @@ export class AuthService {
   }
 
   async saveConfirmCode(createUserDto: CreateUserDto, code: string) {
+    const existingCode = await this.confirmCodesRepository.findOneBy({
+      phoneNumber: createUserDto.phoneNumber,
+    });
+    if (existingCode) {
+      await this.confirmCodesRepository.remove(existingCode);
+      console.log('deleted existing code');
+    }
+
     const newCode = new ConfirmCode();
     newCode.phoneNumber = createUserDto.phoneNumber;
     newCode.code = code;
@@ -150,18 +143,6 @@ export class AuthService {
   }
 
   async sendEmailConfirmation(user: User, code) {
-    // const expiresIn = 60 * 60 * 24;
-    // const tokenPayload = {
-    //   id: user.id,
-    //   status: user.status,
-    //   role: user.role,
-    // };
-    //
-    // const token = await this.generateToken(tokenPayload, { expiresIn });
-    // const confirmLink = `${this.configService.get(
-    //   'BASE_URL',
-    // )}/auth/confirm?token=${token}`;
-
     const response = await this.mailService.sendMail(
       user.email,
       user.firstName,
@@ -178,7 +159,7 @@ export class AuthService {
     try {
       const data = this.jwtService.verify(token);
       return data;
-    } catch(e) {
+    } catch (e) {
       throw new UnauthorizedException();
     }
   }

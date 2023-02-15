@@ -43,4 +43,23 @@ export class UserService extends BaseService<User> {
   async findOne(searchUserDto: SearchUserDto) {
     return await this.usersRepository.findOneBy(searchUserDto);
   }
+
+  async checkIfUserExists(searchUserDto: SearchUserDto) {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email: searchUserDto.email })
+      .orWhere('user.phoneNumber = :phoneNumber', {
+        phoneNumber: searchUserDto.phoneNumber,
+      })
+      .getOne();
+
+    if (!user) {
+      return false;
+    } else if (user.status === StatusEnum.PENDING) {
+      await this.usersRepository.remove(user);
+      return false;
+    }
+
+    return true;
+  }
 }
