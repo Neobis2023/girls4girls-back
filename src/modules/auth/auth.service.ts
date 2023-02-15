@@ -110,8 +110,9 @@ export class AuthService {
 
     const currentTime = new Date().getTime();
     const createdAt = sentAccount.createdAt.getTime();
-    const timeDifference = currentTime - createdAt;
-    if (timeDifference > 10) {
+    const timeDifference = (currentTime - createdAt) / 1000 / 60;
+    const tenMinutes = 10;
+    if (timeDifference > tenMinutes) {
       this.confirmCodesRepository.remove(sentAccount);
       throw new BadRequestException('Code time is expired');
     }
