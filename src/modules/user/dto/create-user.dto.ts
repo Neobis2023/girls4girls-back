@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserGenderEnum } from '../enums/user-gender.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseDto } from '../../../base/dto/base.dto';
@@ -57,5 +57,6 @@ export class CreateUserDto extends BaseDto {
     default: UserGenderEnum.FEMALE,
   })
   @IsOptional()
+  @IsEnum(UserGenderEnum)
   gender: UserGenderEnum;
 }
