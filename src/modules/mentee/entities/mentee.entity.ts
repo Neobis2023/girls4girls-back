@@ -8,7 +8,7 @@ export class MenteeEntity extends BaseEntity{
     @Column()
     @IsString()
     @IsNotEmpty()
-    mentee_name: string;
+    menteeName: string;
 
     @ManyToOne(() => MentorEntity, (mentor) => mentor.mentees)
     @IsNotEmpty()

@@ -5,5 +5,5 @@ import { BaseDto } from 'src/base/dto/base.dto';
 export class CreateMenteeDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
-  mentee_name: string;
+  menteeName: string;
 }

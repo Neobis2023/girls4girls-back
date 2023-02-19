@@ -9,12 +9,12 @@ export class MentorEntity extends BaseEntity{
     @Column()
     @IsNotEmpty()
     @IsString()
-    mentor_name: string;
+    mentorName: string;
 
     @Column()
     @IsNotEmpty()
     @IsString()
-    job_title: string;
+    jobTitle: string;
 
     @Column()
     @IsNotEmpty()

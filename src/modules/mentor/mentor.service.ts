@@ -19,8 +19,8 @@ export class MentorService extends BaseService<MentorEntity> {
     return await this.mentorRepo.save(mentorDto);
   }
 
-  async editOne(mentor_id: number, editMentorDto: EditMentorDto) {
-    const mentor = await this.mentorRepo.findOne({ where: { id: mentor_id } });
+  async editOne(mentorId: number, editMentorDto: EditMentorDto) {
+    const mentor = await this.mentorRepo.findOne({ where: { id: mentorId } });
     Object.assign(mentor, editMentorDto);
     return await this.mentorRepo.save(mentor);
   }
