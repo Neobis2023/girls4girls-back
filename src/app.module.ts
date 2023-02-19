@@ -3,18 +3,19 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './modules/user/entities/user.entity';
 import { MailModule } from './modules/mail/mail.module';
 import { ImageModule } from './modules/image/image.module';
-import { Image } from './modules/image/entities/image.entity';
 import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
 import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
-import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
+import { MenteeModule } from './modules/mentee/mentee.module';
+import { MentorModule } from './modules/mentor/mentor.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    MentorModule,
+    MenteeModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -30,7 +31,7 @@ import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
         // ssl: {
         //   rejectUnauthorized: false,
         // },
-        entities: [User, Image, ConfirmCode],
+        entities: ["dist/**/*.entity{.ts,.js}"],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -40,5 +41,6 @@ import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
     CloudinaryModule,
     SmsNikitaModule,
   ],
+  controllers: [],
 })
 export class AppModule {}
