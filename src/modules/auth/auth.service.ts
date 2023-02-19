@@ -42,6 +42,23 @@ export class AuthService {
       throw new BadRequestException('Not proper credentials');
     }
 
+    if (!user) {
+      throw new BadRequestException(
+        'Password on login credentials are incorrect!',
+      );
+    }
+
+    if (loginDto.phoneNumber && loginDto.email) {
+      if (
+        loginDto.phoneNumber !== user.phoneNumber ||
+        loginDto.email !== user.email
+      ) {
+        throw new BadRequestException(
+          'Both email and phoneNumber provided, but not correct!',
+        );
+      }
+    }
+
     if (user && Hash.compare(loginDto.password, user.password)) {
       const { password, ...result } = user;
       return result;
@@ -111,7 +128,9 @@ export class AuthService {
     const tenMinutes = 10;
     if (timeDifference > tenMinutes) {
       this.confirmCodesRepository.remove(sentAccount);
-      throw new BadRequestException('Code time is expired');
+      throw new BadRequestException(
+        'Code time is expired, you have to send code in 10 minutes',
+      );
     }
 
     if (phoneNumber === sentAccount.phoneNumber && code === sentAccount.code) {
