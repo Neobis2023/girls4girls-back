@@ -24,7 +24,6 @@ export class UserController {
   @Delete()
   @ApiOperation({ summary: 'Удаление пользователя' })
   async deleteUser(@Query('id') id: number) {
-    console.log(id);
     return this.userService.deleteUser(id);
   }
 }

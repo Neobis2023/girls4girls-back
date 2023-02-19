@@ -37,12 +37,16 @@ export class User extends BaseEntity {
   @IsNotEmpty()
   firstName: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   @IsString()
   @IsNotEmpty()
   lastName: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   @IsDate()
   @IsOptional()
   dateOfBirth: Date;
@@ -67,6 +71,4 @@ export class User extends BaseEntity {
     default: StatusEnum.PENDING,
   })
   status: StatusEnum;
-
-  // image: object;
 }
