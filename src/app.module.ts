@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailModule } from './modules/mail/mail.module';
+import { ImageModule } from './modules/image/image.module';
+import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
+import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
 import { MentorModule } from './modules/mentor/mentor.module';
 import { MenteeModule } from './modules/mentee/mentee.module';
-import { MentorEntity } from './modules/mentor/entities/mentor.entity';
 
 @Module({
   imports: [
@@ -32,8 +33,10 @@ import { MentorEntity } from './modules/mentor/entities/mentor.entity';
     }),
     MentorModule,
     MenteeModule,
+    MailModule,
+    ImageModule,
+    CloudinaryModule,
+    SmsNikitaModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
