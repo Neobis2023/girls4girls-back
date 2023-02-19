@@ -1,11 +1,8 @@
 import { IsEmail, IsNotEmpty, IsString } from "class-validator"
+import { BaseDto } from "src/base/dto/base.dto"
 
-export class MenteeDto{
+export class CreateMenteeDto extends BaseDto{
     @IsString()
     @IsNotEmpty()
     mentee_name: string
-
-    // @IsEmail()
-    // @IsNotEmpty()
-    // mentee_email: string
 }

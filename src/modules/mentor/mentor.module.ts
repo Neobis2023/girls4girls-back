@@ -6,7 +6,6 @@ import { MentorService } from './mentor.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([MentorEntity])],
-    controllers: [],
     providers: [MentorService]
 })
 export class MentorModule {}

@@ -1,10 +1,7 @@
 import { IsNotEmpty, IsString } from "class-validator"
-import { PrimaryGeneratedColumn } from "typeorm"
+import { BaseDto } from "src/base/dto/base.dto"
 
-export class MentorDto{
-    @PrimaryGeneratedColumn()
-    mentor_id: number
-
+export class CreateMentorDto extends BaseDto{
     @IsString()
     @IsNotEmpty()
     mentor_name: string

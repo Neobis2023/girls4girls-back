@@ -5,7 +5,6 @@ import { MenteeService } from './mentee.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([MenteeEntity])],
-    providers:[MenteeService],
-    controllers: []
+    providers:[MenteeService]
 })
 export class MenteeModule {}

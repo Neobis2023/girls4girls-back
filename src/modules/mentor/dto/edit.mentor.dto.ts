@@ -1,3 +1,3 @@
-import { MentorDto } from "./mentor.dto";
+import { CreateMentorDto } from "./create.mentor.dto";
 
-export class EditMentorDto extends MentorDto{}
+export class EditMentorDto extends CreateMentorDto{}

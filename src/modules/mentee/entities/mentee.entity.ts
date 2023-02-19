@@ -1,25 +1,17 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
+import { BaseEntity } from "src/base/base.entity";
 import { MentorEntity } from "src/modules/mentor/entities/mentor.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
-export class MenteeEntity{
-    @PrimaryGeneratedColumn()
-    @IsNotEmpty()
-    id: number
-    
+export class MenteeEntity extends BaseEntity{
     @Column()
     @IsString()
     @IsNotEmpty()
-    mentee_name: string
+    mentee_name: string;
 
-    // @Column()
-    // @IsEmail()
-    // @IsNotEmpty()
-    // mentee_email: string
-    
     @ManyToOne(() => MentorEntity, (mentor) => mentor.mentees)
     @IsNotEmpty()
-    mentor: MentorEntity
+    mentor: MentorEntity;
 }
 
