@@ -31,7 +31,7 @@ import { MentorModule } from './modules/mentor/mentor.module';
         // ssl: {
         //   rejectUnauthorized: false,
         // },
-        entities: ["dist/**/*.entity{.ts,.js}"],
+        entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
       inject: [ConfigService],
