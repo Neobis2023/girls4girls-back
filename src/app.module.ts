@@ -9,6 +9,7 @@ import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
 import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
 import { MenteeModule } from './modules/mentee/mentee.module';
 import { MentorModule } from './modules/mentor/mentor.module';
+import { TrainingsModule } from './modules/training/training.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MentorModule } from './modules/mentor/mentor.module';
     ImageModule,
     CloudinaryModule,
     SmsNikitaModule,
+    TrainingsModule
   ],
   controllers: [],
 })

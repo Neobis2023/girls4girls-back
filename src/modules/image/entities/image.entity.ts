@@ -1,6 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity , ManyToOne} from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { IsString } from 'class-validator';
+import { Training } from 'src/modules/training/entities/training.entity';
 
 @Entity()
 export class Image extends BaseEntity {
@@ -10,4 +11,7 @@ export class Image extends BaseEntity {
 
   @IsString()
   publicId: string;
+
+  @ManyToOne(()=>Training,(training)=>training.image)
+  training: Training[]
 }
