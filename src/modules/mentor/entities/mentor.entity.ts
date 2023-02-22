@@ -1,7 +1,8 @@
 import { IsNotEmpty, IsString } from "class-validator";
 import { BaseEntity } from "src/base/base.entity";
 import { MenteeEntity } from "src/modules/mentee/entities/mentee.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Training } from "src/modules/training/entities/training.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 
@@ -23,5 +24,8 @@ export class MentorEntity extends BaseEntity{
 
     @OneToMany(() => MenteeEntity, (mentee) => mentee.mentor)
     mentees: MenteeEntity[];
+
+    // @ManyToOne(()=>Training,(training)=>training.id)
+    // training: Training []
 }
 
