@@ -32,7 +32,7 @@ import { TrainingsModule } from './modules/training/training.module';
         // ssl: {
         //   rejectUnauthorized: false,
         // },
-        entities: ["dist/**/*.entity{.ts,.js}"],
+        entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
       inject: [ConfigService],
