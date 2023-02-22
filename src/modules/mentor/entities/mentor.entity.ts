@@ -24,8 +24,5 @@ export class MentorEntity extends BaseEntity{
 
     @OneToMany(() => MenteeEntity, (mentee) => mentee.mentor)
     mentees: MenteeEntity[];
-
-    // @ManyToOne(()=>Training,(training)=>training.id)
-    // training: Training []
 }
 

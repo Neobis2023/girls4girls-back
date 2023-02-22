@@ -23,11 +23,6 @@ export class Training extends BaseEntity {
     
     @OneToMany(()=> Image,(image)=>image.training, {cascade: true})
     @IsOptional()
-    image: Image [] 
-
-    // @OneToMany(()=>MentorEntity,(mentor)=>mentor.id)
-    // @IsNumber()
-    // mentor_id: number                                       
-
+    image: Image []                                    
 }
 

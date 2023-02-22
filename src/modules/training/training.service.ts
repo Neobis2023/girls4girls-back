@@ -39,11 +39,6 @@ export class TrainingsService extends BaseService<Training>{
     training.absorbFromDto(createTrainingDto)
     training.image = images
     return await this.trainingRepo.save(training)
-
-  }
-
-  findAll() {
-    return `This action returns all user`;
   }
 
   async findOne(searchTrainingDto: SearchTrainingDto){

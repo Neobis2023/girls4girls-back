@@ -32,10 +32,4 @@ export class CreateTrainingDto extends BaseDto{
     @ApiProperty()
     @IsOptional()
     image: Image []
-
-    // @ApiProperty()
-    // @IsNumber()
-    // @IsOptional()
-    // mentor_id: number
-
 }
