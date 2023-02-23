@@ -7,6 +7,7 @@ import { SearchUserDto } from './dto/search-user.dto';
 import { Hash } from '../../utils/hash.util';
 import { BaseService } from '../../base/base.service';
 import { StatusEnum } from './enums/user-status.enum';
+import { ChangePasswordDto } from '../auth/dto/change-password.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -69,5 +70,10 @@ export class UserService extends BaseService<User> {
       return this.usersRepository.remove(user);
     }
     return { message: `User with id ${id} nod found!` };
+  }
+
+  async changePassword(user: User, changePasswordDto: ChangePasswordDto) {
+    user.password = Hash.make(changePasswordDto.newPassword);
+    return this.usersRepository.save(user);
   }
 }

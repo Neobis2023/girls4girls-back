@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -15,6 +16,9 @@ import { UserRoleEnum } from '../user/enums/user-role.enum';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ConfirmAccountDto } from './dto/confirm-account.dto';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ConfirmCodeDto } from './dto/confirm-code.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @ApiTags('Aвторизация')
 @Controller('auth')
@@ -37,6 +41,35 @@ export class AuthController {
   @ApiOperation({ summary: 'Логин' })
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Забыли пароль' })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto);
+  }
+
+  @Post('forgot-password/confirm')
+  @ApiOperation({ summary: 'Подтверждение кода для изменения пароля' })
+  async confirmCodeToChangePassword(@Body() confirmCodeDto: ConfirmCodeDto) {
+    return this.authService.confirmCodeToChangePassword(confirmCodeDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-password')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Изменение пароля' })
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @Request() req: any,
+  ) {
+    return this.authService.changePassword(
+      {
+        email: req.user?.email,
+        phoneNumber: req.user?.phoneNumber,
+      },
+      changePasswordDto,
+    );
   }
 
   @Roles(UserRoleEnum.USER)

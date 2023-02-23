@@ -28,9 +28,9 @@ import { MentorModule } from './modules/mentor/mentor.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        // ssl: {
+        //   rejectUnauthorized: false,
+        // },
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
