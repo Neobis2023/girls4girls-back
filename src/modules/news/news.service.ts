@@ -4,13 +4,13 @@ import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { EditNewsDto } from './dto/edit-news.dto';
-import { NewsEntity } from './entities/news.entitiy';
+import { News } from './entities/news.entitiy';
 
 @Injectable()
-export default class NewsService extends BaseService<NewsEntity> {
+export default class NewsService extends BaseService<News> {
   constructor(
-    @InjectRepository(NewsEntity)
-    private readonly newsRepo: Repository<NewsEntity>,
+    @InjectRepository(News)
+    private readonly newsRepo: Repository<News>,
   ) {
     super(newsRepo);
   }

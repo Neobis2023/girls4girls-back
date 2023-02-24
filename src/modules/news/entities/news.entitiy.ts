@@ -3,7 +3,7 @@ import { BaseEntity } from 'src/base/base.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class NewsEntity extends BaseEntity {
+export class News extends BaseEntity {
   @Column()
   @IsNotEmpty()
   @IsString()
