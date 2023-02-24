@@ -41,7 +41,7 @@ import { TrainingsModule } from './modules/training/training.module';
     ImageModule,
     CloudinaryModule,
     SmsNikitaModule,
-    TrainingsModule
+    TrainingsModule,
   ],
   controllers: [],
 })
