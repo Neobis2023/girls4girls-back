@@ -11,6 +11,8 @@ import { MenteeModule } from './modules/mentee/mentee.module';
 import { MentorModule } from './modules/mentor/mentor.module';
 import { TrainingsModule } from './modules/training/training.module';
 import { NewsModule } from './modules/news/news.module';
+import { ForumModule } from './modules/forum/forum.module';
+
 
 @Module({
   imports: [
@@ -43,7 +45,8 @@ import { NewsModule } from './modules/news/news.module';
     CloudinaryModule,
     SmsNikitaModule,
     TrainingsModule,
-    NewsModule
+    NewsModule,
+    ForumModule
   ],
   controllers: [],
 })
