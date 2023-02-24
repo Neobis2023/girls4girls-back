@@ -10,6 +10,7 @@ import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
 import { MenteeModule } from './modules/mentee/mentee.module';
 import { MentorModule } from './modules/mentor/mentor.module';
 import { TrainingsModule } from './modules/training/training.module';
+import { NewsModule } from './modules/news/news.module';
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import { TrainingsModule } from './modules/training/training.module';
     ImageModule,
     CloudinaryModule,
     SmsNikitaModule,
-    TrainingsModule
+    TrainingsModule,
+    NewsModule
   ],
   controllers: [],
 })
