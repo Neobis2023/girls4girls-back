@@ -6,8 +6,8 @@ export class SmsNikitaService {
   async sendSms(phoneNumber: string, code: string) {
     const body = `<?xml version="1.0" encoding="UTF-8"?>
                    <message>
-                    <login>begalievn</login>
-                    <pwd>Jda2XvVp</pwd>
+                    <login>arstanr</login>
+                    <pwd>74v6h3Ok</pwd>
                     <id>${Math.random().toString().substr(2, 6)}</id>
                     <sender>SMSPRO.KG</sender>
                     <text>Код для подтверждения ${code}</text>
