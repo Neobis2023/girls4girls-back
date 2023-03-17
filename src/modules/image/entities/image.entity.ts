@@ -12,6 +12,6 @@ export class Image extends BaseEntity {
   @IsString()
   publicId: string;
 
-  @ManyToOne(()=>Training,(training)=>training.image)
-  training: Training[]
+  @ManyToOne(() => Training, (training) => training.image)
+  training: Training[];
 }

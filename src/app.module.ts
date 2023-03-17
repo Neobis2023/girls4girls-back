@@ -10,6 +10,7 @@ import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
 import { MenteeModule } from './modules/mentee/mentee.module';
 import { MentorModule } from './modules/mentor/mentor.module';
 import { TrainingsModule } from './modules/training/training.module';
+import { JetonModule } from './modules/jeton/jeton.module';
 
 @Module({
   imports: [
@@ -29,9 +30,9 @@ import { TrainingsModule } from './modules/training/training.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        // ssl: {
+        //   rejectUnauthorized: false,
+        // },
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
@@ -42,6 +43,7 @@ import { TrainingsModule } from './modules/training/training.module';
     CloudinaryModule,
     SmsNikitaModule,
     TrainingsModule,
+    JetonModule,
   ],
   controllers: [],
 })
