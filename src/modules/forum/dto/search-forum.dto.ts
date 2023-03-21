@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class SearchTrainingDto {
+export class SearchForumDto {
   @ApiProperty({
     example: 'Female body',
-    description: 'Title of training',
+    description: 'Title of forum',
   })
   @IsString()
   @IsNotEmpty()
@@ -12,7 +12,7 @@ export class SearchTrainingDto {
 
   @ApiProperty({
     example: 'From high peaks to lush valleys, hard planes, and soft edges',
-    description: 'Training description',
+    description: 'Forum description',
   })
   @IsString()
   @IsOptional()

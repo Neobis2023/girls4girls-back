@@ -10,6 +10,8 @@ import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
 import { MenteeModule } from './modules/mentee/mentee.module';
 import { MentorModule } from './modules/mentor/mentor.module';
 import { TrainingsModule } from './modules/training/training.module';
+import { NewsModule } from './modules/news/news.module';
+import { ForumModule } from './modules/forum/forum.module';
 import { JetonModule } from './modules/jeton/jeton.module';
 
 @Module({
@@ -42,6 +44,9 @@ import { JetonModule } from './modules/jeton/jeton.module';
     ImageModule,
     CloudinaryModule,
     SmsNikitaModule,
+    TrainingsModule,
+    NewsModule,
+    ForumModule,
     TrainingsModule,
     JetonModule,
   ],

@@ -1,34 +1,28 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany } from 'typeorm';
 
 @Entity()
-export class Training extends BaseEntity {
-  @Column({ type: 'varchar', nullable: true })
-  @IsNotEmpty()
+export class Forum extends BaseEntity {
+  @Column()
   @IsString()
+  @IsNotEmpty()
   title: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column()
+  @IsString()
   @IsNotEmpty()
   description: string;
 
-  @Column({ type: 'text' })
+  @Column()
   @IsNotEmpty()
   @IsString()
   address: string;
 
-  @OneToMany(() => Image, (image) => image.training, {
+  @OneToMany(() => Image, (image) => image.forum, {
     cascade: true,
   })
-  @JoinColumn({ name: 'id' })
   @IsOptional()
   image: Image[];
 

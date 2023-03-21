@@ -1,12 +1,12 @@
+import { BaseDto } from 'src/base/dto/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { BaseDto } from 'src/base/dto/base.dto';
 import { Image } from 'src/modules/image/entities/image.entity';
 
-export class CreateTrainingDto extends BaseDto {
+export class CreateForumDto extends BaseDto {
   @ApiProperty({
     example: 'Female body',
-    description: 'Title of training',
+    description: 'Forum of training',
   })
   @IsString()
   @IsNotEmpty()
@@ -14,7 +14,7 @@ export class CreateTrainingDto extends BaseDto {
 
   @ApiProperty({
     example: 'From high peaks to lush valleys, hard planes, and soft edges',
-    description: 'Training description',
+    description: 'Forum description',
   })
   @IsString()
   @IsNotEmpty()
@@ -33,7 +33,7 @@ export class CreateTrainingDto extends BaseDto {
   image: Image[];
 
   @ApiProperty({
-    description: 'Deadline of the training',
+    description: 'Deadline of the forum',
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
