@@ -3,16 +3,19 @@ import { TrainingsService } from './training.service';
 import { TrainingsController } from './training.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Training } from './entities/training.entity';
-import {Image} from '../image/entities/image.entity'
+import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
 import { ImageService } from '../image/image.service';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Training, Image]), CloudinaryModule, ImageModule],
-  controllers: [TrainingsController,],
-  providers: [TrainingsService,ImageService],
-  exports:[TrainingsService]
+  imports: [
+    TypeOrmModule.forFeature([Training, Image]),
+    CloudinaryModule,
+    ImageModule,
+  ],
+  controllers: [TrainingsController],
+  providers: [TrainingsService, ImageService],
+  exports: [TrainingsService],
 })
 export class TrainingsModule {}
-

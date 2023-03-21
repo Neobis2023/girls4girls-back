@@ -9,54 +9,70 @@ import { SearchForumDto } from './dto/search-forum.dto';
 import { Forum } from './entities/forum.entity';
 
 @Injectable()
-export class ForumService extends BaseService<Forum>{
+export class ForumService extends BaseService<Forum> {
   constructor(
-    @InjectRepository(Forum) private readonly forumRepo: Repository<Forum>,
-    private readonly imageService: ImageService
-  ){
-    super(forumRepo)
+    @InjectRepository(Forum)
+    private readonly forumRepo: Repository<Forum>,
+    @InjectRepository(Image)
+    private readonly imageService: ImageService,
+  ) {
+    super(forumRepo);
   }
 
-  getOneByTitle(title: string){
-    const findOneByTitle = this.forumRepo.findOne({where:{title}})
-    if(findOneByTitle === null){
-      throw new BadRequestException(` Forum with such title is not found!`)
+  getOneByTitle(title: string) {
+    const findOneByTitle = this.forumRepo.findOne({ where: { title } });
+    if (findOneByTitle === null) {
+      throw new BadRequestException(` Forum with such title is not found!`);
     }
     return findOneByTitle;
   }
 
-  async createNewForum(createForumDto: CreateForumDto, file: Express.Multer.File){
-    const images: Image[] = []
-    const image = await this.imageService.createImage(file)
-    images.push(image)
+  async createNewForum(
+    createForumDto: CreateForumDto,
+    file: Express.Multer.File,
+  ) {
+    const images: Image[] = [];
+    const image = await this.imageService.createImage(file);
+    images.push(image);
 
-    const forum = new Forum()
-    forum.absorbFromDto(createForumDto)
-    forum.image = images
-    return await this.forumRepo.save(forum)
+    const forum = new Forum();
+    forum.absorbFromDto(createForumDto);
+    forum.image = images;
+    return await this.forumRepo.save(forum);
   }
 
-  async findOne(searchForumDto: SearchForumDto){
-    return await this.forumRepo.findOneBy(searchForumDto)
+  async findOne(searchForumDto: SearchForumDto) {
+    return await this.forumRepo.findOneBy(searchForumDto);
   }
 
-  async checkifForumExist(searchForumDto: SearchForumDto){
+  async checkifForumExist(searchForumDto: SearchForumDto) {
     const forum = await this.forumRepo
-                  .createQueryBuilder('forum')
-                  .where('forum.title = : title',{title: searchForumDto.title})
-                  .orWhere('forum.description = :description',{description : searchForumDto.description})
-                  .getOne()
-    if(!forum){
-    return false
+      .createQueryBuilder('forum')
+      .where('forum.title = : title', { title: searchForumDto.title })
+      .orWhere('forum.description = :description', {
+        description: searchForumDto.description,
+      })
+      .getOne();
+    if (!forum) {
+      return false;
     }
-    return true
-    }
+    return true;
+  }
 
-  async findOneById(id: number){
-    const forum = await this.get(id)
-    if(!forum){
-      throw new BadRequestException('NOT FOUND!')
+  async findOneById(id: number) {
+    const forum = await this.get(id);
+    if (!forum) {
+      throw new BadRequestException('NOT FOUND!');
     }
-    return  forum
+    return forum;
+  }
+
+  async deleteForumById(forum_id: number) {
+    const forum = await this.forumRepo.findOneBy({ id: forum_id });
+    if (forum) {
+      await this.forumRepo.delete({ id: forum?.id });
+      return `Forum is successfully removed!`;
+    }
+    return `Forum is not found!`;
   }
 }

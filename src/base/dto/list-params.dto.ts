@@ -45,7 +45,9 @@ export class ListParamsDto {
   orderField = 'id';
 
   getOrderedField() {
-    return ['id', 'created_at', 'updated_at'].includes(this.orderField) ? this.orderField : 'id';
+    return ['id', 'created_at', 'updated_at'].includes(this.orderField)
+      ? this.orderField
+      : 'id';
   }
 
   public countOffset(): number {
