@@ -68,7 +68,6 @@ export class TrainingsService extends BaseService<Training> {
   async deleteTraining(training_id: number) {
     const training = await this.trainingRepo.findOneBy({ id: training_id });
     const image = await this.imageRepo.findOne({ where: { id: training_id } });
-    console.log(image);
     if (training) {
       await this.imageRepo.delete({id:image?.id});
       await this.trainingRepo.delete({id:training?.id});
