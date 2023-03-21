@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post,Delete, Body, Param, UseInterceptors, UploadedFile, Query, UseGuards } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { CreateForumDto } from './dto/create-forum.dto';
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -36,5 +36,14 @@ export class ForumController {
   @ApiOperation({summary:'Получить один форум по названию'})
   async findOneById(@Param('title') title: string) {
     return await this.forumService.getOneByTitle(title)
+  }
+
+  @Roles(UserRoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard,RoleGuard)
+  @ApiBearerAuth()
+  @Delete(':forum_id')
+  @ApiOperation({summary: 'Удаление форума по его ID'})
+  remove(@Param('forum_id') forum_id:number){
+    return this.forumService.deleteForumById(forum_id)
   }
 }

@@ -12,6 +12,7 @@ import { Forum } from './entities/forum.entity';
 export class ForumService extends BaseService<Forum>{
   constructor(
     @InjectRepository(Forum) private readonly forumRepo: Repository<Forum>,
+    @InjectRepository(Image) private readonly imageRepo:Repository<Image>, 
     private readonly imageService: ImageService
   ){
     super(forumRepo)
@@ -58,5 +59,16 @@ export class ForumService extends BaseService<Forum>{
       throw new BadRequestException('NOT FOUND!')
     }
     return  forum
+  }
+
+  async deleteForumById(forum_id:number){
+    const forum = await this.forumRepo.findOneBy({id:forum_id})
+    const image = await this.imageRepo.findOne({where:{id:forum_id}})
+    if(forum){
+      await this.imageRepo.delete({id:image?.id})
+      await this.forumRepo.delete({id:forum?.id})
+      return `Forum is successfully removed!`
+    }
+    return `Forum is not found!`
   }
 }

@@ -13,7 +13,6 @@ import { TrainingsModule } from './modules/training/training.module';
 import { NewsModule } from './modules/news/news.module';
 import { ForumModule } from './modules/forum/forum.module';
 
-
 @Module({
   imports: [
     UserModule,
@@ -46,7 +45,7 @@ import { ForumModule } from './modules/forum/forum.module';
     SmsNikitaModule,
     TrainingsModule,
     NewsModule,
-    ForumModule
+    ForumModule,
   ],
   controllers: [],
 })

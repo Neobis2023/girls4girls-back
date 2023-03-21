@@ -5,14 +5,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Forum } from './entities/forum.entity';
 import { ImageModule } from '../image/image.module';
 import { ImageService } from '../image/image.service';
-import { Image } from '../image/entities/image.entity'
+import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 
-
 @Module({
-  imports:[TypeOrmModule.forFeature([Forum,Image]),ImageModule,CloudinaryModule],
+  imports: [
+    TypeOrmModule.forFeature([Forum, Image]),
+    ImageModule,
+    CloudinaryModule,
+  ],
   controllers: [ForumController],
-  providers: [ForumService,ImageService],
-  exports:[ForumService]
+  providers: [ForumService, ImageService],
+  exports: [ForumService],
 })
 export class ForumModule {}

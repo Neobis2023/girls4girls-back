@@ -23,7 +23,7 @@ import { ListParamsDto } from 'src/base/dto/list-params.dto';
 export class TrainingsController {
 constructor(private readonly trainingsService: TrainingsService) {}
 
-@Post('post')
+@Post()
 @Roles(UserRoleEnum.ADMIN)
 @UseGuards(JwtAuthGuard, RoleGuard)
 @ApiConsumes('multypart/form-data')
@@ -48,12 +48,13 @@ async findOneById(@Param('title') title: string){
 return await this.trainingsService.getOneByTitle(title)
 }
 
-@Roles(UserRoleEnum.ADMIN)
-@UseGuards(JwtAuthGuard, RoleGuard)
-@ApiBearerAuth()
-@Delete(':title')
-@ApiOperation({summary: 'Удаление тренинга по названию'})
-remove(@Param('title') title: string) {
-return this.trainingsService.deleteTraining(title)
+// @Roles(UserRoleEnum.ADMIN)
+// @UseGuards(JwtAuthGuard, RoleGuard)
+// @ApiBearerAuth()
+@Delete(':training_id')
+@ApiOperation({summary: 'Удаление тренинга по ID'})
+remove(@Param('training_id') training_id:number) {
+return this.trainingsService.deleteTraining(training_id)
 }
+
 }
