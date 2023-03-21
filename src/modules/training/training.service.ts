@@ -1,9 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
-import { title } from 'process';
 import { BaseService } from 'src/base/base.service';
-import { CloudinaryService } from 'src/services/cloudinary/cloudinary.service';
 import { Repository } from 'typeorm';
 import { Image } from '../image/entities/image.entity';
 import { ImageService } from '../image/image.service';
@@ -16,9 +13,8 @@ export class TrainingsService extends BaseService<Training> {
   constructor(
     @InjectRepository(Training)
     private readonly trainingRepo: Repository<Training>,
-    @InjectRepository(Image) private readonly imageRepo: Repository<Image>,
+    @InjectRepository(Image)
     private readonly imageService: ImageService,
-    private readonly cloudServ: CloudinaryService
   ) {
     super(trainingRepo);
   }
@@ -67,13 +63,10 @@ export class TrainingsService extends BaseService<Training> {
 
   async deleteTraining(training_id: number) {
     const training = await this.trainingRepo.findOneBy({ id: training_id });
-    const image = await this.imageRepo.findOne({ where: { id: training_id } });
     if (training) {
-      await this.imageRepo.delete({id:image?.id});
-      await this.trainingRepo.delete({id:training?.id});
+      await this.trainingRepo.delete({ id: training?.id });
       return `Training is successfully removed! `;
     }
     return `Training is not found!`;
   }
-
 }

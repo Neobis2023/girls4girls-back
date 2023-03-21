@@ -32,10 +32,10 @@ export class CreateTrainingDto extends BaseDto {
   @IsOptional()
   image: Image[];
 
-//   @ApiProperty({
-//     description: 'Deadline of the training',
-//     example: '2023-03-22T10:30:40.000Z',
-//   })
-//   @IsNotEmpty()
-//   endDate: Date;
+  @ApiProperty({
+    description: 'Deadline of the training',
+    example: '2023-03-22T10:30:40.000Z',
+  })
+  @IsNotEmpty()
+  endDate: Date;
 }

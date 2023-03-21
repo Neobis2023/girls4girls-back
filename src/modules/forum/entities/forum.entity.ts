@@ -21,11 +21,11 @@ export class Forum extends BaseEntity {
   address: string;
 
   @OneToMany(() => Image, (image) => image.forum, {
-    cascade:true
+    cascade: true,
   })
   @IsOptional()
   image: Image[];
 
-  @CreateDateColumn({ default: '2023-03-01T00:00:00.000Z' })
+  @CreateDateColumn()
   endDate?: Date;
 }

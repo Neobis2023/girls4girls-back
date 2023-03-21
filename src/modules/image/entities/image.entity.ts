@@ -13,12 +13,12 @@ export class Image extends BaseEntity {
   @IsString()
   publicId: string;
 
-  @ManyToOne(() => Training, (training) => training.image,{
+  @ManyToOne(() => Training, (training) => training.image, {
     onDelete: 'CASCADE',
   })
   training: Training[];
 
-  @ManyToOne(() => Forum, (forum) => forum.image,{
+  @ManyToOne(() => Forum, (forum) => forum.image, {
     onDelete: 'CASCADE',
   })
   forum: Forum[];
