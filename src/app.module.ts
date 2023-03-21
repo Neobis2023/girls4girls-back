@@ -12,6 +12,7 @@ import { MentorModule } from './modules/mentor/mentor.module';
 import { TrainingsModule } from './modules/training/training.module';
 import { NewsModule } from './modules/news/news.module';
 import { ForumModule } from './modules/forum/forum.module';
+import { JetonModule } from './modules/jeton/jeton.module';
 
 @Module({
   imports: [
@@ -46,6 +47,8 @@ import { ForumModule } from './modules/forum/forum.module';
     TrainingsModule,
     NewsModule,
     ForumModule,
+    TrainingsModule,
+    JetonModule,
   ],
   controllers: [],
 })

@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import {
   IsDate,
@@ -10,6 +10,7 @@ import {
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { UserGenderEnum } from '../enums/user-gender.enum';
 import { StatusEnum } from '../enums/user-status.enum';
+import { Jeton } from '../../jeton/entities/jeton.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -71,4 +72,7 @@ export class User extends BaseEntity {
     default: StatusEnum.PENDING,
   })
   status: StatusEnum;
+
+  @ManyToMany(() => Jeton, (jeton) => jeton.users)
+  jetons: Jeton[];
 }
