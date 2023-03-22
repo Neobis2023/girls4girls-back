@@ -13,6 +13,8 @@ import { TrainingsModule } from './modules/training/training.module';
 import { NewsModule } from './modules/news/news.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { JetonModule } from './modules/jeton/jeton.module';
+import { LikeModule } from './modules/likes/like.module';
+import { VideoBlogModule } from './modules/video-blog/video-blog.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { JetonModule } from './modules/jeton/jeton.module';
     ForumModule,
     TrainingsModule,
     JetonModule,
+    VideoBlogModule,
+    LikeModule,
   ],
   controllers: [],
 })
