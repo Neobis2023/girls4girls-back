@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { CreateMenteeDto } from './dto/create-mentee.dto';
-import { MenteeEntity } from './entities/mentee.entity';
+import { Mentee } from './entities/mentee.entity';
 
 @Injectable()
-export class MenteeService extends BaseService<MenteeEntity> {
+export class MenteeService extends BaseService<Mentee> {
   constructor(
-    @InjectRepository(MenteeEntity)
-    private readonly menteeRepo: Repository<MenteeEntity>,
+    @InjectRepository(Mentee)
+    private readonly menteeRepo: Repository<Mentee>,
   ) {
     super(menteeRepo);
   }

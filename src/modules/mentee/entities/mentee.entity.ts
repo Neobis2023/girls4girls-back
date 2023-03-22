@@ -1,16 +1,16 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
-import { MentorEntity } from 'src/modules/mentor/entities/mentor.entity';
+import { Mentor } from 'src/modules/mentor/entities/mentor.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
-export class MenteeEntity extends BaseEntity {
+export class Mentee extends BaseEntity {
   @Column()
   @IsString()
   @IsNotEmpty()
   menteeName: string;
 
-  @ManyToOne(() => MentorEntity, (mentor) => mentor.mentees)
+  @ManyToOne(() => Mentor, (mentor) => mentor.mentees)
   @IsNotEmpty()
-  mentor: MentorEntity;
+  mentor: Mentor;
 }
