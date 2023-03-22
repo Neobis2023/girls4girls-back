@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import {
   IsDate,
@@ -11,6 +11,7 @@ import { UserRoleEnum } from '../enums/user-role.enum';
 import { UserGenderEnum } from '../enums/user-gender.enum';
 import { StatusEnum } from '../enums/user-status.enum';
 import { Jeton } from '../../jeton/entities/jeton.entity';
+import { Likes } from 'src/modules/likes/entities/like.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -75,4 +76,7 @@ export class User extends BaseEntity {
 
   @ManyToMany(() => Jeton, (jeton) => jeton.users)
   jetons: Jeton[];
+
+  @OneToMany(() => Likes, (likes) => likes.user)
+  likes: Likes[];
 }

@@ -1,10 +1,10 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
-import { MenteeEntity } from 'src/modules/mentee/entities/mentee.entity';
+import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
-export class MentorEntity extends BaseEntity {
+export class Mentor extends BaseEntity {
   @Column()
   @IsNotEmpty()
   @IsString()
@@ -20,6 +20,6 @@ export class MentorEntity extends BaseEntity {
   @IsString()
   info: string;
 
-  @OneToMany(() => MenteeEntity, (mentee) => mentee.mentor)
-  mentees: MenteeEntity[];
+  @OneToMany(() => Mentee, (mentee) => mentee.mentor)
+  mentees: Mentee[];
 }

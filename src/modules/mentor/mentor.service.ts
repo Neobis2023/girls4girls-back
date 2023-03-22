@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MentorEntity } from './entities/mentor.entity';
+import { Mentor } from './entities/mentor.entity';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { EditMentorDto } from './dto/edit-mentor.dto';
 import { BaseService } from 'src/base/base.service';
 
 @Injectable()
-export class MentorService extends BaseService<MentorEntity> {
+export class MentorService extends BaseService<Mentor> {
   constructor(
-    @InjectRepository(MentorEntity)
-    private readonly mentorRepo: Repository<MentorEntity>,
+    @InjectRepository(Mentor)
+    private readonly mentorRepo: Repository<Mentor>,
   ) {
     super(mentorRepo);
   }
