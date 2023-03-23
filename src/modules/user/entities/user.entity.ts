@@ -78,6 +78,6 @@ export class User extends BaseEntity {
   @JoinTable()
   jetons: Jeton[];
 
-  @OneToMany(() => Likes, (likes) => likes.user)
+  @OneToMany(() => Likes, (likes) => likes.user,{cascade:true})
   likes: Likes[];
 }
