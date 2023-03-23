@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Delete } from '@nestjs/common';
+import { Controller, Get, Query, Delete, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -12,6 +12,12 @@ export class UserController {
   @ApiOperation({ summary: 'Получение списка пользователей' })
   async list(@Query() listParamsDto: ListParamsDto) {
     return this.userService.list(listParamsDto);
+  }
+
+  @Get('profile')
+  @ApiOperation({ summary: 'Получение профиля пользователя' })
+  async getProfile(@Req() req) {
+    return this.userService.getProfile(req?.user?.id);
   }
 
   @Delete()

@@ -9,5 +9,6 @@ import { ImageController } from './image.controller';
   imports: [TypeOrmModule.forFeature([Image]), CloudinaryModule],
   providers: [ImageService],
   controllers: [ImageController],
+  exports: [ImageService],
 })
 export class ImageModule {}

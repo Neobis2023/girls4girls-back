@@ -14,7 +14,7 @@ export class Jeton extends BaseEntity {
   @IsString()
   description: string;
 
-  @OneToOne(() => Image)
+  @OneToOne(() => Image, { cascade: true })
   @JoinColumn()
   image: Image;
 

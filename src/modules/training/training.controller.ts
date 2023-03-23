@@ -32,11 +32,11 @@ export class TrainingsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiConsumes('multypart/form-data')
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Создание нового тренинга' })
-  async creat(
+  async create(
     @Body() createTrainingDto: CreateTrainingDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
