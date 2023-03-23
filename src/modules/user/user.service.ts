@@ -41,6 +41,19 @@ export class UserService extends BaseService<User> {
     throw new BadRequestException('Confirmation error');
   }
 
+  async getProfile(id: number): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['jetons'],
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    return user;
+  }
+
   async findOne(searchUserDto: SearchUserDto) {
     return await this.usersRepository.findOneBy(searchUserDto);
   }

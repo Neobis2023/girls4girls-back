@@ -6,7 +6,6 @@ import { Training } from './entities/training.entity';
 import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
-import { ImageService } from '../image/image.service';
 
 @Module({
   imports: [
@@ -15,7 +14,7 @@ import { ImageService } from '../image/image.service';
     ImageModule,
   ],
   controllers: [TrainingsController],
-  providers: [TrainingsService, ImageService],
+  providers: [TrainingsService],
   exports: [TrainingsService],
 })
 export class TrainingsModule {}

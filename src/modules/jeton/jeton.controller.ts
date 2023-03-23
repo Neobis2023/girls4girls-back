@@ -1,9 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors
+} from '@nestjs/common';
 import { JetonService } from './jeton.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { CreateJetonDto } from './dto/create-jeton.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateJetonDto } from './dto/update-jeton.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Жетоны')
 @Controller('jeton')
@@ -18,8 +30,12 @@ export class JetonController {
 
   @Post()
   @ApiOperation({ summary: 'Создание жетона' })
-  async create(@Body() createJetonDto: CreateJetonDto) {
-    return this.jetonService.create(createJetonDto);
+  @UseInterceptors(FileInterceptor('image'))
+  async create(
+    @Body() createJetonDto: CreateJetonDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.jetonService.create(createJetonDto, file);
   }
 
   @Patch(':id')
