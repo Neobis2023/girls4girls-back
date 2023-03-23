@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import {
   IsDate,
@@ -75,8 +75,9 @@ export class User extends BaseEntity {
   status: StatusEnum;
 
   @ManyToMany(() => Jeton, (jeton) => jeton.users)
+  @JoinTable()
   jetons: Jeton[];
 
-  @OneToMany(() => Likes, (likes) => likes.user)
+  @OneToMany(() => Likes, (likes) => likes.user,{cascade:true})
   likes: Likes[];
 }
