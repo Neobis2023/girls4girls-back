@@ -13,7 +13,8 @@ export class TrainingsService extends BaseService<Training> {
   constructor(
     @InjectRepository(Training)
     private readonly trainingRepo: Repository<Training>,
-    @InjectRepository(Image)
+    @InjectRepository(Image) 
+    private readonly imageRepo: Repository<Image>,
     private readonly imageService: ImageService,
   ) {
     super(trainingRepo);
@@ -21,8 +22,7 @@ export class TrainingsService extends BaseService<Training> {
 
   async getOneByTitle(title: string) {
     const findByTitle = await this.trainingRepo.findOne({ where: { title } });
-    console.log(findByTitle);
-    if (findByTitle === null) {
+    if (!findByTitle) {
       throw new BadRequestException(` Training with such title is not found!`);
     }
     return findByTitle;
@@ -35,7 +35,6 @@ export class TrainingsService extends BaseService<Training> {
     const images: Image[] = [];
     const image = await this.imageService.createImage(file);
     images.push(image);
-    console.log(image);
 
     const training = new Training();
     training.absorbFromDto(createTrainingDto);
