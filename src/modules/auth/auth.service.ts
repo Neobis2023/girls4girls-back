@@ -144,7 +144,18 @@ export class AuthService {
     if (phoneNumber === sentAccount.phoneNumber && code === sentAccount.code) {
       const account = await this.usersService.findOne({ phoneNumber });
       this.confirmCodesRepository.remove(sentAccount);
-      return this.usersService.activateUser(account.id);
+      this.usersService.activateUser(account.id);
+      const payload = {
+        email: account.email,
+        firstName: account.firstName,
+        lastName: account.lastName,
+        phoneNumber: account.phoneNumber,
+        role: account.role,
+      };
+
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
     }
 
     throw new BadRequestException('Incorrect code');
