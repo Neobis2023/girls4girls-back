@@ -1,7 +1,8 @@
-import { Controller, Get, Query, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Query, Delete, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -14,9 +15,12 @@ export class UserController {
     return this.userService.list(listParamsDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('profile')
   @ApiOperation({ summary: 'Получение профиля пользователя' })
   async getProfile(@Req() req) {
+    console.log(req.user);
     return this.userService.getProfile(req?.user?.id);
   }
 

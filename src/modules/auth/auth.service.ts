@@ -146,6 +146,7 @@ export class AuthService {
       this.confirmCodesRepository.remove(sentAccount);
       this.usersService.activateUser(account.id);
       const payload = {
+        id: account.id,
         email: account.email,
         firstName: account.firstName,
         lastName: account.lastName,
@@ -169,6 +170,7 @@ export class AuthService {
     }
 
     const payload = {
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -234,6 +236,7 @@ export class AuthService {
     await this.confirmCodesRepository.remove(savedConfirmCode);
 
     const payload = {
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
