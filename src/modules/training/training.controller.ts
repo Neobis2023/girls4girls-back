@@ -18,10 +18,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Roles } from '../auth/roles/roles.decorator';
-import { UserRoleEnum } from '../user/enums/user-role.enum';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { RoleGuard } from '../auth/roles/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 
@@ -32,8 +29,8 @@ export class TrainingsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Создание нового тренинга' })
   async create(
@@ -56,7 +53,7 @@ export class TrainingsController {
   @ApiOperation({ summary: 'Получить один тренинг по его названию' })
   async findOneById(@Param('title') title: string) {
     return await this.trainingsService.getOneByTitle(title);
-  }
+  } 
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

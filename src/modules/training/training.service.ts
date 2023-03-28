@@ -68,4 +68,5 @@ export class TrainingsService extends BaseService<Training> {
     }
     return `Training is not found!`;
   }
+
 }

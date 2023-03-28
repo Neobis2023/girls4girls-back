@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseDto } from 'src/base/dto/base.dto';
 import { Image } from 'src/modules/image/entities/image.entity';
+import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
+import { Mentor } from 'src/modules/mentor/entities/mentor.entity';
 
 export class CreateTrainingDto extends BaseDto {
   @ApiProperty({
@@ -33,9 +35,21 @@ export class CreateTrainingDto extends BaseDto {
   image: Image[];
 
   @ApiProperty({
+      description: 'Deadline of the training',
+      example: '2023-03-22T10:30:40.000Z',
+    })
+  eventDate: Date
+
+  @ApiProperty({
     description: 'Deadline of the training',
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
   endDate: Date;
+
+  @ApiProperty()
+  mentor: Mentor[]
+
+  @ApiProperty()
+  mentee: Mentee[]
 }

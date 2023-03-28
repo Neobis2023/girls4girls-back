@@ -27,5 +27,5 @@ export class Mentor extends BaseEntity {
   @ManyToMany(()=>Training,(training)=>training.mentor)
   @IsOptional()
   @JoinTable()
-  trainind: Training[]
+  training: Training[]
 }

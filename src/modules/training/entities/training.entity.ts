@@ -32,19 +32,22 @@ export class Training extends BaseEntity {
   @OneToMany(() => Image, (image) => image.training, {
     cascade: true,
   })
-  @JoinColumn({ name: 'id' })
   @IsOptional()
   image: Image[];
 
   @CreateDateColumn()
+  eventDate: Date
+
+  @CreateDateColumn()
   endDate?: Date;
 
-  @ManyToMany(()=>Mentor,(mentor)=>mentor.trainind)
+  @ManyToMany(()=>Mentor,(mentor)=>mentor.training)
   @IsOptional()
   @JoinTable()
   mentor: Mentor[]
 
-  @ManyToMany(()=>Mentee,(mentee)=>mentee.training)
-  @JoinTable()
+  @OneToMany(()=>Mentee,(mentee)=>mentee.training, {cascade:true})
   mentee: Mentee[]
+
+  
 }
