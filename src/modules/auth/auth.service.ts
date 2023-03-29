@@ -63,6 +63,10 @@ export class AuthService {
       }
     }
 
+    if (!user.confirmed) {
+      throw new UnauthorizedException('Account is not confirmed!');
+    }
+
     if (user && Hash.compare(loginDto.password, user.password)) {
       const { password, ...result } = user;
       return result;
@@ -88,10 +92,7 @@ export class AuthService {
 
     await this.saveConfirmCode(confirmCode);
 
-    const smsResponse = await this.smsNikitaService.sendSms(
-      createUserDto.phoneNumber,
-      codeToConfirm,
-    );
+    this.smsNikitaService.sendSms(createUserDto.phoneNumber, codeToConfirm);
 
     const newUser = await this.usersService.create(createUserDto);
 

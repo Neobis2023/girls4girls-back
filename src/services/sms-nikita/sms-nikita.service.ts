@@ -4,7 +4,8 @@ import axios from 'axios';
 @Injectable()
 export class SmsNikitaService {
   async sendSms(phoneNumber: string, code: string) {
-    const body = `<?xml version="1.0" encoding="UTF-8"?>
+    try {
+      const body = `<?xml version="1.0" encoding="UTF-8"?>
                    <message>
                     <login>Garnizon1</login>
                     <pwd>uo_bWwZD</pwd>
@@ -16,16 +17,18 @@ export class SmsNikitaService {
                       <phone>${phoneNumber}</phone>
                     </phones>
                   </message>`;
-    const response = await axios.post(
-      'https://smspro.nikita.kg/api/message',
-      body,
-      {
-        headers: {
-          'Content-Type': 'text/xml',
+      const response = await axios.post(
+        'https://smspro.nikita.kg/api/message',
+        body,
+        {
+          headers: {
+            'Content-Type': 'text/xml',
+          },
         },
-      },
-    );
-
-    return response;
+      );
+      return response;
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 }
