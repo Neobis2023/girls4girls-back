@@ -1,11 +1,15 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
+import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
+import { Mentor } from 'src/modules/mentor/entities/mentor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
 } from 'typeorm';
 
@@ -34,4 +38,13 @@ export class Training extends BaseEntity {
 
   @CreateDateColumn()
   endDate?: Date;
+
+  @ManyToMany(()=>Mentor,(mentor)=>mentor.trainind)
+  @IsOptional()
+  @JoinTable()
+  mentor: Mentor[]
+
+  @ManyToMany(()=>Mentee,(mentee)=>mentee.training)
+  @JoinTable()
+  mentee: Mentee[]
 }
