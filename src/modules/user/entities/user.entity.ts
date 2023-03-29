@@ -70,14 +70,26 @@ export class User extends BaseEntity {
   @Column({
     type: 'enum',
     enum: StatusEnum,
-    default: StatusEnum.PENDING,
+    default: StatusEnum.VISITOR,
   })
   status: StatusEnum;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  confirmed: boolean;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isDeleted: boolean;
 
   @ManyToMany(() => Jeton, (jeton) => jeton.users)
   @JoinTable()
   jetons: Jeton[];
 
-  @OneToMany(() => Likes, (likes) => likes.user,{cascade:true})
+  @OneToMany(() => Likes, (likes) => likes.user, { cascade: true })
   likes: Likes[];
 }
