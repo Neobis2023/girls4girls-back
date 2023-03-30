@@ -1,4 +1,6 @@
 export enum StatusEnum {
-  ACTIVE = 'active',
-  PENDING = 'pending',
+  VISITOR = 'VISITOR',
+  MENTEE = 'MENTEE',
+  MENTOR = 'MENTOR',
+  GRADUATE = 'GRADUATE',
 }

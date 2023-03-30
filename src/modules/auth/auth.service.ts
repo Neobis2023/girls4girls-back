@@ -63,6 +63,10 @@ export class AuthService {
       }
     }
 
+    if (!user.confirmed) {
+      throw new UnauthorizedException('Account is not confirmed!');
+    }
+
     if (user && Hash.compare(loginDto.password, user.password)) {
       const { password, ...result } = user;
       return result;
@@ -88,10 +92,7 @@ export class AuthService {
 
     await this.saveConfirmCode(confirmCode);
 
-    const smsResponse = await this.smsNikitaService.sendSms(
-      createUserDto.phoneNumber,
-      codeToConfirm,
-    );
+    this.smsNikitaService.sendSms(createUserDto.phoneNumber, codeToConfirm);
 
     const newUser = await this.usersService.create(createUserDto);
 
@@ -144,7 +145,19 @@ export class AuthService {
     if (phoneNumber === sentAccount.phoneNumber && code === sentAccount.code) {
       const account = await this.usersService.findOne({ phoneNumber });
       this.confirmCodesRepository.remove(sentAccount);
-      return this.usersService.activateUser(account.id);
+      this.usersService.activateUser(account.id);
+      const payload = {
+        id: account.id,
+        email: account.email,
+        firstName: account.firstName,
+        lastName: account.lastName,
+        phoneNumber: account.phoneNumber,
+        role: account.role,
+      };
+
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
     }
 
     throw new BadRequestException('Incorrect code');
@@ -158,6 +171,7 @@ export class AuthService {
     }
 
     const payload = {
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -223,6 +237,7 @@ export class AuthService {
     await this.confirmCodesRepository.remove(savedConfirmCode);
 
     const payload = {
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,

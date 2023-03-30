@@ -6,8 +6,8 @@ import { Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
 import { Hash } from '../../utils/hash.util';
 import { BaseService } from '../../base/base.service';
-import { StatusEnum } from './enums/user-status.enum';
 import { ChangePasswordDto } from '../auth/dto/change-password.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -19,10 +19,10 @@ export class UserService extends BaseService<User> {
 
   async create(createUserDto: CreateUserDto) {
     const userExists = await this.findOne({ email: createUserDto.email });
-    if (userExists && userExists.status === StatusEnum.ACTIVE) {
+    if (userExists && userExists.confirmed) {
       throw new BadRequestException('User already exists');
     }
-    if (userExists && userExists.status === StatusEnum.PENDING) {
+    if (userExists && !userExists.confirmed) {
       await this.usersRepository.remove(userExists);
     }
 
@@ -34,20 +34,21 @@ export class UserService extends BaseService<User> {
 
   async activateUser(id: number) {
     const user: User = await this.get(id);
-    if (user && user.status === StatusEnum.PENDING) {
-      user.status = StatusEnum.ACTIVE;
+    if (user && !user.confirmed) {
+      user.confirmed = true;
       return this.usersRepository.save(user);
     }
     throw new BadRequestException('Confirmation error');
   }
 
   async getProfile(id: number): Promise<User> {
+    console.log(id);
     const user = await this.usersRepository.findOne({
       where: { id },
       relations: ['jetons'],
     });
 
-    if (!user) {
+    if (!user || !id) {
       throw new BadRequestException('User not found');
     }
 
@@ -69,7 +70,7 @@ export class UserService extends BaseService<User> {
 
     if (!user) {
       return false;
-    } else if (user.status === StatusEnum.PENDING) {
+    } else if (!user.confirmed) {
       await this.usersRepository.remove(user);
       return false;
     }
@@ -88,5 +89,9 @@ export class UserService extends BaseService<User> {
   async changePassword(user: User, changePasswordDto: ChangePasswordDto) {
     user.password = Hash.make(changePasswordDto.newPassword);
     return this.usersRepository.save(user);
+  }
+
+  async updateProfile(updateProfileDto: UpdateProfileDto) {
+    return updateProfileDto;
   }
 }
