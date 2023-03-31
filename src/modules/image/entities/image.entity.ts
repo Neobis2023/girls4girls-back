@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../base/base.entity';
 import { IsString } from 'class-validator';
 import { Training } from 'src/modules/training/entities/training.entity';
 import { Forum } from 'src/modules/forum/entities/forum.entity';
+import { VideoBlog } from 'src/modules/video-blog/entities/video-blog.entity';
 
 @Entity()
 export class Image extends BaseEntity {
@@ -22,4 +23,9 @@ export class Image extends BaseEntity {
     onDelete: 'CASCADE',
   })
   forum: Forum[];
+
+  @ManyToOne(() => VideoBlog, (videoBlog) => videoBlog.lecturerImage, {
+    onDelete: 'CASCADE',
+  })
+  videoBlog: VideoBlog[];
 }
