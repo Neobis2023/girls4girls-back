@@ -1,50 +1,43 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
-import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
-import { Mentor } from 'src/modules/mentor/entities/mentor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
+import { TrainingRuEntity } from './training-ru.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity()
 export class Training extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
-  @IsNotEmpty()
-  @IsString()
   title: string;
 
   @Column({ type: 'text', nullable: true })
-  @IsNotEmpty()
   description: string;
 
   @Column({ type: 'text' })
-  @IsNotEmpty()
-  @IsString()
   address: string;
 
   @OneToMany(() => Image, (image) => image.training, {
     cascade: true,
   })
-  @JoinColumn({ name: 'id' })
-  @IsOptional()
   image: Image[];
+
+  @CreateDateColumn()
+  eventDate?: Date;
 
   @CreateDateColumn()
   endDate?: Date;
 
-  @ManyToMany(()=>Mentor,(mentor)=>mentor.trainind)
-  @IsOptional()
-  @JoinTable()
-  mentor: Mentor[]
+  @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
+  ru: TrainingRuEntity[];
 
-  @ManyToMany(()=>Mentee,(mentee)=>mentee.training)
+  @ManyToMany(() => User, (user) => user.training)
   @JoinTable()
-  mentee: Mentee[]
+  user: User[];
 }

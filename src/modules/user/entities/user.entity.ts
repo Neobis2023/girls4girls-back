@@ -1,4 +1,12 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import {
   IsDate,
@@ -12,6 +20,8 @@ import { UserGenderEnum } from '../enums/user-gender.enum';
 import { StatusEnum } from '../enums/user-status.enum';
 import { Jeton } from '../../jeton/entities/jeton.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
+import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
+import { Training } from 'src/modules/training/entities';
 
 @Entity()
 export class User extends BaseEntity {
@@ -92,4 +102,12 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Likes, (likes) => likes.user, { cascade: true })
   likes: Likes[];
+
+  @OneToOne(() => Mentee, (mentee) => mentee.mentee, { cascade: true })
+  @JoinColumn()
+  mentee: Mentee;
+
+  @ManyToMany(() => Training, (training) => training.user)
+  @JoinTable()
+  training: Training;
 }

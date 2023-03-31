@@ -37,5 +37,20 @@ export class CreateTrainingDto extends BaseDto {
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
+  eventDate: Date;
+
+  @ApiProperty({
+    description: 'Deadline of the training',
+    example: '2023-03-22T10:30:40.000Z',
+  })
+  @IsNotEmpty()
   endDate: Date;
+
+  @ApiProperty()
+  @IsOptional()
+  ru: {
+    training_id: number;
+    title: string;
+    description: string;
+  };
 }

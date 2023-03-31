@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
-import { CreateMenteeDto } from './dto/create-mentee.dto';
 import { Mentee } from './entities/mentee.entity';
+import { CreateMenteeDto } from './dto/create-mentee.dto';
 
 @Injectable()
 export class MenteeService extends BaseService<Mentee> {
@@ -14,7 +14,17 @@ export class MenteeService extends BaseService<Mentee> {
     super(menteeRepo);
   }
 
-  async addOne(menteeDto: CreateMenteeDto) {
-    return await this.menteeRepo.save(menteeDto);
-  }
+  async getAll(){
+    return await this.menteeRepo.find();
+}
+
+async getOne(mentee_id: number){
+    return await this.menteeRepo.findOne({where:{id: mentee_id}})
+}
+
+async deleteOne(mentee_id: number){
+    const mentee = await this.menteeRepo.findOne({where: {id: mentee_id}})
+    if(!mentee)throw new BadRequestException("Менти c таким id нет")
+    return await this.menteeRepo.remove(mentee)
+}
 }

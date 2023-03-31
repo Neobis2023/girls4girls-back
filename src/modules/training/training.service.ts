@@ -13,15 +13,18 @@ export class TrainingsService extends BaseService<Training> {
   constructor(
     @InjectRepository(Training)
     private readonly trainingRepo: Repository<Training>,
-    @InjectRepository(Image) 
+    @InjectRepository(Image)
     private readonly imageRepo: Repository<Image>,
     private readonly imageService: ImageService,
   ) {
     super(trainingRepo);
   }
 
-  async getOneByTitle(title: string) {
-    const findByTitle = await this.trainingRepo.findOne({ where: { title } });
+  getOneByTitle(title: string) {
+    const findByTitle = this.trainingRepo.findOne({
+      where: { title },
+      relations: ['image'],
+    });
     if (!findByTitle) {
       throw new BadRequestException(` Training with such title is not found!`);
     }
@@ -67,5 +70,19 @@ export class TrainingsService extends BaseService<Training> {
       return `Training is successfully removed! `;
     }
     return `Training is not found!`;
+  }
+
+  async pastList() {
+    return await this.repository
+      .createQueryBuilder('training')
+      .where('training.endDate < :currentDate', { currentDate: new Date() })
+      .getMany();
+  }
+
+  async listFuture() {
+    return await this.repository
+      .createQueryBuilder('training')
+      .where('training.endDate > :currentDate', { currentDate: new Date() })
+      .getMany();
   }
 }
