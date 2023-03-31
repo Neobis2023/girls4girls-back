@@ -62,24 +62,15 @@ export class TrainingsController {
           example: '2023-03-22T10:30:40.000Z',
           description: 'Дата проведения тренинга',
         },
-        endDate: {
+        time: {
           type: 'string',
-          format: 'date-time',
-          example: '2023-03-22T10:30:40.000Z',
-          description: 'Дедлайн подачи заявки',
+          example: '18:00',
+          description: 'Время тренинга',
         },
-        ru: {
-          type: 'object',
-          properties: {
-            title: {
-              type: 'string',
-              description: 'Title of the training in Russian version',
-            },
-            description: {
-              type: 'string',
-              description: 'Description of the training in Russian version',
-            },
-          },
+        location: {
+          type: 'string',
+          example: 'Наарынская область',
+          description: 'Локация тренинга',
         },
       },
     },
@@ -115,13 +106,15 @@ export class TrainingsController {
   @Get()
   @ApiOperation({ summary: 'Получить список всех тренингов' })
   async list(@Query() listParamsDto: ListParamsDto) {
-    return await this.trainingsService.list(listParamsDto);
+    return await this.trainingsService.listTrainings(listParamsDto);
   }
 
-  @Get(':title')
-  @ApiOperation({ summary: 'Получить один тренинг по его названию' })
-  findOneById(@Param('title') title: string) {
-    return this.trainingsService.getOneByTitle(title);
+  @Get(':id')
+  @ApiOperation({ summary: 'Получить трейнинг по id' })
+  async getById(@Param('id') id: number) {
+    return await this.trainingsService.getWithRelations(id, 'training', [
+      'images',
+    ]);
   }
 
   @UseGuards(JwtAuthGuard)
