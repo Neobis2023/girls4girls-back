@@ -34,6 +34,20 @@ export abstract class BaseService<T extends BaseEntity> {
       .getOne();
   }
 
+  async getWithRelations(id: number, entity: string, relations?: string[]) {
+    const query = this.repository
+      .createQueryBuilder(entity)
+      .where(`${entity}.id = :id`, { id });
+
+    if (relations) {
+      for (const relation of relations) {
+        query.leftJoinAndSelect(`${entity}.${relation}`, `${relation}`);
+      }
+    }
+
+    return await query.getOne();
+  }
+
   async listBy(
     where: string | ObjectLiteral | Brackets,
     listParamsDto: ListParamsDto,
