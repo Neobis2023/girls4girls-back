@@ -14,7 +14,7 @@ import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity()
 export class Training extends BaseEntity {
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar' })
   title: string;
 
   @Column({ type: 'text', nullable: true })
@@ -23,16 +23,28 @@ export class Training extends BaseEntity {
   @Column({ type: 'text' })
   address: string;
 
-  @OneToMany(() => Image, (image) => image.training, {
-    cascade: true,
-  })
-  image: Image[];
-
   @CreateDateColumn()
   eventDate?: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    nullable: true,
+  })
   endDate?: Date;
+
+  @Column({
+    nullable: true,
+  })
+  time: string;
+
+  @Column({
+    nullable: true,
+  })
+  location: string;
+
+  @OneToMany(() => Image, (image) => image.training, {
+    cascade: true,
+  })
+  images: Image[];
 
   @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
   ru: TrainingRuEntity[];

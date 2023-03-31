@@ -14,7 +14,7 @@ export class Image extends BaseEntity {
   @IsString()
   publicId: string;
 
-  @ManyToOne(() => Training, (training) => training.image, {
+  @ManyToOne(() => Training, (training) => training.images, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
