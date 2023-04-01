@@ -111,23 +111,17 @@ export class TrainingsController {
     return await this.trainingsService.listFuture()
   }
 
-  @Get(':id')
-  @ApiOperation({summary:'Возвращает тренинг по его ID'})
-  async getOneById(@Param('id') id : string){
-    return await this.trainingsService.get(+id)
-  }
-
   @Get()
   @ApiOperation({ summary: 'Получить список всех тренингов' })
   async list(@Query() listParamsDto: ListParamsDto) {
     return await this.trainingsService.list(listParamsDto);
   }
 
-  // @Get(':title')
-  // @ApiOperation({ summary: 'Получить один тренинг по его названию' })
-  // findOneById(@Param('title') title: string) {
-  //   return this.trainingsService.getOneByTitle(title);
-  // } 
+  @Get(':title')
+  @ApiOperation({ summary: 'Получить один тренинг по его названию' })
+  findOneById(@Param('title') title: string) {
+    return this.trainingsService.getOneByTitle(title);
+  } 
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

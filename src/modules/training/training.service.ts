@@ -21,14 +21,13 @@ export class TrainingsService extends BaseService<Training> {
     super(trainingRepo);
   }
 
-  // Этот код перестал работать 
-  // getOneByTitle(title: string) {
-  //   const findByTitle = this.trainingRepo.findOne({ where: { title } });
-  //   if (!findByTitle) {
-  //     throw new BadRequestException(` Training with such title is not found!`);
-  //   }
-  //   return findByTitle;
-  // }
+  getOneByTitle(title: string) {
+    const findByTitle = this.trainingRepo.findOne({ where: { title },relations:['image']});
+    if (!findByTitle) {
+      throw new BadRequestException(` Training with such title is not found!`);
+    }
+    return findByTitle;
+  }
 
   async getOneById(training_id:number){
     const training = await this.trainingRepo.findOne({
@@ -37,7 +36,6 @@ export class TrainingsService extends BaseService<Training> {
       console.log(training)
     if(!training)throw new NotFoundException('NOT FOUND!')
     return training
-
   }
 
   async createNewTraining(
