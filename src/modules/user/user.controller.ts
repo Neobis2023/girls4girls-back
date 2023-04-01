@@ -7,12 +7,22 @@ import {
   UseGuards,
   Patch,
   Body,
+  Post,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -22,7 +32,7 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: 'Получение списка пользователей' })
   async list(@Query() listParamsDto: ListParamsDto) {
-    return this.userService.list(listParamsDto);
+    return this.userService.listWithRelations(listParamsDto, 'user', ['image']);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -40,6 +50,27 @@ export class UserController {
   @ApiOperation({ summary: 'Изменение данных в пофиле' })
   async updateProfile(@Body() updateProfileDto: UpdateProfileDto) {
     return this.userService.updateProfile(updateProfileDto);
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Добавление фотки для профиля' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('image'))
+  addProfileImage(@Req() req: any, @UploadedFile() file: Express.Multer.File) {
+    return this.userService.addProfileImage(req.user?.id, file);
   }
 
   @Delete()

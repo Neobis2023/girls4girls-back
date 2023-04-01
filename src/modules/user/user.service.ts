@@ -8,11 +8,13 @@ import { Hash } from '../../utils/hash.util';
 import { BaseService } from '../../base/base.service';
 import { ChangePasswordDto } from '../auth/dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ImageService } from '../image/image.service';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    private readonly imageService: ImageService,
   ) {
     super(usersRepository);
   }
@@ -76,6 +78,19 @@ export class UserService extends BaseService<User> {
     }
 
     return true;
+  }
+
+  async addProfileImage(userId: number, file: Express.Multer.File) {
+    const user = await this.getWithRelations(userId, 'user', ['image']);
+
+    if (!file) {
+      throw new BadRequestException('Image is not provided!');
+    }
+
+    const image = await this.imageService.createImage(file);
+    user.image = image;
+    await this.usersRepository.save(user);
+    return this.getWithRelations(userId, 'user', ['image']);
   }
 
   async deleteUser(id: number) {
