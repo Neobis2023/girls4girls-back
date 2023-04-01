@@ -7,7 +7,6 @@ import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([Training, Image]),

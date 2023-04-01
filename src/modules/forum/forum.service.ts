@@ -14,14 +14,17 @@ export class ForumService extends BaseService<Forum> {
     @InjectRepository(Forum)
     private readonly forumRepo: Repository<Forum>,
     @InjectRepository(Image)
-    private readonly imageRepo:Repository<Image>,
+    private readonly imageRepo: Repository<Image>,
     private readonly imageService: ImageService,
   ) {
     super(forumRepo);
   }
 
   async getOneByTitle(title: string) {
-    const findByTitle = await this.forumRepo.findOne({ where: { title } });
+    const findByTitle = await this.forumRepo.findOne({
+      where: { title },
+      relations: ['image'],
+    });
     if (!findByTitle) {
       throw new BadRequestException(` Forum with such title is not found!`);
     }

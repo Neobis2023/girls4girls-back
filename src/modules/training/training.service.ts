@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { Image } from '../image/entities/image.entity';
 import { ImageService } from '../image/image.service';
-import { UpdateTrainingDto } from './dto';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { SearchTrainingDto } from './dto/search-training.dto';
 import { Training } from './entities/training.entity';
@@ -14,7 +13,7 @@ export class TrainingsService extends BaseService<Training> {
   constructor(
     @InjectRepository(Training)
     private readonly trainingRepo: Repository<Training>,
-    @InjectRepository(Image) 
+    @InjectRepository(Image)
     private readonly imageRepo: Repository<Image>,
     private readonly imageService: ImageService,
   ) {
@@ -22,20 +21,14 @@ export class TrainingsService extends BaseService<Training> {
   }
 
   getOneByTitle(title: string) {
-    const findByTitle = this.trainingRepo.findOne({ where: { title },relations:['image']});
+    const findByTitle = this.trainingRepo.findOne({
+      where: { title },
+      relations: ['image'],
+    });
     if (!findByTitle) {
       throw new BadRequestException(` Training with such title is not found!`);
     }
     return findByTitle;
-  }
-
-  async getOneById(training_id:number){
-    const training = await this.trainingRepo.findOne({
-      where:{id:training_id},
-      relations: ['image']})
-      console.log(training)
-    if(!training)throw new NotFoundException('NOT FOUND!')
-    return training
   }
 
   async createNewTraining(
@@ -79,18 +72,17 @@ export class TrainingsService extends BaseService<Training> {
     return `Training is not found!`;
   }
 
-  async pastList(){
+  async pastList() {
     return await this.repository
-    .createQueryBuilder('training')
-    .where('training.endDate < :currentDate', { currentDate: new Date() })
-    .getMany()
+      .createQueryBuilder('training')
+      .where('training.endDate < :currentDate', { currentDate: new Date() })
+      .getMany();
   }
 
-  async listFuture(){
+  async listFuture() {
     return await this.repository
-    .createQueryBuilder('training')
-    .where('training.endDate > :currentDate', { currentDate: new Date() })
-    .getMany()
+      .createQueryBuilder('training')
+      .where('training.endDate > :currentDate', { currentDate: new Date() })
+      .getMany();
   }
-
 }

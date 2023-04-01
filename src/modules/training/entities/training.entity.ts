@@ -1,4 +1,3 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
 import {
@@ -30,16 +29,15 @@ export class Training extends BaseEntity {
   image: Image[];
 
   @CreateDateColumn()
-  eventDate?: Date
+  eventDate?: Date;
 
   @CreateDateColumn()
   endDate?: Date;
 
-  @OneToOne(()=>TrainingRuEntity,(ru)=>ru.training)
-  ru:TrainingRuEntity[]
+  @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
+  ru: TrainingRuEntity[];
 
-  @ManyToMany(()=>User,(user)=>user.training)
+  @ManyToMany(() => User, (user) => user.training)
   @JoinTable()
-  user:User[]
-  
+  user: User[];
 }

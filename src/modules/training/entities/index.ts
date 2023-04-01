@@ -1,2 +1,2 @@
-export * from './training-ru.entity'
-export * from './training.entity'
+export * from './training-ru.entity';
+export * from './training.entity';

@@ -1,4 +1,12 @@
-import { Column, Entity,OneToOne,JoinColumn ,JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import {
   IsDate,
@@ -95,12 +103,11 @@ export class User extends BaseEntity {
   @OneToMany(() => Likes, (likes) => likes.user, { cascade: true })
   likes: Likes[];
 
-  @OneToOne(()=>Mentee,(mentee)=>mentee.mentee,{cascade:true})
+  @OneToOne(() => Mentee, (mentee) => mentee.mentee, { cascade: true })
   @JoinColumn()
-  mentee: Mentee
+  mentee: Mentee;
 
-  @ManyToMany(()=>Training,(training)=>training.user)
+  @ManyToMany(() => Training, (training) => training.user)
   @JoinTable()
-  training:Training
-  
+  training: Training;
 }

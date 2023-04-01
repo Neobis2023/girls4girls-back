@@ -1,4 +1,4 @@
-export enum Language{
-    KG = 'kg',
-    RU = 'ru'
+export enum Language {
+  KG = 'kg',
+  RU = 'ru',
 }

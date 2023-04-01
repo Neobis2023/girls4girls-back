@@ -9,7 +9,6 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
-  Put,
 } from '@nestjs/common';
 import { TrainingsService } from './training.service';
 import { CreateTrainingDto } from './dto/create-training.dto';
@@ -23,8 +22,6 @@ import {
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
-import { Training } from './entities/training.entity';
-import { UpdateTrainingDto } from './dto';
 
 @ApiTags('Тренинги')
 @Controller('training')
@@ -46,7 +43,8 @@ export class TrainingsController {
         },
         description: {
           type: 'string',
-          example: 'From high peaks to lush valleys, hard planes, and soft edges',
+          example:
+            'From high peaks to lush valleys, hard planes, and soft edges',
           description: 'Описание тренинга',
         },
         address: {
@@ -68,7 +66,7 @@ export class TrainingsController {
           type: 'string',
           format: 'date-time',
           example: '2023-03-22T10:30:40.000Z',
-          description: 'Дедлайн',
+          description: 'Дедлайн подачи заявки',
         },
         ru: {
           type: 'object',
@@ -98,17 +96,20 @@ export class TrainingsController {
     );
   }
 
-  
   @Get('past/trainings')
-  @ApiOperation({summary:'Получить прошедшие тренинги по дедлайну подачи заявки'})
-  async pastTraining(){
-    return await this.trainingsService.pastList()
+  @ApiOperation({
+    summary: 'Получить прошедшие тренинги по дедлайну подачи заявки',
+  })
+  async pastTraining() {
+    return await this.trainingsService.pastList();
   }
 
   @Get('future/trainings')
-  @ApiOperation({summary:'Получить будущие тренинги по дедлайну подачи заявки'})
-  async future(){
-    return await this.trainingsService.listFuture()
+  @ApiOperation({
+    summary: 'Получить будущие тренинги по дедлайну подачи заявки',
+  })
+  async future() {
+    return await this.trainingsService.listFuture();
   }
 
   @Get()
@@ -121,7 +122,7 @@ export class TrainingsController {
   @ApiOperation({ summary: 'Получить один тренинг по его названию' })
   findOneById(@Param('title') title: string) {
     return this.trainingsService.getOneByTitle(title);
-  } 
+  }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -130,5 +131,4 @@ export class TrainingsController {
   remove(@Param('id') training_id: number) {
     return this.trainingsService.deleteTraining(training_id);
   }
-
 }
