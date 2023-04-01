@@ -11,6 +11,8 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -18,6 +20,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
@@ -28,6 +31,7 @@ import { UserRoleEnum } from '../user/enums/user-role.enum';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlogService } from './video-blog.service';
+import { log } from 'console';
 
 @ApiTags('Видеоблоги')
 @Controller('video-blog')
@@ -43,14 +47,22 @@ export class VideoBlogController {
   @ApiOperation({ summary: 'Найти один видеоблог по id' })
   @Get(':id')
   async getBlog(@Param('id') id: number) {
-    return await this.videoBlogService.get(id);
+    return await this.videoBlogService.getWithRelations(id);
   }
 
   // @Roles(UserRoleEnum.ADMIN)
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
   @ApiOperation({ summary: 'Создать видеоблог' })
   @ApiConsumes('multipart/form-data')
+  // @ApiQuery({
+  //   name: 'caterories',
+  //   description: 'Array of category names',
+  //   isArray: true,
+  //   type: Number,
+  //   required: true,
+  // })
   @ApiBody({
     schema: {
       type: 'object',
@@ -64,17 +76,18 @@ export class VideoBlogController {
           type: 'string',
           format: 'binary',
         },
-        categoryId: { type: 'array', items: { type: 'number' } },
+        categories: { type: 'array', items: { type: 'number' } },
       },
     },
   })
   @UseInterceptors(FileInterceptor('lecturerImage'))
   @Post('/post')
-  async postBlog(@Req() req, @UploadedFile() file: Express.Multer.File) {
-    const blog = new CreateBlogDto();
-    Object.assign(blog, req.body);
-    blog.lecturerImage = file;
-    return await this.videoBlogService.createOne(blog);
+  async postBlog(@Body() body, @UploadedFile() file: Express.Multer.File) {
+    log(body);
+    // const blog = new CreateBlogDto();
+    // Object.assign(blog, req.body);
+    // blog.lecturerImage = file;
+    // return await this.videoBlogService.createOne(blog);
   }
 
   // @Roles(UserRoleEnum.ADMIN)

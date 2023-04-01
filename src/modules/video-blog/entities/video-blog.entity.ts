@@ -54,6 +54,7 @@ export class VideoBlog extends BaseEntity {
   likes: Likes[];
 
   @ManyToMany(() => Categories, (category) => category.videoBlog)
+  @JoinColumn({ name: 'name' })
   @IsNotEmpty()
   category: Categories[];
 }

@@ -14,21 +14,37 @@ export class VideoBlogService extends BaseService<VideoBlog> {
   constructor(
     @InjectRepository(VideoBlog)
     private readonly blogRepo: Repository<VideoBlog>,
+    @InjectRepository(Categories)
+    private readonly categoryRepo: Repository<Categories>,
     private readonly imageService: ImageService,
   ) {
     super(blogRepo);
   }
 
+  async getWithRelations(id: number) {
+    return await this.blogRepo.findOne({
+      where: { id: id },
+      relations: ['lecturerImage', 'category'],
+    });
+  }
+
   async createOne(blog: CreateBlogDto) {
+    const categoryNames = blog.categoriesNames;
     const images = [];
-    const image = await this.imageService.createImage(blog.lecturerImage);
-    console.log(image);
-    images.push(image);
-    const videoBlog = new VideoBlog();
-    Object.assign(videoBlog, blog);
-    videoBlog.lecturerImage = images;
-    console.log(videoBlog);
-    return await this.blogRepo.save(videoBlog);
+    // const categories = await this.categoryRepo
+    //   .createQueryBuilder('categories')
+    //   .where('categor.name IN (:...categoryNames)', { categoryNames })
+    //   .getMany();
+    console.log(blog);
+    // const image = await this.imageService.createImage(blog.lecturerImage);
+    // console.log(image);
+    // images.push(image);
+    // const videoBlog = new VideoBlog();
+    // Object.assign(videoBlog, blog);
+    // videoBlog.lecturerImage = images;
+    // videoBlog.category = categories;
+    // console.log(videoBlog);
+    // return await this.blogRepo.save(videoBlog);
   }
 
   //ещё не готово
