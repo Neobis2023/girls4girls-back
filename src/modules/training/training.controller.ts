@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { TrainingsService } from './training.service';
-import { CreateTrainingDto } from './dto/create-training.dto';
+import { CreateTrainingDto } from './dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,6 +22,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
+import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 
 @ApiTags('Тренинги')
 @Controller('training')
@@ -87,6 +88,20 @@ export class TrainingsController {
     );
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Получить список всех тренингов' })
+  async list(@Query() listParamsDto: ListParamsDto) {
+    return await this.trainingsService.listTrainings(listParamsDto);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Получить трейнинг по id' })
+  async getById(@Param('id') id: number) {
+    return await this.trainingsService.getWithRelations(id, 'training', [
+      'images',
+    ]);
+  }
+
   @Get('past/trainings')
   @ApiOperation({
     summary: 'Получить прошедшие тренинги по дедлайну подачи заявки',
@@ -103,25 +118,27 @@ export class TrainingsController {
     return await this.trainingsService.listFuture();
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Получить список всех тренингов' })
-  async list(@Query() listParamsDto: ListParamsDto) {
-    return await this.trainingsService.listTrainings(listParamsDto);
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Получить трейнинг по id' })
-  async getById(@Param('id') id: number) {
-    return await this.trainingsService.getWithRelations(id, 'training', [
-      'images',
-    ]);
-  }
-
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Удаление тренинга по ID' })
   remove(@Param('id') training_id: number) {
     return this.trainingsService.deleteTraining(training_id);
+  }
+
+  @Post('apply')
+  @ApiOperation({ summary: 'Подать заявку на тренинг' })
+  async applyUserToTraining(
+    @Query() applyUserToTrainingDto: ApplyUserToTrainingDto,
+  ) {
+    return this.trainingsService.applyUserToTraining(applyUserToTrainingDto);
+  }
+
+  @Get('apply/:id')
+  @ApiOperation({
+    summary: 'Получить список подавших заявки пользователей по id тренинга',
+  })
+  async getUserApplies(@Param('id') id: number) {
+    return 'This action will return list of applied users';
   }
 }

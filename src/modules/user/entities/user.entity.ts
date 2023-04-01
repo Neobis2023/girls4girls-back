@@ -22,6 +22,7 @@ import { Jeton } from '../../jeton/entities/jeton.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
 import { Training } from 'src/modules/training/entities';
+import { UserToTraining } from '../../training/entities/users-to-training.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -107,7 +108,6 @@ export class User extends BaseEntity {
   @JoinColumn()
   mentee: Mentee;
 
-  @ManyToMany(() => Training, (training) => training.user)
-  @JoinTable()
-  training: Training;
+  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user)
+  userToTraining: UserToTraining[];
 }

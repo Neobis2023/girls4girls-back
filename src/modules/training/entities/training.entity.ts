@@ -5,12 +5,11 @@ import {
   CreateDateColumn,
   Entity,
   JoinTable,
-  ManyToMany,
   OneToMany,
   OneToOne,
 } from 'typeorm';
 import { TrainingRuEntity } from './training-ru.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { UserToTraining } from './users-to-training.entity';
 
 @Entity()
 export class Training extends BaseEntity {
@@ -49,7 +48,7 @@ export class Training extends BaseEntity {
   @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
   ru: TrainingRuEntity[];
 
-  @ManyToMany(() => User, (user) => user.training)
+  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.training)
   @JoinTable()
-  user: User[];
+  userToTraining: UserToTraining[];
 }

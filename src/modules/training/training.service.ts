@@ -9,6 +9,9 @@ import { SearchTrainingDto } from './dto';
 import { Training } from './entities';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { ListDto } from '../../base/dto/list.dto';
+import { UserToTraining } from './entities/users-to-training.entity';
+import { UserService } from '../user/user.service';
+import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -17,7 +20,10 @@ export class TrainingsService extends BaseService<Training> {
     private readonly trainingRepo: Repository<Training>,
     @InjectRepository(Image)
     private readonly imageRepo: Repository<Image>,
+    @InjectRepository(UserToTraining)
+    private readonly userToTraining: Repository<UserToTraining>,
     private readonly imageService: ImageService,
+    private readonly userService: UserService,
   ) {
     super(trainingRepo);
   }
@@ -98,4 +104,19 @@ export class TrainingsService extends BaseService<Training> {
       .where('training.endDate > :currentDate', { currentDate: new Date() })
       .getMany();
   }
+
+  async applyUserToTraining(applyUserToTrainingDto: ApplyUserToTrainingDto) {
+    const { userId, trainingId } = applyUserToTrainingDto;
+    const user = await this.userService.get(userId);
+    const training = await this.get(trainingId);
+
+    return {
+      user,
+      training,
+    };
+  }
+
+  // async findAppliedUserById(userId: number) {
+  //   const appliedUser =
+  // }
 }
