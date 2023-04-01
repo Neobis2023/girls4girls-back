@@ -14,7 +14,7 @@ export class ImageController {
   constructor(private readonly imagesService: ImageService) {}
 
   @Post()
-  @ApiOperation({ description: 'Для отправки изображений' })
+  @ApiOperation({ summary: 'Для отправки изображений' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {

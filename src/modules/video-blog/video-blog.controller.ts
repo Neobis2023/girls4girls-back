@@ -7,9 +7,19 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { RoleGuard } from '../auth/roles/role.guard';
@@ -32,27 +42,49 @@ export class VideoBlogController {
 
   @ApiOperation({ summary: 'Найти один видеоблог по id' })
   @Get(':id')
-  async getBlog(@Param('id') id: string) {
-    return await this.videoBlogService.get(+id);
+  async getBlog(@Param('id') id: number) {
+    return await this.videoBlogService.get(id);
   }
 
   // @Roles(UserRoleEnum.ADMIN)
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @ApiBearerAuth()
   @ApiOperation({ summary: 'Создать видеоблог' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        videoUrl: { type: 'string' },
+        title: { type: 'string' },
+        description: { type: 'string' },
+        lecturerName: { type: 'string' },
+        lecturerInfo: { type: 'string' },
+        lecturerImage: {
+          type: 'string',
+          format: 'binary',
+        },
+        categoryId: { type: 'array', items: { type: 'number' } },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('lecturerImage'))
   @Post('/post')
-  async postBlog(@Body() blog: CreateBlogDto) {
+  async postBlog(@Req() req, @UploadedFile() file: Express.Multer.File) {
+    const blog = new CreateBlogDto();
+    Object.assign(blog, req.body);
+    blog.lecturerImage = file;
     return await this.videoBlogService.createOne(blog);
   }
 
   // @Roles(UserRoleEnum.ADMIN)
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @ApiBearerAuth()
-  @ApiOperation({ summary: 'Изменить содержание видео блога' })
-  @Put('/put/:id')
-  async editBlog(@Param('id') id: string, @Body() newBlog: EditBlogDto) {
-    return await this.videoBlogService.editOne(+id, newBlog);
-  }
+  // @ApiOperation({ summary: 'Изменить содержание видео блога' })
+  // @Put('/put/:id')
+  // async editBlog(@Param('id') id: string, @Body() newBlog: EditBlogDto) {
+  //   return await this.videoBlogService.editOne(+id, newBlog);
+  // }
 
   // @Roles(UserRoleEnum.ADMIN)
   // @UseGuards(JwtAuthGuard, RoleGuard)
