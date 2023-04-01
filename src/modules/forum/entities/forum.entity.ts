@@ -27,5 +27,8 @@ export class Forum extends BaseEntity {
   image: Image[];
 
   @CreateDateColumn()
+  eventDate?:Date
+
+  @CreateDateColumn()
   endDate?: Date;
 }

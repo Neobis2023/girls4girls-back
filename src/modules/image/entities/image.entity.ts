@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 import { Training } from 'src/modules/training/entities/training.entity';
 import { Forum } from 'src/modules/forum/entities/forum.entity';
 
-@Entity()
+@Entity('images')
 export class Image extends BaseEntity {
   @Column()
   @IsString()

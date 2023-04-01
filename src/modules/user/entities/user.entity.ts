@@ -13,6 +13,7 @@ import { StatusEnum } from '../enums/user-status.enum';
 import { Jeton } from '../../jeton/entities/jeton.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
+import { Training } from 'src/modules/training/entities';
 
 @Entity()
 export class User extends BaseEntity {
@@ -97,4 +98,9 @@ export class User extends BaseEntity {
   @OneToOne(()=>Mentee,(mentee)=>mentee.mentee,{cascade:true})
   @JoinColumn()
   mentee: Mentee
+
+  @ManyToMany(()=>Training,(training)=>training.user)
+  @JoinTable()
+  training:Training
+  
 }

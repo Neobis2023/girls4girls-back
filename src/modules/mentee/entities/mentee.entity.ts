@@ -16,7 +16,7 @@ export class Mentee extends BaseEntity {
   @IsNotEmpty()
   mentor: Mentor;
 
-  @ManyToOne(()=>Training,(training)=>training.mentee)
-  @JoinColumn()
-  training: Training
+  // @ManyToOne(()=>Training,(training)=>training.mentee)
+  // @JoinColumn()
+  // training: Training
 }

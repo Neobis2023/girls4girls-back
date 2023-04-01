@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { Image } from '../image/entities/image.entity';
 import { ImageService } from '../image/image.service';
+import { UpdateTrainingDto } from './dto';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { SearchTrainingDto } from './dto/search-training.dto';
 import { Training } from './entities/training.entity';
@@ -20,12 +21,23 @@ export class TrainingsService extends BaseService<Training> {
     super(trainingRepo);
   }
 
-  async getOneByTitle(title: string) {
-    const findByTitle = await this.trainingRepo.findOne({ where: { title } });
-    if (!findByTitle) {
-      throw new BadRequestException(` Training with such title is not found!`);
-    }
-    return findByTitle;
+  // Этот код перестал работать 
+  // getOneByTitle(title: string) {
+  //   const findByTitle = this.trainingRepo.findOne({ where: { title } });
+  //   if (!findByTitle) {
+  //     throw new BadRequestException(` Training with such title is not found!`);
+  //   }
+  //   return findByTitle;
+  // }
+
+  async getOneById(training_id:number){
+    const training = await this.trainingRepo.findOne({
+      where:{id:training_id},
+      relations: ['image']})
+      console.log(training)
+    if(!training)throw new NotFoundException('NOT FOUND!')
+    return training
+
   }
 
   async createNewTraining(
@@ -67,6 +79,20 @@ export class TrainingsService extends BaseService<Training> {
       return `Training is successfully removed! `;
     }
     return `Training is not found!`;
+  }
+
+  async pastList(){
+    return await this.repository
+    .createQueryBuilder('training')
+    .where('training.endDate < :currentDate', { currentDate: new Date() })
+    .getMany()
+  }
+
+  async listFuture(){
+    return await this.repository
+    .createQueryBuilder('training')
+    .where('training.endDate > :currentDate', { currentDate: new Date() })
+    .getMany()
   }
 
 }
