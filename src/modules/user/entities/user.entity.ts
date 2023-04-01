@@ -22,6 +22,7 @@ import { Jeton } from '../../jeton/entities/jeton.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
 import { Training } from 'src/modules/training/entities';
+import { Image } from '../../image/entities/image.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -95,6 +96,10 @@ export class User extends BaseEntity {
     default: false,
   })
   isDeleted: boolean;
+
+  @OneToOne(() => Image, { cascade: true })
+  @JoinColumn()
+  image: Image;
 
   @ManyToMany(() => Jeton, (jeton) => jeton.users)
   @JoinTable()
