@@ -38,13 +38,11 @@ export class CreateBlogDto extends BaseDto {
   @IsString()
   lecturerInfo: string;
 
-  @ApiProperty({ example: 'здесь будет ссылка на фото' })
-  @IsNotEmpty()
-  @IsString()
+  @ApiProperty()
   lecturerImage: Express.Multer.File;
 
   @ApiProperty({ example: ['hEaLTh', 'Business'], type: String, isArray: true })
   @IsNotEmpty()
-  @IsArray()
-  categoriesNames: string[];
+  @IsString()
+  category: string;
 }

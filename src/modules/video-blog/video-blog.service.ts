@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { Categories } from '../categories/entities/category.entity';
-import { Image } from '../image/entities/image.entity';
 import { ImageService } from '../image/image.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlog } from './entities/video-blog.entity';
+import { log } from 'console';
 
 @Injectable()
 export class VideoBlogService extends BaseService<VideoBlog> {
@@ -21,43 +21,46 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     super(blogRepo);
   }
 
-  async getWithRelations(id: number) {
-    return await this.blogRepo.findOne({
-      where: { id: id },
-      relations: ['lecturerImage', 'category'],
-    });
-  }
-
   async createOne(blog: CreateBlogDto) {
-    const categoryNames = blog.categoriesNames;
-    const images = [];
-    // const categories = await this.categoryRepo
-    //   .createQueryBuilder('categories')
-    //   .where('categor.name IN (:...categoryNames)', { categoryNames })
-    //   .getMany();
-    console.log(blog);
-    // const image = await this.imageService.createImage(blog.lecturerImage);
-    // console.log(image);
-    // images.push(image);
-    // const videoBlog = new VideoBlog();
-    // Object.assign(videoBlog, blog);
-    // videoBlog.lecturerImage = images;
-    // videoBlog.category = categories;
-    // console.log(videoBlog);
-    // return await this.blogRepo.save(videoBlog);
+    const videoBlog = new VideoBlog();
+    const category = await this.categoryRepo.findOne({
+      where: { name: blog.category },
+    });
+    if (!category)
+      throw new BadRequestException('Введите название категории правильно');
+    const image = await this.imageService.createImage(blog.lecturerImage);
+    Object.assign(videoBlog, blog);
+    videoBlog.lecturerImage = image;
+    videoBlog.category = category;
+    console.log(videoBlog);
+    return await this.blogRepo.save(videoBlog);
   }
 
-  //ещё не готово
-  // async editOne(id: number, newBlog: EditBlogDto) {
-  //   const blog = await this.blogRepo.findOne({ where: { id: id } });
-  //   if (!blog)
-  //     throw new BadRequestException(
-  //       'Видео с таким id отсутствует в Базе данных',
-  //     );
-
-  //   Object.assign(blog, newBlog);
-  //   return await this.blogRepo.save(blog);
-  // }
+  async editOne(id: number, newBlog: EditBlogDto) {
+    const blog = await this.blogRepo.findOne({
+      where: { id: id },
+      relations: ['category', 'lecturerImage'],
+    });
+    if (!blog)
+      throw new BadRequestException(
+        'Видео с таким id отсутствует в Базе данных',
+      );
+    const category = await this.categoryRepo.findOne({
+      where: { name: newBlog.category },
+    });
+    if (!category)
+      throw new BadRequestException('Введите название категории правильно');
+    const newImage = await this.imageService.createImage(newBlog.lecturerImage);
+    blog.category = category;
+    blog.videoUrl = newBlog.videoUrl;
+    blog.title = newBlog.title;
+    blog.lecturerImage = newImage;
+    blog.description = newBlog.description;
+    blog.lecturerInfo = newBlog.lecturerInfo;
+    blog.lecturerName = newBlog.lecturerName;
+    log(blog);
+    return await this.blogRepo.save(blog);
+  }
 
   async deleteOne(blogId: number) {
     const blog = await this.get(blogId);

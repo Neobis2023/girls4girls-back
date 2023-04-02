@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -47,7 +48,10 @@ export class VideoBlogController {
   @ApiOperation({ summary: 'Найти один видеоблог по id' })
   @Get(':id')
   async getBlog(@Param('id') id: number) {
-    return await this.videoBlogService.getWithRelations(id);
+    return await this.videoBlogService.getWithRelations(id, 'VideoBlog', [
+      'lecturerImage',
+      'category',
+    ]);
   }
 
   // @Roles(UserRoleEnum.ADMIN)
@@ -56,48 +60,71 @@ export class VideoBlogController {
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: 'Создать видеоблог' })
   @ApiConsumes('multipart/form-data')
-  // @ApiQuery({
-  //   name: 'caterories',
-  //   description: 'Array of category names',
-  //   isArray: true,
-  //   type: Number,
-  //   required: true,
-  // })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        videoUrl: { type: 'string' },
-        title: { type: 'string' },
-        description: { type: 'string' },
-        lecturerName: { type: 'string' },
-        lecturerInfo: { type: 'string' },
+        videoUrl: { type: 'string', example: 'https://youtu.be/dQw4w9WgXcQ' },
+        title: { type: 'string', example: 'Название видео ' },
+        description: { type: 'string', example: 'Это лекция про здоровье' },
+        lecturerName: { type: 'string', example: 'Имя Фамилия' },
+        lecturerInfo: { type: 'string', example: 'Ментор' },
         lecturerImage: {
           type: 'string',
           format: 'binary',
         },
-        categories: { type: 'array', items: { type: 'number' } },
+        category: { type: 'string', example: 'Health' },
       },
     },
   })
   @UseInterceptors(FileInterceptor('lecturerImage'))
   @Post('/post')
-  async postBlog(@Body() body, @UploadedFile() file: Express.Multer.File) {
-    log(body);
-    // const blog = new CreateBlogDto();
-    // Object.assign(blog, req.body);
-    // blog.lecturerImage = file;
-    // return await this.videoBlogService.createOne(blog);
+  async postBlog(
+    @Body() body: CreateBlogDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('Image should not be empty');
+    const blog = new CreateBlogDto();
+    blog.lecturerImage = file;
+    Object.assign(blog, body);
+    return await this.videoBlogService.createOne(blog);
   }
 
   // @Roles(UserRoleEnum.ADMIN)
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'Изменить содержание видео блога' })
-  // @Put('/put/:id')
-  // async editBlog(@Param('id') id: string, @Body() newBlog: EditBlogDto) {
-  //   return await this.videoBlogService.editOne(+id, newBlog);
-  // }
+  @ApiOperation({ summary: 'Изменить содержание видео блога' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('lecturerImage'))
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        videoUrl: { type: 'string', example: 'https://youtu.be/JojwHc1MKag' },
+        title: { type: 'string', example: 'Новое название видео ' },
+        description: {
+          type: 'string',
+          example: 'Это лекция про тайм менеджмент',
+        },
+        lecturerName: { type: 'string', example: 'Новое Имя и Фамилия' },
+        lecturerInfo: { type: 'string', example: 'Бизнес-вумен' },
+        lecturerImage: {
+          type: 'string',
+          format: 'binary',
+        },
+        category: { type: 'string', example: 'Business' },
+      },
+    },
+  })
+  @Put('/put/:id')
+  async editBlog(
+    @Param('id') id: number,
+    @Body() newBlog: EditBlogDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    newBlog.lecturerImage = file;
+    return await this.videoBlogService.editOne(id, newBlog);
+  }
 
   // @Roles(UserRoleEnum.ADMIN)
   // @UseGuards(JwtAuthGuard, RoleGuard)
