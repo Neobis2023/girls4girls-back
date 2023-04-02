@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TrainingsService } from './training.service';
 import { TrainingsController } from './training.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Training } from './entities/training.entity';
+import { Training } from './entities';
 import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';

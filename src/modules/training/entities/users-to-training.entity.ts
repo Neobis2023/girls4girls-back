@@ -14,9 +14,11 @@ export class UserToTraining extends BaseEntity {
   })
   applyStatus: ApplyStatus;
 
-  @ManyToOne(() => User, (user) => user.userToTraining)
+  @ManyToOne(() => User, (user) => user.userToTraining, { cascade: true })
   user: User;
 
-  @ManyToOne(() => Training, (training) => training.userToTraining)
+  @ManyToOne(() => Training, (training) => training.userToTraining, {
+    cascade: true,
+  })
   training: Training;
 }

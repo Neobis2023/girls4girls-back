@@ -16,6 +16,7 @@ import { JetonModule } from './modules/jeton/jeton.module';
 import { LikeModule } from './modules/likes/like.module';
 import { VideoBlogModule } from './modules/video-blog/video-blog.module';
 import { CategoryModule } from './modules/categories/category.module';
+import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { CategoryModule } from './modules/categories/category.module';
     VideoBlogModule,
     LikeModule,
     CategoryModule,
+    QuestionnaireModule,
   ],
   controllers: [],
 })

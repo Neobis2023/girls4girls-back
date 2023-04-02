@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
@@ -12,6 +12,7 @@ import { ListDto } from '../../base/dto/list.dto';
 import { UserToTraining } from './entities/users-to-training.entity';
 import { UserService } from '../user/user.service';
 import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
+import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -21,7 +22,7 @@ export class TrainingsService extends BaseService<Training> {
     @InjectRepository(Image)
     private readonly imageRepo: Repository<Image>,
     @InjectRepository(UserToTraining)
-    private readonly userToTraining: Repository<UserToTraining>,
+    private readonly userToTrainingRepository: Repository<UserToTraining>,
     private readonly imageService: ImageService,
     private readonly userService: UserService,
   ) {
@@ -91,32 +92,76 @@ export class TrainingsService extends BaseService<Training> {
     return `Training is not found!`;
   }
 
-  async pastList() {
-    return await this.repository
-      .createQueryBuilder('training')
-      .where('training.endDate < :currentDate', { currentDate: new Date() })
-      .getMany();
-  }
-
-  async listFuture() {
-    return await this.repository
-      .createQueryBuilder('training')
-      .where('training.endDate > :currentDate', { currentDate: new Date() })
-      .getMany();
-  }
-
   async applyUserToTraining(applyUserToTrainingDto: ApplyUserToTrainingDto) {
     const { userId, trainingId } = applyUserToTrainingDto;
     const user = await this.userService.get(userId);
     const training = await this.get(trainingId);
+    if (!training) {
+      throw new BadRequestException(
+        `Training with ${trainingId} is not found!`,
+      );
+    }
 
-    return {
-      user,
-      training,
-    };
+    const isUserApplied = await this.findAppliedUserById(trainingId, userId);
+    if (isUserApplied) {
+      throw new BadRequestException(
+        `User with id ${userId} already applied to this training!`,
+      );
+    }
+
+    const apply = new UserToTraining();
+    apply.user = user;
+    apply.training = training;
+    return await this.userToTrainingRepository.save(apply);
   }
 
-  // async findAppliedUserById(userId: number) {
-  //   const appliedUser =
-  // }
+  async getAppliedUsers(trainingId: number): Promise<UserToTraining[]> {
+    const training: Training = await this.trainingRepo.findOne({
+      where: {
+        id: trainingId,
+      },
+      relations: [
+        'userToTraining',
+        'userToTraining.user',
+        'userToTraining.user.image',
+      ],
+    });
+
+    if (!training) {
+      throw new BadRequestException(
+        `Training with id ${trainingId} is not found!`,
+      );
+    }
+
+    return training.userToTraining;
+  }
+
+  async updateUserApplication(
+    updateUserApplication: UpdateUserApplicationDto,
+  ): Promise<UserToTraining> {
+    const { applicationId, applyStatus } = updateUserApplication;
+    const application = await this.userToTrainingRepository.findOneBy({
+      id: applicationId,
+    });
+
+    if (!application) {
+      throw new BadRequestException(
+        `Application to training with id ${applicationId} is not found!`,
+      );
+    }
+
+    application.applyStatus = applyStatus;
+    return this.userToTrainingRepository.save(application);
+  }
+
+  async findAppliedUserById(trainingId: number, userId: number) {
+    const appliedUser = await this.userToTrainingRepository.findOne({
+      where: {
+        training: { id: trainingId },
+        user: { id: userId },
+      },
+    });
+
+    return appliedUser;
+  }
 }

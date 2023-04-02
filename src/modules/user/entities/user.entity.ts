@@ -21,8 +21,9 @@ import { StatusEnum } from '../enums/user-status.enum';
 import { Jeton } from '../../jeton/entities/jeton.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
-import { Training } from 'src/modules/training/entities';
+import { Image } from '../../image/entities/image.entity';
 import { UserToTraining } from '../../training/entities/users-to-training.entity';
+import { Response } from '../../questionnaire/entities/response.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -97,6 +98,10 @@ export class User extends BaseEntity {
   })
   isDeleted: boolean;
 
+  @OneToOne(() => Image, { cascade: true })
+  @JoinColumn()
+  image: Image;
+
   @ManyToMany(() => Jeton, (jeton) => jeton.users)
   @JoinTable()
   jetons: Jeton[];
@@ -110,4 +115,8 @@ export class User extends BaseEntity {
 
   @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user)
   userToTraining: UserToTraining[];
+
+  @OneToMany(() => Response, (response) => response.user)
+  @JoinColumn()
+  response: Response[];
 }

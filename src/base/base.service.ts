@@ -27,6 +27,38 @@ export abstract class BaseService<T extends BaseEntity> {
     });
   }
 
+  async listWithRelations(
+    listParamsDto: ListParamsDto,
+    entity: string,
+    relations?: string[],
+  ) {
+    const query = this.repository.createQueryBuilder(entity);
+
+    if (relations) {
+      for (const relation of relations) {
+        query.leftJoinAndSelect(`${entity}.${relation}`, `${relation}`);
+      }
+    }
+
+    const array = await query
+      .limit(listParamsDto.limit)
+      .offset(listParamsDto.countOffset())
+      .orderBy(
+        `${entity}.${listParamsDto.getOrderedField()}`,
+        listParamsDto.order,
+      )
+      .getMany();
+
+    const itemsCount = await this.repository.createQueryBuilder().getCount();
+    return new ListDto(array, {
+      page: listParamsDto.page,
+      itemsCount,
+      limit: listParamsDto.limit,
+      order: listParamsDto.order,
+      orderField: listParamsDto.orderField,
+    });
+  }
+
   async get(id: number): Promise<T | null> {
     return this.repository
       .createQueryBuilder()
