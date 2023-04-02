@@ -37,5 +37,12 @@ export class CreateForumDto extends BaseDto {
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
+  eventDate: Date;
+
+  @ApiProperty({
+    description: 'Deadline of the forum',
+    example: '2023-03-22T10:30:40.000Z',
+  })
+  @IsNotEmpty()
   endDate: Date;
 }

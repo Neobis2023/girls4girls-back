@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { IsString } from 'class-validator';
 import { Training } from 'src/modules/training/entities/training.entity';
@@ -14,13 +14,16 @@ export class Image extends BaseEntity {
   @IsString()
   publicId: string;
 
-  @ManyToOne(() => Training, (training) => training.image, {
+  @ManyToOne(() => Training, (training) => training.images, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
+  @JoinColumn({ name: 'trainingId' })
   training: Training[];
 
   @ManyToOne(() => Forum, (forum) => forum.image, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   forum: Forum[];
 

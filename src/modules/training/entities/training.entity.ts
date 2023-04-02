@@ -1,50 +1,55 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from 'src/base/base.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
-import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
-import { Mentor } from 'src/modules/mentor/entities/mentor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
+import { TrainingRuEntity } from './training-ru.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity()
 export class Training extends BaseEntity {
-  @Column({ type: 'varchar', nullable: true })
-  @IsNotEmpty()
-  @IsString()
+  @Column({ type: 'varchar' })
   title: string;
 
   @Column({ type: 'text', nullable: true })
-  @IsNotEmpty()
   description: string;
 
   @Column({ type: 'text' })
-  @IsNotEmpty()
-  @IsString()
   address: string;
+
+  @CreateDateColumn()
+  eventDate?: Date;
+
+  @CreateDateColumn({
+    nullable: true,
+  })
+  endDate?: Date;
+
+  @Column({
+    nullable: true,
+  })
+  time: string;
+
+  @Column({
+    nullable: true,
+  })
+  location: string;
 
   @OneToMany(() => Image, (image) => image.training, {
     cascade: true,
   })
-  @JoinColumn({ name: 'id' })
-  @IsOptional()
-  image: Image[];
+  images: Image[];
 
-  @CreateDateColumn()
-  endDate?: Date;
+  @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
+  ru: TrainingRuEntity[];
 
-  @ManyToMany(()=>Mentor,(mentor)=>mentor.trainind)
-  @IsOptional()
+  @ManyToMany(() => User, (user) => user.training)
   @JoinTable()
-  mentor: Mentor[]
-
-  @ManyToMany(()=>Mentee,(mentee)=>mentee.training)
-  @JoinTable()
-  mentee: Mentee[]
+  user: User[];
 }

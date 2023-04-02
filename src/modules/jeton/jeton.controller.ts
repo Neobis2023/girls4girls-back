@@ -8,7 +8,7 @@ import {
   Post,
   Query,
   UploadedFile,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { JetonService } from './jeton.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';

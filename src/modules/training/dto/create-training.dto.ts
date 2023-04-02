@@ -30,12 +30,39 @@ export class CreateTrainingDto extends BaseDto {
 
   @ApiProperty()
   @IsOptional()
-  image: Image[];
+  images: Image[];
 
   @ApiProperty({
     description: 'Deadline of the training',
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
+  eventDate: Date;
+
+  @ApiProperty({
+    description: 'Deadline of the training',
+    example: '2023-03-22T10:30:40.000Z',
+    required: false,
+  })
+  @IsNotEmpty()
+  @IsOptional()
   endDate: Date;
+
+  @ApiProperty({
+    description: 'Time of a training',
+    example: '18:00',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  time: string;
+
+  @ApiProperty({
+    description: 'Location of a training',
+    example: 'Наарынская область',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  location: string;
 }
