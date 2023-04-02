@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -11,15 +10,7 @@ import { Categories } from 'src/modules/categories/entities/category.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Quiz } from 'src/modules/quiz/entities/quiz.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 
 @Entity()
 export class VideoBlog extends BaseEntity {
@@ -65,6 +56,6 @@ export class VideoBlog extends BaseEntity {
   @IsNotEmpty()
   category: Categories;
 
-  @OneToOne(() => Quiz, (quiz) => quiz.videoBlog, { cascade: true })
-  quiz: Quiz;
+  @ManyToOne(() => Quiz, (quiz) => quiz.videoBlog, { cascade: true })
+  quiz: Quiz[];
 }

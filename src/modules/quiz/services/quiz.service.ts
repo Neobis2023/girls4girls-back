@@ -42,12 +42,16 @@ export class QuizService extends BaseService<Quiz> {
 
   async createNewQuiz(quiz: CreateQuizDto) {
     const videoBlog = await this.blogRepo.findOne({
-      where: { id: quiz.blogId },
+      where: {
+        id: quiz.blogId,
+      },
       relations: ['quiz'],
     });
-    Object.assign(videoBlog.quiz, quiz);
+    const savedQuiz = await this.quizRepository.save(quiz);
+    videoBlog.quiz = [savedQuiz];
     await this.blogRepo.save(videoBlog);
-    return await this.quizRepository.save(quiz);
+    console.log(videoBlog);
+    return savedQuiz;
   }
 
   async deleteOne(id: number) {

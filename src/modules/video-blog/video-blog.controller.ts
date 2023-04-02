@@ -51,6 +51,7 @@ export class VideoBlogController {
     return await this.videoBlogService.getWithRelations(id, 'VideoBlog', [
       'lecturerImage',
       'category',
+      'quiz',
     ]);
   }
 

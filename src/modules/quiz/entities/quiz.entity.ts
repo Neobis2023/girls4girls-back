@@ -20,7 +20,7 @@ export class Quiz extends BaseEntity {
   @OneToMany(() => Question, (question) => question.quiz, { cascade: true })
   questions: Question[];
 
-  @OneToOne(() => VideoBlog, (videoBlog) => videoBlog.quiz, {
+  @OneToMany(() => VideoBlog, (videoBlog) => videoBlog.quiz, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
