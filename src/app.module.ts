@@ -16,7 +16,7 @@ import { JetonModule } from './modules/jeton/jeton.module';
 import { LikeModule } from './modules/likes/like.module';
 import { VideoBlogModule } from './modules/video-blog/video-blog.module';
 import { CategoryModule } from './modules/categories/category.module';
-
+import { QuizModule } from './modules/quiz/quiz.module';
 @Module({
   imports: [
     UserModule,

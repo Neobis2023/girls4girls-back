@@ -12,7 +12,7 @@ import { CreateCategoryDto } from './dtos/create-category.dto';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Видеоблоги')
+@ApiTags('Категории')
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

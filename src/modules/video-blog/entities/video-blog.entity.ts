@@ -10,7 +10,15 @@ import { BaseEntity } from 'src/base/base.entity';
 import { Categories } from 'src/modules/categories/entities/category.entity';
 import { Image } from 'src/modules/image/entities/image.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
-import { Column, Entity, JoinColumn, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
 @Entity()
 export class VideoBlog extends BaseEntity {
@@ -44,16 +52,15 @@ export class VideoBlog extends BaseEntity {
   @IsString()
   lecturerInfo: string;
 
-  @OneToMany(() => Image, (image) => image.videoBlog, { cascade: true })
-  @JoinColumn({ name: 'id' })
+  @OneToOne(() => Image, (image) => image.videoBlog, { cascade: true })
   @IsNotEmpty()
-  lecturerImage: Image[];
+  lecturerImage: Image;
 
   @OneToMany(() => Likes, (like) => like.blog, { cascade: true })
   @IsOptional()
   likes: Likes[];
 
-  @ManyToMany(() => Categories, (category) => category.videoBlog)
+  @ManyToOne(() => Categories, (category) => category.videoBlogs)
   @IsNotEmpty()
-  category: Categories[];
+  category: Categories;
 }
