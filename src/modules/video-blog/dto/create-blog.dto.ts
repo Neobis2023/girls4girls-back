@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 import { BaseDto } from 'src/base/dto/base.dto';
-import { Image } from 'src/modules/image/entities/image.entity';
 
 export class CreateBlogDto extends BaseDto {
   @ApiProperty({ example: 'https://www.youtube.com/embed/l-ooCKssPv4' })
@@ -33,13 +38,11 @@ export class CreateBlogDto extends BaseDto {
   @IsString()
   lecturerInfo: string;
 
-  @ApiProperty({ example: 'здесь будет ссылка на фото' })
-  @IsNotEmpty()
-  @IsString()
+  @ApiProperty()
   lecturerImage: Express.Multer.File;
 
-  @ApiProperty({ example: [1, 2] })
+  @ApiProperty({ example: ['hEaLTh', 'Business'], type: String, isArray: true })
   @IsNotEmpty()
-  @IsNumber()
-  categoryId: number[];
+  @IsString()
+  category: string;
 }
