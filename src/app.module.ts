@@ -55,6 +55,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
     VideoBlogModule,
     LikeModule,
     CategoryModule,
+    QuizModule,
   ],
   controllers: [],
 })
