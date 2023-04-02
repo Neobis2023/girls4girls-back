@@ -39,7 +39,9 @@ export class VideoBlog extends BaseEntity {
   @IsString()
   lecturerName: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   @IsNotEmpty()
   @IsString()
   lecturerInfo: string;
