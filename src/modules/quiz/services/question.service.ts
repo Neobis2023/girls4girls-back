@@ -34,4 +34,11 @@ export class QuestionService extends BaseService<Question> {
     await this.quizRepository.save(excistingQuiz);
     return newQuestions;
   }
+  async deleteOne(id: number) {
+    const question = await this.questionRepository.findOne({
+      where: { id: id },
+    });
+    if (question) return await this.questionRepository.remove(question);
+    return;
+  }
 }
