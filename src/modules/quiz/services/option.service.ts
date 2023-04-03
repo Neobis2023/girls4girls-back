@@ -32,4 +32,10 @@ export class OptionService extends BaseService<Option> {
     console.log(excistingQuestion);
     return newOption;
   }
+
+  async deleteOne(id: number) {
+    const option = await this.optionRepository.findOne({ where: { id: id } });
+    if (option) return await this.optionRepository.remove(option);
+    return;
+  }
 }

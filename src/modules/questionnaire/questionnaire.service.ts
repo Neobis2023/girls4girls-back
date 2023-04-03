@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Questionnaire } from './entities/questionnaire.entity';
 import { Repository } from 'typeorm';
-import { Question } from './entities/question.entity';
+import { QuestionnaireQuestion } from './entities/questionnaire-question.entity';
 import { Variant } from './entities/variant.entity';
-import { Response } from './entities/response.entity';
+import { QuestionnaireResponse } from './entities/questionnaire-response.entity';
 import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
 import { ResponseToQuestionnaireDto } from './dto/response-to-questionnaire.dto';
 import { BaseService } from '../../base/base.service';
@@ -17,12 +17,12 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
   constructor(
     @InjectRepository(Questionnaire)
     private questionnaireRepository: Repository<Questionnaire>,
-    @InjectRepository(Question)
-    private questionRepository: Repository<Question>,
+    @InjectRepository(QuestionnaireQuestion)
+    private questionRepository: Repository<QuestionnaireQuestion>,
     @InjectRepository(Variant)
     private variantRepository: Repository<Variant>,
-    @InjectRepository(Response)
-    private responseRepository: Repository<Response>,
+    @InjectRepository(QuestionnaireResponse)
+    private responseRepository: Repository<QuestionnaireResponse>,
     @InjectRepository(QuestionAnswer)
     private questionAnswerRepository: Repository<QuestionAnswer>,
     private readonly userService: UserService,
@@ -48,7 +48,7 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     for await (const createQuestionDto of questions) {
       const { text, variants, correctVariantIndex } = createQuestionDto;
 
-      let question = new Question();
+      let question = new QuestionnaireQuestion();
       question.text = text;
       question.questionnaire = questionnaire;
       question = await this.questionRepository.save(question);
@@ -67,6 +67,8 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
         }
       }
     }
+
+    return questionnaire;
   }
 
   async responseToQuestionnaire(
@@ -81,7 +83,7 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     }
 
     const user = await this.userService.get(userId);
-    let response = new Response();
+    let response = new QuestionnaireResponse();
     response.user = user;
     response.questionnaire = questionnaire;
     response = await this.responseRepository.save(response);

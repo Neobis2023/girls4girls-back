@@ -8,7 +8,8 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Query, Patch
+  Query,
+  Patch, Req
 } from '@nestjs/common';
 import { TrainingsService } from './training.service';
 import { CreateTrainingDto } from './dto';
@@ -74,6 +75,11 @@ export class TrainingsController {
           example: 'Наарынская область',
           description: 'Локация тренинга',
         },
+        questionnaireId: {
+          type: 'string',
+          example: 3,
+          description: 'ID of a training',
+        },
       },
     },
   })
@@ -98,16 +104,18 @@ export class TrainingsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить трейнинг по ID' })
   async getById(@Param('id') id: number) {
-    return await this.trainingsService.getWithRelations(id, 'training', [
-      'images',
-    ]);
+    return await this.trainingsService.getTrainingById(id);
   }
 
   @Post('apply')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Подать заявку на тренинг' })
   async applyUserToTraining(
+    @Req() req: any,
     @Query() applyUserToTrainingDto: ApplyUserToTrainingDto,
   ) {
+    applyUserToTrainingDto.userId = req.user?.id;
     return this.trainingsService.applyUserToTraining(applyUserToTrainingDto);
   }
 
