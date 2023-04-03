@@ -7,7 +7,6 @@ import { ImageService } from '../image/image.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlog } from './entities/video-blog.entity';
-import { log } from 'console';
 
 @Injectable()
 export class VideoBlogService extends BaseService<VideoBlog> {
@@ -58,7 +57,6 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     blog.description = newBlog.description;
     blog.lecturerInfo = newBlog.lecturerInfo;
     blog.lecturerName = newBlog.lecturerName;
-    log(blog);
     return await this.blogRepo.save(blog);
   }
 
