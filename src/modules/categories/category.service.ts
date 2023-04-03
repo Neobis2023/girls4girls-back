@@ -31,4 +31,14 @@ export class CategoryService extends BaseService<Categories> {
     });
     return this.categoryRepo.remove(oldCategory);
   }
+
+  async getCategoryBlogs(categoryName: string) {
+    const category = await this.categoryRepo.findOne({
+      where: { name: categoryName },
+      relations: ['videoBlogs'],
+    });
+    if (!category)
+      throw new BadRequestException('Введите имя категории правильно');
+    return category.videoBlogs;
+  }
 }
