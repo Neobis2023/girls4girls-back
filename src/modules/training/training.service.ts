@@ -13,6 +13,7 @@ import { UserToTraining } from './entities/users-to-training.entity';
 import { UserService } from '../user/user.service';
 import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
+import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -23,6 +24,8 @@ export class TrainingsService extends BaseService<Training> {
     private readonly imageRepo: Repository<Image>,
     @InjectRepository(UserToTraining)
     private readonly userToTrainingRepository: Repository<UserToTraining>,
+    @InjectRepository(Questionnaire)
+    private readonly questionnaireRepository: Repository<Questionnaire>,
     private readonly imageService: ImageService,
     private readonly userService: UserService,
   ) {
@@ -40,6 +43,14 @@ export class TrainingsService extends BaseService<Training> {
       images.push(image);
       createTrainingDto.images = images;
     }
+
+    if (createTrainingDto.questionnaireId) {
+      const questionnaire = await this.questionnaireRepository.findOneBy({
+        id: createTrainingDto.questionnaireId,
+      });
+      training.questionnaire = questionnaire;
+    }
+
     training.absorbFromDto(createTrainingDto);
     return await this.trainingRepo.save(training);
   }
@@ -63,6 +74,21 @@ export class TrainingsService extends BaseService<Training> {
       order: listParamsDto.order,
       orderField: listParamsDto.orderField,
     });
+  }
+
+  async getTrainingById(id: number) {
+    const training = await this.trainingRepo.findOne({
+      where: {
+        id,
+      },
+      relations: [
+        'images',
+        'userToTraining',
+        'questionnaire',
+        'questionnaire.questions',
+      ],
+    });
+    return training;
   }
 
   async findOne(searchTrainingDto: SearchTrainingDto) {
