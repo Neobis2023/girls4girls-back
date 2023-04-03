@@ -24,9 +24,9 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Получить все видео-блоги определенной категории' })
-  @Get(':categoryName')
-  async getCategoryBlog(@Param('categoryName') categoryName: string) {
-    return await this.categoryService.getCategoryBlogs(categoryName);
+  @Get(':name')
+  async getCategoryBlog(@Param('name') name: string) {
+    return await this.categoryService.getCategoryBlogs(name);
   }
 
   @ApiOperation({ summary: 'Создать категорию' })

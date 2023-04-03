@@ -32,9 +32,9 @@ export class CategoryService extends BaseService<Categories> {
     return this.categoryRepo.remove(oldCategory);
   }
 
-  async getCategoryBlogs(categoryName: string) {
+  async getCategoryBlogs(name: string) {
     const category = await this.categoryRepo.findOne({
-      where: { name: categoryName },
+      where: { name: name },
       relations: ['videoBlogs'],
     });
     if (!category)
