@@ -1,10 +1,13 @@
 import { BaseDto } from '../../../base/dto/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { IsPhoneNumberDecorator } from '../../../utils/decorators/is-phone-number.decorator';
 import { UserGenderEnum } from '../enums/user-gender.enum';
+import { RegionEnum } from '../../../utils/enum/region.enum';
 
 export class UpdateProfileDto extends BaseDto {
+  id?: number;
+
   @ApiProperty({
     example: 'playerone@gmail.com',
     description: 'Email of a user',
@@ -42,7 +45,8 @@ export class UpdateProfileDto extends BaseDto {
   phoneNumber: string;
 
   @ApiProperty({
-    example: '29-03-2023',
+    description: 'Birthday',
+    example: '2001-07-23T10:30:40.000Z',
     required: false,
   })
   @IsOptional()
@@ -53,4 +57,11 @@ export class UpdateProfileDto extends BaseDto {
   })
   @IsEnum(UserGenderEnum)
   gender: UserGenderEnum;
+
+  @ApiProperty({
+    example: RegionEnum.CHUI,
+    enum: RegionEnum,
+  })
+  @IsEnum(RegionEnum)
+  region: RegionEnum;
 }

@@ -3,10 +3,11 @@ import { Image } from 'src/modules/image/entities/image.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinColumn,
+  Entity,
+  JoinColumn,
   JoinTable,
   OneToMany,
-  OneToOne
+  OneToOne,
 } from 'typeorm';
 import { TrainingRuEntity } from './training-ru.entity';
 import { UserToTraining } from './users-to-training.entity';

@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { QuestionnaireController } from './questionnaire.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Question } from './entities/question.entity';
+import { QuestionnaireQuestion } from './entities/questionnaire-question.entity';
 import { Questionnaire } from './entities/questionnaire.entity';
 import { Variant } from './entities/variant.entity';
-import { Response } from './entities/response.entity';
+import { QuestionnaireResponse } from './entities/questionnaire-response.entity';
 import { QuestionAnswer } from './entities/question-answer.entity';
 import { UserModule } from '../user/user.module';
 
@@ -13,9 +13,9 @@ import { UserModule } from '../user/user.module';
   imports: [
     TypeOrmModule.forFeature([
       Questionnaire,
-      Question,
+      QuestionnaireQuestion,
       Variant,
-      Response,
+      QuestionnaireResponse,
       QuestionAnswer,
     ]),
     UserModule,

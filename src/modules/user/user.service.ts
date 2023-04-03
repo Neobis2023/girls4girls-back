@@ -9,6 +9,7 @@ import { BaseService } from '../../base/base.service';
 import { ChangePasswordDto } from '../auth/dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ImageService } from '../image/image.service';
+import { RegionEnum } from '../../utils/enum/region.enum';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -105,7 +106,33 @@ export class UserService extends BaseService<User> {
     return this.usersRepository.save(user);
   }
 
-  async updateProfile(updateProfileDto: UpdateProfileDto) {
-    return updateProfileDto;
+  async updateProfile(id: number, updateProfileDto: UpdateProfileDto) {
+    const { email, phoneNumber } = updateProfileDto;
+
+    const user = await this.get(id);
+
+    if (email) {
+      const isEmailExists = await this.findOne({ email });
+      if (isEmailExists) {
+        throw new BadRequestException(`Email ${email} is used by other user!`);
+      }
+    }
+
+    if (phoneNumber) {
+      const isPhoneNumberExists = await this.findOne({ phoneNumber });
+      if (isPhoneNumberExists) {
+        throw new BadRequestException(
+          `Phone number ${phoneNumber} is used by other user!`,
+        );
+      }
+    }
+
+    user.absorbFromDto(updateProfileDto);
+
+    return this.usersRepository.save(user);
+  }
+
+  async getRegions() {
+    return RegionEnum;
   }
 }
