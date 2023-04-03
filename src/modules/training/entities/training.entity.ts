@@ -3,14 +3,14 @@ import { Image } from 'src/modules/image/entities/image.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, JoinColumn,
   JoinTable,
-  ManyToMany,
   OneToMany,
-  OneToOne,
+  OneToOne
 } from 'typeorm';
 import { TrainingRuEntity } from './training-ru.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { UserToTraining } from './users-to-training.entity';
+import { Questionnaire } from '../../questionnaire/entities/questionnaire.entity';
 
 @Entity()
 export class Training extends BaseEntity {
@@ -46,10 +46,14 @@ export class Training extends BaseEntity {
   })
   images: Image[];
 
+  @OneToOne(() => Questionnaire, (questionnaire) => questionnaire.training)
+  @JoinColumn()
+  questionnaire: Questionnaire;
+
   @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
   ru: TrainingRuEntity[];
 
-  @ManyToMany(() => User, (user) => user.training)
+  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.training)
   @JoinTable()
-  user: User[];
+  userToTraining: UserToTraining[];
 }

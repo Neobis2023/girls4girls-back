@@ -17,6 +17,8 @@ import { LikeModule } from './modules/likes/like.module';
 import { VideoBlogModule } from './modules/video-blog/video-blog.module';
 import { CategoryModule } from './modules/categories/category.module';
 import { QuizModule } from './modules/quiz/quiz.module';
+import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
+
 @Module({
   imports: [
     UserModule,
@@ -55,6 +57,8 @@ import { QuizModule } from './modules/quiz/quiz.module';
     VideoBlogModule,
     LikeModule,
     CategoryModule,
+    QuizModule,
+    QuestionnaireModule,
   ],
   controllers: [],
 })
