@@ -58,6 +58,6 @@ export class VideoBlog extends BaseEntity {
   @IsNotEmpty()
   category: Categories;
 
-  @ManyToOne(() => Quiz, (quiz) => quiz.videoBlog, { cascade: true })
+  @OneToMany(() => Quiz, (quiz) => quiz.videoBlog, { cascade: true })
   quiz: Quiz[];
 }

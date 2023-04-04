@@ -50,7 +50,6 @@ export class QuizService extends BaseService<Quiz> {
     const savedQuiz = await this.quizRepository.save(quiz);
     videoBlog.quiz = [savedQuiz];
     await this.blogRepo.save(videoBlog);
-    console.log(videoBlog);
     return savedQuiz;
   }
 
