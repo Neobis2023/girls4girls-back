@@ -20,13 +20,6 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     super(blogRepo);
   }
 
-  async getOne(id: number) {
-    const videoBlog = await this.blogRepo.findOne({
-      where: { id: id },
-      relations: ['lecturerImage', 'category', 'quiz'],
-    });
-    return videoBlog;
-  }
   async createOne(blog: CreateBlogDto) {
     const videoBlog = new VideoBlog();
     const category = await this.categoryRepo.findOne({
