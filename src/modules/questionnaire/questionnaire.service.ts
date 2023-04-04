@@ -46,13 +46,14 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     questionnaire = await this.questionnaireRepository.save(questionnaire);
 
     for await (const createQuestionDto of questions) {
-      const { text, variants, correctVariantIndex } = createQuestionDto;
+      const { text, variants, type, correctVariantIndex } = createQuestionDto;
 
       let question = new QuestionnaireQuestion();
       question.text = text;
       question.questionnaire = questionnaire;
+      question.type = type;
       question = await this.questionRepository.save(question);
-
+      if (!variants) continue;
       for await (const [index, createVariantDto] of variants.entries()) {
         const { text } = createVariantDto;
 
