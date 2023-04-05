@@ -9,10 +9,11 @@ import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { UserToForum } from './entities/users-to-forum.entity';
 import { UserModule } from '../user/user.module';
+import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Forum, Image, UserToForum]),
+    TypeOrmModule.forFeature([Forum, Image, UserToForum, Questionnaire]),
     ImageModule,
     CloudinaryModule,
     UserModule,
