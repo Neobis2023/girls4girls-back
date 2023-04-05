@@ -1,7 +1,8 @@
 import { BaseDto } from 'src/base/dto/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Image } from 'src/modules/image/entities/image.entity';
+import { Type } from 'class-transformer';
 
 export class CreateForumDto extends BaseDto {
   @ApiProperty({
@@ -63,4 +64,12 @@ export class CreateForumDto extends BaseDto {
   @IsString()
   @IsOptional()
   location: string;
+
+  @ApiProperty({
+    example: 3,
+    description: 'ID of a questionnaire',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  questionnaireId: number;
 }

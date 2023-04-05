@@ -8,7 +8,9 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Query, Patch, Req
+  Query,
+  Patch,
+  Req,
 } from '@nestjs/common';
 import { TrainingsService } from './training.service';
 import { CreateTrainingDto } from './dto';
@@ -24,10 +26,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
-import { Training } from './entities';
-import { MoreThan } from 'typeorm';
-import { ListDto } from 'src/base/dto/list.dto';
-import { stat } from 'fs';
 
 @ApiTags('Тренинги')
 @Controller('training')
