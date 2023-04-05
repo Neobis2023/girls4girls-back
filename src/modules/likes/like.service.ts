@@ -45,11 +45,15 @@ export class LikeService extends BaseService<Likes> {
         blog: { id: blogId },
         user: { email: userEmail },
       },
+      relations: ['blog', 'blog.category'],
     });
     if (liked) return await this.likesRepo.remove(liked);
   }
 
   async getLikes(userEmail: string) {
-    return await this.likesRepo.find({ where: { user: { email: userEmail } } });
+    return await this.likesRepo.find({
+      where: { user: { email: userEmail } },
+      relations: ['blog', 'blog.category'],
+    });
   }
 }
