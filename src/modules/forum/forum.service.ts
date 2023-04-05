@@ -153,22 +153,6 @@ export class ForumService extends BaseService<Forum> {
     return this.userToForumRepository.save(application);
   }
 
-  async pastList() {
-    return await this.repository
-      .createQueryBuilder('forum')
-      .where('forum.eventDate < :currentDate', { currentDate: new Date() })
-      .leftJoinAndSelect('forum.images', 'images')
-      .getMany();
-  }
-
-  async listFuture() {
-    return await this.repository
-      .createQueryBuilder('forum')
-      .where('forum.eventDate > :currentDate', { currentDate: new Date() })
-      .leftJoinAndSelect('forum.images', 'images')
-      .getMany();
-  }
-
   async listFutureForums(listParamsDto: ListParamsDto) {
     const future = await this.repository
       .createQueryBuilder('forum')
