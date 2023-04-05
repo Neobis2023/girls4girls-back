@@ -30,7 +30,7 @@ export class Training extends BaseEntity {
   @CreateDateColumn({
     nullable: true,
   })
-  endDate?: Date;
+  deadlineDate?: Date;
 
   @Column({
     nullable: true,

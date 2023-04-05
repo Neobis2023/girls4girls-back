@@ -9,6 +9,7 @@ import {
   UploadedFile,
   Query,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { CreateForumDto } from './dto/create-forum.dto';
@@ -22,6 +23,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { ApplyUserToTrainingDto } from '../training/dto/apply-user-to-training.dto';
+import { ApplyUserToForumDto } from './dto/apply-user-to-forum.dto';
+import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 
 @ApiTags('Форумы')
 @Controller('forum')
@@ -29,9 +33,9 @@ export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiConsumes('multypart/form-data')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
@@ -62,11 +66,21 @@ export class ForumController {
           example: '2023-03-22T10:30:40.000Z',
           description: 'Дата проведения форума',
         },
-        endDate: {
+        deadlineDate: {
           type: 'string',
           format: 'date-time',
           example: '2023-03-22T10:30:40.000Z',
           description: 'Дедлайн подачи заявки',
+        },
+        time: {
+          type: 'string',
+          example: '18:00',
+          description: 'Время тренинга',
+        },
+        location: {
+          type: 'string',
+          example: 'Наарынская область',
+          description: 'Локация тренинга',
         },
       },
     },
@@ -83,20 +97,59 @@ export class ForumController {
   @Get()
   @ApiOperation({ summary: 'Получить список всех форумов' })
   async list(@Query() listParamsDto: ListParamsDto) {
-    return await this.forumService.list(listParamsDto);
+    return await this.forumService.listForums(listParamsDto)
   }
 
-  @Get(':title')
-  @ApiOperation({ summary: 'Получить один форум по названию' })
-  async findOneById(@Param('title') title: string) {
-    return await this.forumService.getOneByTitle(title);
+  @Get(':id')
+  @ApiOperation({ summary: 'Получить форум по ID' })
+  async getById(@Param('id') id: number) {
+    return await this.forumService.getWithRelations(id, 'forum', [
+      'images',
+    ]);
+  }
+
+  @Post('apply')
+  @ApiOperation({ summary: 'Подать заявку на форум' })
+  async applyUserToTraining(
+    @Query() applyUserToForumDto: ApplyUserToForumDto
+  ) {
+    return this.forumService.applyUserToForum(applyUserToForumDto)
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  @ApiOperation({ summary: 'Удаление форума по его ID' })
+  @ApiOperation({ summary: 'Админ: Удаление форума по его ID' })
   remove(@Param('id') forum_id: number) {
     return this.forumService.deleteForumById(forum_id);
   }
+
+  @Get('apply/:id')
+  @ApiOperation({
+    summary:
+      'Админ: Получить список подавших заявку пользователей по ID форума',
+  })
+  async getAppliedUsers(@Param('id') id: number) {
+    return this.forumService.getAppliedUsers(id)
+  }
+
+  @Patch('apply')
+  @ApiOperation({ summary: 'Админ: Изменить подачу пользователя на форум' })
+  async updateUserApplication(
+    @Body() updateUserApplication: UpdateUserApplicationDto) {
+    return this.forumService.updateUserApplication(updateUserApplication)
+  }
+
+  @Get('past/forums')
+  @ApiOperation({summary: 'Получить прошедшие форумы'})
+  async pastTraining(@Query() listParamsDto: ListParamsDto) {
+    return await this.forumService.listPastForums(listParamsDto)
+  }
+
+  @Get('future/forums')
+  @ApiOperation({summary: 'Получить будущие форумы'})
+  async future(@Query() listParamsDto: ListParamsDto) {
+    return await this.forumService.listFutureForums(listParamsDto)
+  }
+
 }
