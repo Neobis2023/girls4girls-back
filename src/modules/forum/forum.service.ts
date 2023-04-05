@@ -33,15 +33,15 @@ export class ForumService extends BaseService<Forum> {
     createForumDto: CreateForumDto,
     file: Express.Multer.File,
   ) {
-    const forum = new Forum();
-    if (file) {
-      const images: Image[] = [];
-      const image = await this.imageService.createImage(file);
-      images.push(image);
-      createForumDto.images = images;
+    const forum = new Forum()
+    if(file){
+      const images: Image[] = []
+      const image = await this.imageService.createImage(file)
+      images.push(image)
+      createForumDto.images = images
     }
-    forum.absorbFromDto(createForumDto);
-    return await this.forumRepo.save(forum);
+    forum.absorbFromDto(createForumDto)
+    return await this.forumRepo.save(forum)
   }
 
   async findOne(searchForumDto: SearchForumDto) {
@@ -68,7 +68,10 @@ export class ForumService extends BaseService<Forum> {
       .leftJoinAndSelect('forum.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(`forum.${listParamsDto.getOrderedField()}`, listParamsDto.order)
+      .orderBy(
+        `forum.${listParamsDto.getOrderedField()}`,
+        listParamsDto.order,
+      )
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
     return new ListDto(array, {
@@ -90,11 +93,13 @@ export class ForumService extends BaseService<Forum> {
   }
 
   async applyUserToForum(applyUserToForumDto: ApplyUserToForumDto) {
-    const { userId, forumId } = applyUserToForumDto;
+    const { userId, forumId } = applyUserToForumDto
     const user = await this.userService.get(userId);
     const forum = await this.get(forumId);
     if (!forum) {
-      throw new BadRequestException(`Forum with ${forumId} is not found!`);
+      throw new BadRequestException(
+        `Forum with ${forumId} is not found!`,
+      );
     }
     const isUserApplied = await this.findAppliedUserById(forumId, userId);
     if (isUserApplied) {
@@ -105,7 +110,7 @@ export class ForumService extends BaseService<Forum> {
 
     const apply = new UserToForum();
     apply.user = user;
-    apply.forum = forum;
+    apply.forum = forum
     return await this.userToForumRepository.save(apply);
   }
 
@@ -121,18 +126,24 @@ export class ForumService extends BaseService<Forum> {
   }
 
   async getAppliedUsers(forumId: number): Promise<UserToForum[]> {
-    const forum: Forum = await this.forumRepo.findOne({
+    const forum : Forum = await this.forumRepo.findOne({
       where: {
         id: forumId,
       },
-      relations: ['userToForum', 'userToForum.user', 'userToForum.user.image'],
+      relations: [
+        'userToForum',
+        'userToForum.user',
+        'userToForum.user.image',
+      ],
     });
 
     if (!forum) {
-      throw new BadRequestException(`Forum with id ${forumId} is not found!`);
+      throw new BadRequestException(
+        `Forum with id ${forumId} is not found!`,
+      );
     }
 
-    return forum.userToForum;
+    return forum.userToForum
   }
 
   async updateUserApplication(
@@ -151,6 +162,23 @@ export class ForumService extends BaseService<Forum> {
 
     application.applyStatus = applyStatus;
     return this.userToForumRepository.save(application);
+  }
+
+  async pastList() {
+    return await this.repository
+      .createQueryBuilder('forum')
+      .where('forum.eventDate < :currentDate', { currentDate: new Date() })
+      .leftJoinAndSelect('forum.images','images')
+      .getMany();
+  }
+
+  
+  async listFuture() {
+    return await this.repository
+      .createQueryBuilder('forum')
+      .where('forum.eventDate > :currentDate', { currentDate: new Date() })
+      .leftJoinAndSelect('forum.images','images')
+      .getMany();
   }
 
   async listFutureForums(listParamsDto: ListParamsDto) {
@@ -190,4 +218,5 @@ export class ForumService extends BaseService<Forum> {
       orderField: listParamsDto.orderField,
     });
   }
+  
 }

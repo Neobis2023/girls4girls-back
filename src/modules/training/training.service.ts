@@ -193,22 +193,6 @@ export class TrainingsService extends BaseService<Training> {
     return appliedUser;
   }
 
-  // async pastList() {
-  //   return await this.repository
-  // .createQueryBuilder('training')
-  // .where('training.eventDate < :currentDate', { currentDate: new Date() })
-  // .leftJoinAndSelect('training.images','images')
-  //     .getMany();
-  // }
-
-  // async listFuture() {
-  //   return await this.repository
-  //     .createQueryBuilder('training')
-  //     .where('training.eventDate > :currentDate', { currentDate: new Date() })
-  //     .leftJoinAndSelect('training.images','images')
-  //     .getMany();
-  // }
-
   async listPastTrainings(listParamsDto: ListParamsDto) {
     const pastTrainings = await this.repository
       .createQueryBuilder('training')

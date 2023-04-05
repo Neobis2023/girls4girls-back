@@ -33,8 +33,8 @@ export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -97,19 +97,23 @@ export class ForumController {
   @Get()
   @ApiOperation({ summary: 'Получить список всех форумов' })
   async list(@Query() listParamsDto: ListParamsDto) {
-    return await this.forumService.listForums(listParamsDto);
+    return await this.forumService.listForums(listParamsDto)
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Получить форум по ID' })
   async getById(@Param('id') id: number) {
-    return await this.forumService.getWithRelations(id, 'forum', ['images']);
+    return await this.forumService.getWithRelations(id, 'forum', [
+      'images',
+    ]);
   }
 
   @Post('apply')
   @ApiOperation({ summary: 'Подать заявку на форум' })
-  async applyUserToTraining(@Query() applyUserToForumDto: ApplyUserToForumDto) {
-    return this.forumService.applyUserToForum(applyUserToForumDto);
+  async applyUserToTraining(
+    @Query() applyUserToForumDto: ApplyUserToForumDto
+  ) {
+    return this.forumService.applyUserToForum(applyUserToForumDto)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -126,26 +130,26 @@ export class ForumController {
       'Админ: Получить список подавших заявку пользователей по ID форума',
   })
   async getAppliedUsers(@Param('id') id: number) {
-    return this.forumService.getAppliedUsers(id);
+    return this.forumService.getAppliedUsers(id)
   }
 
   @Patch('apply')
   @ApiOperation({ summary: 'Админ: Изменить подачу пользователя на форум' })
   async updateUserApplication(
-    @Body() updateUserApplication: UpdateUserApplicationDto,
-  ) {
-    return this.forumService.updateUserApplication(updateUserApplication);
+    @Body() updateUserApplication: UpdateUserApplicationDto) {
+    return this.forumService.updateUserApplication(updateUserApplication)
   }
 
   @Get('past/forums')
-  @ApiOperation({ summary: 'Получить прошедшие форумы' })
+  @ApiOperation({summary: 'Получить прошедшие форумы'})
   async pastTraining(@Query() listParamsDto: ListParamsDto) {
-    return await this.forumService.listPastForums(listParamsDto);
+    return await this.forumService.listPastForums(listParamsDto)
   }
 
   @Get('future/forums')
-  @ApiOperation({ summary: 'Получить будущие форумы' })
+  @ApiOperation({summary: 'Получить будущие форумы'})
   async future(@Query() listParamsDto: ListParamsDto) {
-    return await this.forumService.listFutureForums(listParamsDto);
+    return await this.forumService.listFutureForums(listParamsDto)
   }
+
 }
