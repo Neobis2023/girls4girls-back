@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Questionnaire } from './entities/questionnaire.entity';
 import { Repository } from 'typeorm';
-import { Question } from './entities/question.entity';
+import { QuestionnaireQuestion } from './entities/questionnaire-question.entity';
 import { Variant } from './entities/variant.entity';
-import { Response } from './entities/response.entity';
+import { QuestionnaireResponse } from './entities/questionnaire-response.entity';
 import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
 import { ResponseToQuestionnaireDto } from './dto/response-to-questionnaire.dto';
 import { BaseService } from '../../base/base.service';
@@ -17,12 +17,12 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
   constructor(
     @InjectRepository(Questionnaire)
     private questionnaireRepository: Repository<Questionnaire>,
-    @InjectRepository(Question)
-    private questionRepository: Repository<Question>,
+    @InjectRepository(QuestionnaireQuestion)
+    private questionRepository: Repository<QuestionnaireQuestion>,
     @InjectRepository(Variant)
     private variantRepository: Repository<Variant>,
-    @InjectRepository(Response)
-    private responseRepository: Repository<Response>,
+    @InjectRepository(QuestionnaireResponse)
+    private responseRepository: Repository<QuestionnaireResponse>,
     @InjectRepository(QuestionAnswer)
     private questionAnswerRepository: Repository<QuestionAnswer>,
     private readonly userService: UserService,
@@ -46,13 +46,14 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     questionnaire = await this.questionnaireRepository.save(questionnaire);
 
     for await (const createQuestionDto of questions) {
-      const { text, variants, correctVariantIndex } = createQuestionDto;
+      const { text, variants, type, correctVariantIndex } = createQuestionDto;
 
-      let question = new Question();
+      let question = new QuestionnaireQuestion();
       question.text = text;
       question.questionnaire = questionnaire;
+      question.type = type;
       question = await this.questionRepository.save(question);
-
+      if (!variants) continue;
       for await (const [index, createVariantDto] of variants.entries()) {
         const { text } = createVariantDto;
 
@@ -67,6 +68,8 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
         }
       }
     }
+
+    return questionnaire;
   }
 
   async responseToQuestionnaire(
@@ -81,7 +84,7 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     }
 
     const user = await this.userService.get(userId);
-    let response = new Response();
+    let response = new QuestionnaireResponse();
     response.user = user;
     response.questionnaire = questionnaire;
     response = await this.responseRepository.save(response);
@@ -147,31 +150,31 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
 }
 
 const questionnaire = {
-  "name": "Менторство",
-  "questions": [
+  name: 'Менторство',
+  questions: [
     {
-      "text": "Что такое менторство?",
-      "type": "TEXT",
-      "variants": [
+      text: 'Что такое менторство?',
+      type: 'TEXT',
+      variants: [
         {
-          "text": ""
-        }
-      ]
+          text: '',
+        },
+      ],
     },
     {
-      "text": "Кто такой ментор?",
-      "type": "VARIANTS",
-      "variants": [
+      text: 'Кто такой ментор?',
+      type: 'VARIANTS',
+      variants: [
         {
-          "text": "Человек который всю жизнь работал на поле"
+          text: 'Человек который всю жизнь работал на поле',
         },
         {
-          "text": "Человек который на один шаг впереди тебя"
+          text: 'Человек который на один шаг впереди тебя',
         },
         {
-          "text": "Учитель"
-        }
-      ]
-    }
-  ]
+          text: 'Учитель',
+        },
+      ],
+    },
+  ],
 };

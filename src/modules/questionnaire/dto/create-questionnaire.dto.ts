@@ -1,4 +1,4 @@
-import { CreateQuestionDto } from './create-question.dto';
+import { CreateQuestionnaireQuestionDto } from './create-questionnaire-question.dto';
 import { IsArray, IsString, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -8,9 +8,9 @@ export class CreateQuestionnaireDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ type: () => [CreateQuestionDto] })
+  @ApiProperty({ type: () => [CreateQuestionnaireQuestionDto] })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateQuestionDto)
-  questions: CreateQuestionDto[];
+  @Type(() => CreateQuestionnaireQuestionDto)
+  questions: CreateQuestionnaireQuestionDto[];
 }

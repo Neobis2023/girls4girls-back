@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
@@ -28,5 +30,11 @@ export class OptionController {
       question,
     );
     return { question, createOption, option };
+  }
+
+  @ApiOperation({ summary: 'Удалить вариант вопроса' })
+  @Delete(':id')
+  async deleteOption(@Param('id') id: number) {
+    return await this.optionService.deleteOne(id);
   }
 }

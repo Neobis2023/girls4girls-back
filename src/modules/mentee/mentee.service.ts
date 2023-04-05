@@ -14,17 +14,17 @@ export class MenteeService extends BaseService<Mentee> {
     super(menteeRepo);
   }
 
-  async getAll(){
+  async getAll() {
     return await this.menteeRepo.find();
-}
+  }
 
-async getOne(mentee_id: number){
-    return await this.menteeRepo.findOne({where:{id: mentee_id}})
-}
+  async getOne(mentee_id: number) {
+    return await this.menteeRepo.findOne({ where: { id: mentee_id } });
+  }
 
-async deleteOne(mentee_id: number){
-    const mentee = await this.menteeRepo.findOne({where: {id: mentee_id}})
-    if(!mentee)throw new BadRequestException("Менти c таким id нет")
-    return await this.menteeRepo.remove(mentee)
-}
+  async deleteOne(mentee_id: number) {
+    const mentee = await this.menteeRepo.findOne({ where: { id: mentee_id } });
+    if (!mentee) throw new BadRequestException('Менти c таким id нет');
+    return await this.menteeRepo.remove(mentee);
+  }
 }

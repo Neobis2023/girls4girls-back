@@ -48,8 +48,11 @@ export class UserController {
   @ApiBearerAuth()
   @Patch('profile')
   @ApiOperation({ summary: 'Изменение данных в пофиле' })
-  async updateProfile(@Body() updateProfileDto: UpdateProfileDto) {
-    return this.userService.updateProfile(updateProfileDto);
+  async updateProfile(
+    @Req() req: any,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    return this.userService.updateProfile(req.user?.id, updateProfileDto);
   }
 
   @Post()
@@ -77,5 +80,11 @@ export class UserController {
   @ApiOperation({ summary: 'Удаление пользователя' })
   async deleteUser(@Query('id') id: number) {
     return this.userService.deleteUser(id);
+  }
+
+  @Get('regions')
+  @ApiOperation({ summary: 'Получение регионов' })
+  async getRegions() {
+    return this.userService.getRegions();
   }
 }

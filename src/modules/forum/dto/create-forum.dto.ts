@@ -30,19 +30,37 @@ export class CreateForumDto extends BaseDto {
 
   @ApiProperty()
   @IsOptional()
-  image: Image[];
+  images: Image[];
 
   @ApiProperty({
-    description: 'Deadline of the forum',
+    description: 'Date of the forum',
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
   eventDate: Date;
 
   @ApiProperty({
-    description: 'Deadline of the forum',
+    description: 'Deadline for submitting an application to the forum',
     example: '2023-03-22T10:30:40.000Z',
   })
   @IsNotEmpty()
-  endDate: Date;
+  deadlineDate: Date;
+
+  @ApiProperty({
+    description: 'Time of a training',
+    example: '18:00',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  time: string;
+
+  @ApiProperty({
+    description: 'Location of a training',
+    example: 'Наарынская область',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  location: string;
 }

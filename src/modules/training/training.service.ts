@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
@@ -13,6 +13,7 @@ import { UserToTraining } from './entities/users-to-training.entity';
 import { UserService } from '../user/user.service';
 import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
+import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -23,6 +24,8 @@ export class TrainingsService extends BaseService<Training> {
     private readonly imageRepo: Repository<Image>,
     @InjectRepository(UserToTraining)
     private readonly userToTrainingRepository: Repository<UserToTraining>,
+    @InjectRepository(Questionnaire)
+    private readonly questionnaireRepository: Repository<Questionnaire>,
     private readonly imageService: ImageService,
     private readonly userService: UserService,
   ) {
@@ -40,6 +43,14 @@ export class TrainingsService extends BaseService<Training> {
       images.push(image);
       createTrainingDto.images = images;
     }
+
+    if (createTrainingDto.questionnaireId) {
+      const questionnaire = await this.questionnaireRepository.findOneBy({
+        id: createTrainingDto.questionnaireId,
+      });
+      training.questionnaire = questionnaire;
+    }
+
     training.absorbFromDto(createTrainingDto);
     return await this.trainingRepo.save(training);
   }
@@ -63,6 +74,23 @@ export class TrainingsService extends BaseService<Training> {
       order: listParamsDto.order,
       orderField: listParamsDto.orderField,
     });
+  }
+
+  async getTrainingById(id: number) {
+    const training = await this.trainingRepo.findOne({
+      where: {
+        id,
+      },
+      relations: [
+        'images',
+        'userToTraining',
+        'userToTraining.user',
+        'questionnaire',
+        'questionnaire.questions',
+        'questionnaire.questions.variants',
+      ],
+    });
+    return training;
   }
 
   async findOne(searchTrainingDto: SearchTrainingDto) {
@@ -163,5 +191,51 @@ export class TrainingsService extends BaseService<Training> {
     });
 
     return appliedUser;
+  }
+
+  async listPastTrainings(listParamsDto: ListParamsDto) {
+    const pastTrainings = await this.repository
+      .createQueryBuilder('training')
+      .where('training.eventDate < :currentDate', { currentDate: new Date() })
+      .leftJoinAndSelect('training.images', 'images')
+      .limit(listParamsDto.limit)
+      .offset(listParamsDto.countOffset())
+      .orderBy(
+        `training.${listParamsDto.getOrderedField()}`,
+        listParamsDto.order,
+      )
+      .getMany();
+    const itemsCount = await this.repository.createQueryBuilder().getCount();
+
+    return new ListDto(pastTrainings, {
+      page: listParamsDto.page,
+      itemsCount,
+      limit: listParamsDto.limit,
+      order: listParamsDto.order,
+      orderField: listParamsDto.orderField,
+    });
+  }
+
+  async listFutureTrainings(listParamsDto: ListParamsDto) {
+    const futureTrainings = await this.repository
+      .createQueryBuilder('training')
+      .where('training.eventDate > :currentDate', { currentDate: new Date() })
+      .leftJoinAndSelect('training.images', 'images')
+      .limit(listParamsDto.limit)
+      .offset(listParamsDto.countOffset())
+      .orderBy(
+        `training.${listParamsDto.getOrderedField()}`,
+        listParamsDto.order,
+      )
+      .getMany();
+    const itemsCount = await this.repository.createQueryBuilder().getCount();
+
+    return new ListDto(futureTrainings, {
+      page: listParamsDto.page,
+      itemsCount,
+      limit: listParamsDto.limit,
+      order: listParamsDto.order,
+      orderField: listParamsDto.orderField,
+    });
   }
 }

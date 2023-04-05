@@ -23,7 +23,9 @@ import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
 import { Image } from '../../image/entities/image.entity';
 import { UserToTraining } from '../../training/entities/users-to-training.entity';
-import { Response } from '../../questionnaire/entities/response.entity';
+import { RegionEnum } from 'src/utils/enum/region.enum';
+import { QuestionnaireResponse } from '../../questionnaire/entities/questionnaire-response.entity';
+import { UserToForum } from 'src/modules/forum/entities/users-to-forum.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -87,6 +89,13 @@ export class User extends BaseEntity {
   status: StatusEnum;
 
   @Column({
+    type: 'enum',
+    enum: RegionEnum,
+    nullable: true,
+  })
+  region: RegionEnum;
+
+  @Column({
     type: 'boolean',
     default: false,
   })
@@ -116,7 +125,10 @@ export class User extends BaseEntity {
   @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user)
   userToTraining: UserToTraining[];
 
-  @OneToMany(() => Response, (response) => response.user)
+  @OneToMany(() => QuestionnaireResponse, (response) => response.user)
   @JoinColumn()
   response: Response[];
+
+  @OneToMany(() => UserToForum, (userToForum) => userToForum.user)
+  userToForum: UserToForum[];
 }

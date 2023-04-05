@@ -8,7 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Query, Patch
+  Query, Patch, Req
 } from '@nestjs/common';
 import { TrainingsService } from './training.service';
 import { CreateTrainingDto } from './dto';
@@ -24,6 +24,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
+import { Training } from './entities';
+import { MoreThan } from 'typeorm';
+import { ListDto } from 'src/base/dto/list.dto';
+import { stat } from 'fs';
 
 @ApiTags('Тренинги')
 @Controller('training')
@@ -31,8 +35,8 @@ export class TrainingsController {
   constructor(private readonly trainingsService: TrainingsService) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -64,6 +68,12 @@ export class TrainingsController {
           example: '2023-03-22T10:30:40.000Z',
           description: 'Дата проведения тренинга',
         },
+        deadlineDate: {
+          type: 'string',
+          format: 'date-time',
+          example: '2023-03-22T10:30:40.000Z',
+          description: 'Дедлайн подачи заявки на тренинг',
+        },
         time: {
           type: 'string',
           example: '18:00',
@@ -73,6 +83,11 @@ export class TrainingsController {
           type: 'string',
           example: 'Наарынская область',
           description: 'Локация тренинга',
+        },
+        questionnaireId: {
+          type: 'string',
+          example: 3,
+          description: 'ID of a training',
         },
       },
     },
@@ -98,16 +113,18 @@ export class TrainingsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить трейнинг по ID' })
   async getById(@Param('id') id: number) {
-    return await this.trainingsService.getWithRelations(id, 'training', [
-      'images',
-    ]);
+    return await this.trainingsService.getTrainingById(id);
   }
 
   @Post('apply')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Подать заявку на тренинг' })
   async applyUserToTraining(
+    @Req() req: any,
     @Query() applyUserToTrainingDto: ApplyUserToTrainingDto,
   ) {
+    applyUserToTrainingDto.userId = req.user?.id;
     return this.trainingsService.applyUserToTraining(applyUserToTrainingDto);
   }
 
@@ -134,5 +151,17 @@ export class TrainingsController {
     @Body() updateUserApplication: UpdateUserApplicationDto,
   ) {
     return this.trainingsService.updateUserApplication(updateUserApplication);
+  }
+
+  @Get('past/trainings')
+  @ApiOperation({ summary: 'Получить прошедшие тренинги' })
+  async pastTraining(@Query() listParamsDto: ListParamsDto) {
+    return await this.trainingsService.listPastTrainings(listParamsDto);
+  }
+
+  @Get('future/trainings')
+  @ApiOperation({ summary: 'Получить будущие тренинги' })
+  async future(@Query() listParamsDto: ListParamsDto) {
+    return await this.trainingsService.listFutureTrainings(listParamsDto);
   }
 }

@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
@@ -25,5 +27,11 @@ export class QuestionController {
   async saveQuestion(@Body() question: CreateQuestionDto): Promise<Question> {
     const quiz = await this.quizService.getQuizById(question.quizid);
     return await this.questionService.createQuestion(question, quiz);
+  }
+
+  @ApiOperation({ summary: 'Удалить вопрос' })
+  @Delete(':id')
+  async deleteQuestion(@Param('id') id: number) {
+    return await this.questionService.deleteOne(id);
   }
 }
