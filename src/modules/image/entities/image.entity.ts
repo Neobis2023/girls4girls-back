@@ -21,7 +21,7 @@ export class Image extends BaseEntity {
   @JoinColumn({ name: 'trainingId' })
   training: Training[];
 
-  @ManyToOne(() => Forum, (forum) => forum.image, {
+  @ManyToOne(() => Forum, (forum) => forum.images, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

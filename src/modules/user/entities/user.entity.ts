@@ -24,6 +24,7 @@ import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
 import { Image } from '../../image/entities/image.entity';
 import { UserToTraining } from '../../training/entities/users-to-training.entity';
 import { Response } from '../../questionnaire/entities/response.entity';
+import { UserToForum } from 'src/modules/forum/entities/users-to-forum.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -119,4 +120,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Response, (response) => response.user)
   @JoinColumn()
   response: Response[];
+
+  @OneToMany(() => UserToForum, (userToForum) => userToForum.user)
+  userToForum: UserToForum[];
 }
