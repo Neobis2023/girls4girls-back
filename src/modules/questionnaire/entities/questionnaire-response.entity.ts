@@ -1,11 +1,11 @@
 import { BaseEntity } from '../../../base/base.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Questionnaire } from './questionnaire.entity';
 import { QuestionAnswer } from './question-answer.entity';
 
 @Entity()
-export class Response extends BaseEntity {
+export class QuestionnaireResponse extends BaseEntity {
   @ManyToOne(() => User, (user) => user.response, { onDelete: 'CASCADE' })
   user: User;
 

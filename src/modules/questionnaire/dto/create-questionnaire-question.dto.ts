@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CreateVariantDto } from './create-variant.dto';
 
-export class CreateQuestionDto {
+export class CreateQuestionnaireQuestionDto {
   @ApiProperty()
   @IsString()
   text: string;

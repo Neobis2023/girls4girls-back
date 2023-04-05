@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseDto } from 'src/base/dto/base.dto';
 import { Image } from 'src/modules/image/entities/image.entity';
+import { Type } from 'class-transformer';
 
 export class CreateTrainingDto extends BaseDto {
   @ApiProperty({
@@ -65,4 +66,12 @@ export class CreateTrainingDto extends BaseDto {
   @IsString()
   @IsOptional()
   location: string;
+
+  @ApiProperty({
+    example: 3,
+    description: 'ID of a questionnaire',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  questionnaireId: number;
 }

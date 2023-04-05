@@ -6,7 +6,7 @@ import { QuestionType } from '../enum/question-type.enum';
 import { QuestionAnswer } from './question-answer.entity';
 
 @Entity()
-export class Question extends BaseEntity {
+export class QuestionnaireQuestion extends BaseEntity {
   @Column()
   text: string;
 
