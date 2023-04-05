@@ -31,7 +31,6 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     Object.assign(videoBlog, blog);
     videoBlog.lecturerImage = image;
     videoBlog.category = category;
-    console.log(videoBlog);
     return await this.blogRepo.save(videoBlog);
   }
 
