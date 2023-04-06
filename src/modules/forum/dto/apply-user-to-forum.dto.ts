@@ -12,11 +12,16 @@ export class ApplyUserToForumDto extends BaseDto {
   @IsNumber()
   forumId: number;
 
+  userId?: number;
+
   @ApiProperty({
-    example: 10,
-    description: 'User id',
+    example: 3,
+    description: 'Questionnaire response ID',
+    required: false,
   })
   @Type(() => Number)
   @IsNumber()
-  userId: number;
+  questionnaireResponseId: number;
+
+
 }

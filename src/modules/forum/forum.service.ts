@@ -13,6 +13,7 @@ import { ApplyUserToForumDto } from './dto/apply-user-to-forum.dto';
 import { UserService } from '../user/user.service';
 import { UserToForum } from './entities/users-to-forum.entity';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
+import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 
 @Injectable()
 export class ForumService extends BaseService<Forum> {
@@ -24,6 +25,8 @@ export class ForumService extends BaseService<Forum> {
     private readonly imageService: ImageService,
     @InjectRepository(UserToForum)
     private readonly userToForumRepository: Repository<UserToForum>,
+    @InjectRepository(Questionnaire)
+    private readonly questionnaireRepository: Repository<Questionnaire>,
     private readonly userService: UserService,
   ) {
     super(forumRepo);
@@ -39,6 +42,13 @@ export class ForumService extends BaseService<Forum> {
       const image = await this.imageService.createImage(file)
       images.push(image)
       createForumDto.images = images
+    }
+
+    if(createForumDto.questionnaireId){
+      const questionnare = await this.questionnaireRepository.findOneBy({
+        id:createForumDto.questionnaireId
+      })
+      forum.questionnaire = questionnare
     }
     forum.absorbFromDto(createForumDto)
     return await this.forumRepo.save(forum)
@@ -104,7 +114,7 @@ export class ForumService extends BaseService<Forum> {
     const isUserApplied = await this.findAppliedUserById(forumId, userId);
     if (isUserApplied) {
       throw new BadRequestException(
-        `User with id ${userId} already applied to this training!`,
+        `User with id ${userId} already applied to this forum!`,
       );
     }
 
@@ -142,7 +152,6 @@ export class ForumService extends BaseService<Forum> {
         `Forum with id ${forumId} is not found!`,
       );
     }
-
     return forum.userToForum
   }
 
@@ -162,23 +171,6 @@ export class ForumService extends BaseService<Forum> {
 
     application.applyStatus = applyStatus;
     return this.userToForumRepository.save(application);
-  }
-
-  async pastList() {
-    return await this.repository
-      .createQueryBuilder('forum')
-      .where('forum.eventDate < :currentDate', { currentDate: new Date() })
-      .leftJoinAndSelect('forum.images','images')
-      .getMany();
-  }
-
-  
-  async listFuture() {
-    return await this.repository
-      .createQueryBuilder('forum')
-      .where('forum.eventDate > :currentDate', { currentDate: new Date() })
-      .leftJoinAndSelect('forum.images','images')
-      .getMany();
   }
 
   async listFutureForums(listParamsDto: ListParamsDto) {
@@ -217,6 +209,21 @@ export class ForumService extends BaseService<Forum> {
       order: listParamsDto.order,
       orderField: listParamsDto.orderField,
     });
+  }
+
+  async getForumById(forum_id:number){
+    const forum = await this.forumRepo.findOne({
+      where:{id:forum_id},
+      relations:[
+        'images',
+        'userToForum',
+        'userToForum.user',
+        'questionnaire',
+        'questionnaire.questions',
+        'questionnaire.questions.variants',
+      ]
+    })
+    return forum
   }
   
 }

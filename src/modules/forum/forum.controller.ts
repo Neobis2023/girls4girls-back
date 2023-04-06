@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
   Patch,
+  Req,
 } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { CreateForumDto } from './dto/create-forum.dto';
@@ -33,8 +34,8 @@ export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -103,16 +104,18 @@ export class ForumController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить форум по ID' })
   async getById(@Param('id') id: number) {
-    return await this.forumService.getWithRelations(id, 'forum', [
-      'images',
-    ]);
+    return await this.forumService.getForumById(id)
   }
 
   @Post('apply')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Подать заявку на форум' })
   async applyUserToTraining(
+    @Req() req:any,
     @Query() applyUserToForumDto: ApplyUserToForumDto
   ) {
+    applyUserToForumDto.userId = req.user?.id
     return this.forumService.applyUserToForum(applyUserToForumDto)
   }
 
@@ -134,6 +137,8 @@ export class ForumController {
   }
 
   @Patch('apply')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Админ: Изменить подачу пользователя на форум' })
   async updateUserApplication(
     @Body() updateUserApplication: UpdateUserApplicationDto) {
