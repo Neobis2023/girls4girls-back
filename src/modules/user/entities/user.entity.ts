@@ -130,5 +130,6 @@ export class User extends BaseEntity {
   response: Response[];
 
   @OneToMany(() => UserToForum, (userToForum) => userToForum.user)
+  @JoinColumn()
   userToForum: UserToForum[];
 }

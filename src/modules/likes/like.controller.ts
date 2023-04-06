@@ -26,6 +26,12 @@ export class LikeController {
     return this.likeServise.list(listParamsDto);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Найти лайк по id' })
+  async getOne(@Param('id') id: number) {
+    return this.likeServise.getWithRelations(id, 'Likes', ['blog']);
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
