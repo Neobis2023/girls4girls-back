@@ -22,6 +22,4 @@ export class ApplyUserToForumDto extends BaseDto {
   @Type(() => Number)
   @IsNumber()
   questionnaireResponseId: number;
-
-
 }
