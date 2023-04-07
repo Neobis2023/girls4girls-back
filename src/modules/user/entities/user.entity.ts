@@ -142,7 +142,10 @@ export class User extends BaseEntity {
   @JoinColumn()
   response: QuestionnaireResponse[];
 
-  @OneToMany(() => UserToForum, (userToForum) => userToForum.user)
+  @OneToMany(() => UserToForum, (userToForum) => userToForum.user, {
+    cascade: true,
+  })
   @JoinColumn()
   userToForum: UserToForum[];
+
 }

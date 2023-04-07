@@ -23,6 +23,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { StatusEnum } from './enums/user-status.enum';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -87,4 +88,34 @@ export class UserController {
   async getRegions() {
     return this.userService.getRegions();
   }
+
+  @Get('statuses')
+  @ApiOperation({ summary: 'Получить список статусов пользователей' })
+  async getStatus() {
+    return await this.userService.getUsersStatuses();
+  }
+
+  @Get('/sorted/by/status')
+  @ApiOperation({
+    summary: 'Получить сортированный по статусу список пользователей',
+  })
+  async findUsersByStatus(
+    @Query('status') status: StatusEnum,
+    @Query() listParamsDto: ListParamsDto,
+  ) {
+    return await this.userService.listByStatus(listParamsDto, status);
+  }
+
+  @Get('/find/by/fullname')
+  @ApiOperation({
+    summary:
+      'Получить список пользователей (или одного пользователя) по имени и фамилии',
+  })
+  async getUsersByFullName(
+    @Query('firstName') firstName: string,
+    @Query('lastName') lastName: string,
+  ) {
+    return await this.userService.getUsersByFullname(firstName, lastName);
+  }
+
 }

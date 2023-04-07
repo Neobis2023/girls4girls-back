@@ -1,4 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -10,6 +13,9 @@ import { ChangePasswordDto } from '../auth/dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ImageService } from '../image/image.service';
 import { RegionEnum } from '../../utils/enum/region.enum';
+import { ListParamsDto } from 'src/base/dto/list-params.dto';
+import { StatusEnum } from './enums/user-status.enum';
+import { ListDto } from 'src/base/dto/list.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -135,4 +141,42 @@ export class UserService extends BaseService<User> {
   async getRegions() {
     return RegionEnum;
   }
+
+  async getUsersByFullname(firstName: string, lastName: string) {
+    return await this.repository
+      .createQueryBuilder('user')
+      .where(
+        'user.firstName LIKE :firstName AND user.lastName LIKE :lastName',
+        {
+          firstName: `%${firstName}%`,
+          lastName: `%${lastName}%`,
+        },
+      )
+      .leftJoinAndSelect('user.image', 'image')
+      .getMany();
+  }
+
+  async getUsersStatuses() {
+    return StatusEnum;
+  }
+
+  async listByStatus(listParamsDto: ListParamsDto, status: StatusEnum) {
+    const array = await this.repository
+      .createQueryBuilder('user')
+      .where('user.status = :status', { status })
+      .leftJoinAndSelect('user.image', 'image')
+      .limit(listParamsDto.limit)
+      .offset(listParamsDto.countOffset())
+      .orderBy(`user.${listParamsDto.getOrderedField()}`, listParamsDto.order)
+      .getMany();
+    const itemsCount = await this.repository.createQueryBuilder().getCount();
+    return new ListDto(array, {
+      page: listParamsDto.page,
+      itemsCount,
+      limit: listParamsDto.limit,
+      order: listParamsDto.order,
+      orderField: listParamsDto.orderField,
+    });
+  }
+
 }
