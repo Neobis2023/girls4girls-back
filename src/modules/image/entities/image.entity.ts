@@ -4,6 +4,7 @@ import { IsString } from 'class-validator';
 import { Training } from 'src/modules/training/entities/training.entity';
 import { Forum } from 'src/modules/forum/entities/forum.entity';
 import { VideoBlog } from 'src/modules/video-blog/entities/video-blog.entity';
+import { CharacterImage } from '../../character/entities/character-image.entity';
 
 @Entity()
 export class Image extends BaseEntity {
@@ -31,4 +32,9 @@ export class Image extends BaseEntity {
     onDelete: 'CASCADE',
   })
   videoBlog: VideoBlog[];
+
+  @ManyToOne(() => CharacterImage, (characterImage) => characterImage.images , {
+    onDelete: 'CASCADE',
+  })
+  characterImage: CharacterImage;
 }

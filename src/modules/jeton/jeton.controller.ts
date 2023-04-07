@@ -13,7 +13,7 @@ import {
 import { JetonService } from './jeton.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { CreateJetonDto } from './dto/create-jeton.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateJetonDto } from './dto/update-jeton.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -25,12 +25,34 @@ export class JetonController {
   @Get()
   @ApiOperation({ summary: 'Получение списка жетонов' })
   async list(@Query() listParams: ListParamsDto) {
-    return this.jetonService.list(listParams);
+    return this.jetonService.listWithRelations(listParams, 'jeton', ['image']);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Создание жетона' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string',
+          example: 'Синяя львица',
+          description: 'Название достижения',
+        },
+        description: {
+          type: 'string',
+          example: 'Достижение за проявленную отвагу и смелость',
+          description: 'Описание достижения',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor('image'))
+  @ApiOperation({ summary: 'Создание жетона' })
   async create(
     @Body() createJetonDto: CreateJetonDto,
     @UploadedFile() file: Express.Multer.File,

@@ -48,7 +48,7 @@ export class UserService extends BaseService<User> {
     console.log(id);
     const user = await this.usersRepository.findOne({
       where: { id },
-      relations: ['jetons', 'image'],
+      relations: ['jetons', 'image', 'character.characterImage'],
     });
 
     if (!user || !id) {

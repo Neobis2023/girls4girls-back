@@ -26,6 +26,7 @@ import { UserToTraining } from '../../training/entities/users-to-training.entity
 import { RegionEnum } from 'src/utils/enum/region.enum';
 import { QuestionnaireResponse } from '../../questionnaire/entities/questionnaire-response.entity';
 import { UserToForum } from 'src/modules/forum/entities/users-to-forum.entity';
+import { Character } from '../../character/entities/character.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -111,6 +112,14 @@ export class User extends BaseEntity {
   @JoinColumn()
   image: Image;
 
+  @OneToOne(() => Character, (character) => character.user, {
+    cascade: true,
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  character: Character;
+
   @ManyToMany(() => Jeton, (jeton) => jeton.users)
   @JoinTable()
   jetons: Jeton[];
@@ -122,12 +131,16 @@ export class User extends BaseEntity {
   @JoinColumn()
   mentee: Mentee;
 
-  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user)
+  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user, {
+    cascade: true,
+  })
   userToTraining: UserToTraining[];
 
-  @OneToMany(() => QuestionnaireResponse, (response) => response.user)
+  @OneToMany(() => QuestionnaireResponse, (response) => response.user, {
+    cascade: true,
+  })
   @JoinColumn()
-  response: Response[];
+  response: QuestionnaireResponse[];
 
   @OneToMany(() => UserToForum, (userToForum) => userToForum.user)
   @JoinColumn()
