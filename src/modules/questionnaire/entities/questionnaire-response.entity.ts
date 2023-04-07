@@ -9,7 +9,10 @@ export class QuestionnaireResponse extends BaseEntity {
   @ManyToOne(() => User, (user) => user.response, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Questionnaire, (questionnaire) => questionnaire.responses)
+  @ManyToOne(() => Questionnaire, (questionnaire) => questionnaire.responses, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   questionnaire: Questionnaire;
 
   @OneToMany(
