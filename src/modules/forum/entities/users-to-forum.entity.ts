@@ -13,7 +13,7 @@ export class UserToForum extends BaseEntity {
   })
   applyStatus: ApplyStatus;
 
-  @ManyToOne(() => User, (user) => user.userToForum, { cascade: true })
+  @ManyToOne(() => User, (user) => user.userToForum, { onDelete:'CASCADE'})
   user: User;
 
   @ManyToOne(() => Forum, (forum) => forum.userToForum, {

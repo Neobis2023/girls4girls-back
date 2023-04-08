@@ -122,14 +122,14 @@ export class User extends BaseEntity {
   @JoinColumn()
   mentee: Mentee;
 
-  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user)
+  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.user ,{cascade:true})
   userToTraining: UserToTraining[];
 
   @OneToMany(() => QuestionnaireResponse, (response) => response.user)
   @JoinColumn()
   response: Response[];
 
-  @OneToMany(() => UserToForum, (userToForum) => userToForum.user)
-  @JoinColumn()
+  @OneToMany(() => UserToForum, (userToForum) => userToForum.user , {cascade: true})
+  // @JoinColumn()
   userToForum: UserToForum[];
 }
