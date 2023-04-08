@@ -1,4 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -139,24 +142,29 @@ export class UserService extends BaseService<User> {
     return RegionEnum;
   }
 
-  async getUsersByFullname(firstName: string, lastName: string){
-    return await this.repository.createQueryBuilder('user')
-          .where('user.firstName LIKE :firstName AND user.lastName LIKE :lastName',{
-            firstName: `%${firstName}%`,
-            lastName: `%${lastName}%`,})
-          .leftJoinAndSelect('user.image','image')
-          .getMany()
+  async getUsersByFullname(firstName: string, lastName: string) {
+    return await this.repository
+      .createQueryBuilder('user')
+      .where(
+        'user.firstName LIKE :firstName AND user.lastName LIKE :lastName',
+        {
+          firstName: `%${firstName}%`,
+          lastName: `%${lastName}%`,
+        },
+      )
+      .leftJoinAndSelect('user.image', 'image')
+      .getMany();
   }
 
-  async getUsersStatuses(){
-    return StatusEnum
+  async getUsersStatuses() {
+    return StatusEnum;
   }
 
   async listByStatus(listParamsDto: ListParamsDto, status: StatusEnum) {
     const array = await this.repository
       .createQueryBuilder('user')
       .where('user.status = :status', { status })
-      .leftJoinAndSelect('user.image','image')
+      .leftJoinAndSelect('user.image', 'image')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(`user.${listParamsDto.getOrderedField()}`, listParamsDto.order)
