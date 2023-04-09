@@ -23,13 +23,23 @@ export class LikeController {
     summary: 'Вывести все избранные видео-блоги всех пользователей',
   })
   async getAll(@Query() listParamsDto: ListParamsDto) {
-    return this.likeServise.list(listParamsDto);
+    return await this.likeServise.list(listParamsDto);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Найти лайк по id' })
   async getOne(@Param('id') id: number) {
-    return this.likeServise.getWithRelations(id, 'Likes', ['blog']);
+    const like = await this.likeServise.getWithRelations(id, 'Likes', [
+      'blog',
+      'user',
+    ]);
+
+    if (!like) {
+      return;
+    }
+    const userLike = { id: like.user.id, email: like.user.email };
+    const correctLike = { blog: like.blog, user: userLike };
+    return correctLike;
   }
 
   @Get()
@@ -37,7 +47,7 @@ export class LikeController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Вывести все ваши избранные видео-блоги' })
   async getAllYour(@Req() req) {
-    return this.likeServise.getLikes(req.user.email);
+    return await this.likeServise.getLikes(req.user.email);
   }
 
   @Post(':blogId')
