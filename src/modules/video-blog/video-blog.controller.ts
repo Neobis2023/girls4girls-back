@@ -42,7 +42,11 @@ export class VideoBlogController {
   @ApiOperation({ summary: 'Вывести все видеоблоги' })
   @Get()
   async getBlogs(@Query() listParamsDto: ListParamsDto) {
-    return await this.videoBlogService.list(listParamsDto);
+    return await this.videoBlogService.listWithRelations(
+      listParamsDto,
+      'VideoBlog',
+      ['category', 'lecturerImage'],
+    );
   }
 
   @ApiOperation({ summary: 'Найти один видеоблог по id' })
