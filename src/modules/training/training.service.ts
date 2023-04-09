@@ -84,11 +84,20 @@ export class TrainingsService extends BaseService<Training> {
       relations: [
         'images',
         'userToTraining',
-        'userToTraining.user',
+        'userToTraining.user.response.questionAnswers',
+        'userToTraining.user.response.questionnaire',
         'questionnaire',
         'questionnaire.questions',
         'questionnaire.questions.variants',
       ],
+    });
+
+    training.userToTraining.forEach((userToTraining) => {
+      const responses = userToTraining.user.response;
+      userToTraining.user.response = responses.filter(
+        (response) =>
+          response?.questionnaire?.id === training?.questionnaire?.id,
+      );
     });
     return training;
   }

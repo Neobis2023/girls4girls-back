@@ -18,6 +18,7 @@ import { VideoBlogModule } from './modules/video-blog/video-blog.module';
 import { CategoryModule } from './modules/categories/category.module';
 import { QuizModule } from './modules/quiz/quiz.module';
 import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
+import { CharacterModule } from './modules/character/character.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { QuestionnaireModule } from './modules/questionnaire/questionnaire.modul
     CategoryModule,
     QuizModule,
     QuestionnaireModule,
+    CharacterModule,
   ],
   controllers: [],
 })
