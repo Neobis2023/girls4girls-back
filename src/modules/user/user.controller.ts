@@ -24,6 +24,7 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StatusEnum } from './enums/user-status.enum';
+import { User } from './entities/user.entity';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -106,16 +107,12 @@ export class UserController {
     return await this.userService.listByStatus(listParamsDto, status);
   }
 
-  @Get('/find/by/fullname')
+  @Get('search/user')
   @ApiOperation({
-    summary:
-      'Получить список пользователей (или одного пользователя) по имени и фамилии',
+    summary:'Получить список пользователей (или одного пользователя) по имени или фамилии',
   })
-  async getUsersByFullName(
-    @Query('firstName') firstName: string,
-    @Query('lastName') lastName: string,
-  ) {
-    return await this.userService.getUsersByFullname(firstName, lastName);
+  async findUsers(@Query('searchTerm') searchTerm: string): Promise<User[]> {
+    return await this.userService.findUsers(searchTerm);
   }
 
 }

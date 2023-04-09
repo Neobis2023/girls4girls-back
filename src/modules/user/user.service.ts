@@ -142,20 +142,6 @@ export class UserService extends BaseService<User> {
     return RegionEnum;
   }
 
-  async getUsersByFullname(firstName: string, lastName: string) {
-    return await this.repository
-      .createQueryBuilder('user')
-      .where(
-        'user.firstName LIKE :firstName AND user.lastName LIKE :lastName',
-        {
-          firstName: `%${firstName}%`,
-          lastName: `%${lastName}%`,
-        },
-      )
-      .leftJoinAndSelect('user.image', 'image')
-      .getMany();
-  }
-
   async getUsersStatuses() {
     return StatusEnum;
   }
@@ -177,6 +163,17 @@ export class UserService extends BaseService<User> {
       order: listParamsDto.order,
       orderField: listParamsDto.orderField,
     });
+  }
+
+  async findUsers(searchTerm: string): Promise<User[]> {
+    const searchTermLowerCase = searchTerm.toLowerCase(); // переводим searchTerm в нижний регистр
+    return await this.repository
+      .createQueryBuilder('user')
+      .where(
+        `LOWER(user.firstName) like LOWER(:nameSearchTerm) or LOWER(user.lastName) like LOWER(:nameSearchTerm)`,
+         { nameSearchTerm: `${searchTermLowerCase}%` })
+      .leftJoinAndSelect('user.image', 'image')
+      .getMany();
   }
 
 }
