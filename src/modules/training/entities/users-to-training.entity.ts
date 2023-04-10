@@ -26,5 +26,4 @@ export class UserToTraining extends BaseEntity {
     cascade: true,
   })
   training: Training;
-
 }
