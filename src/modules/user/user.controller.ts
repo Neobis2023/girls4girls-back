@@ -36,6 +36,12 @@ export class UserController {
     return this.userService.listWithRelations(listParamsDto, 'user', ['image']);
   }
 
+  @Get('search')
+  @ApiOperation({ summary: 'Поиск пользователей' })
+  async searchUsers(@Query('searchTerm') searchTerm: string) {
+    return this.userService.searchUsers(searchTerm);
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('profile')

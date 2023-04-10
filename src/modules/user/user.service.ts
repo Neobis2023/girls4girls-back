@@ -68,6 +68,19 @@ export class UserService extends BaseService<User> {
     return await this.usersRepository.findOneBy(searchUserDto);
   }
 
+  async searchUsers(searchTerm: string): Promise<User[]> {
+    const query = this.usersRepository
+      .createQueryBuilder('user')
+      .where(
+        'LOWER(user.firstName) ILIKE LOWER(:searchTerm) OR LOWER(user.lastName) ILIKE LOWER(:searchTerm) OR LOWER(user.email) ILIKE LOWER(:searchTerm)',
+        { searchTerm: `${searchTerm}%` },
+      )
+      .leftJoinAndSelect('user.image', 'image');
+
+    const users = await query.getMany();
+    return users;
+  }
+
   async checkIfUserExists(searchUserDto: SearchUserDto) {
     const user = await this.usersRepository
       .createQueryBuilder('user')
@@ -178,5 +191,6 @@ export class UserService extends BaseService<User> {
       orderField: listParamsDto.orderField,
     });
   }
+
 
 }
