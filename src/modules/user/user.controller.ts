@@ -36,6 +36,12 @@ export class UserController {
     return this.userService.listWithRelations(listParamsDto, 'user', ['image']);
   }
 
+  @Get('search')
+  @ApiOperation({ summary: 'Поиск пользователей' })
+  async searchUsers(@Query('searchTerm') searchTerm: string) {
+    return this.userService.searchUsers(searchTerm);
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('profile')
@@ -105,17 +111,4 @@ export class UserController {
   ) {
     return await this.userService.listByStatus(listParamsDto, status);
   }
-
-  @Get('/find/by/fullname')
-  @ApiOperation({
-    summary:
-      'Получить список пользователей (или одного пользователя) по имени и фамилии',
-  })
-  async getUsersByFullName(
-    @Query('firstName') firstName: string,
-    @Query('lastName') lastName: string,
-  ) {
-    return await this.userService.getUsersByFullname(firstName, lastName);
-  }
-
 }
