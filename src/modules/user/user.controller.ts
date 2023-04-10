@@ -111,17 +111,4 @@ export class UserController {
   ) {
     return await this.userService.listByStatus(listParamsDto, status);
   }
-
-  @Get('/find/by/fullname')
-  @ApiOperation({
-    summary:
-      'Получить список пользователей (или одного пользователя) по имени и фамилии',
-  })
-  async getUsersByFullName(
-    @Query('firstName') firstName: string,
-    @Query('lastName') lastName: string,
-  ) {
-    return await this.userService.getUsersByFullname(firstName, lastName);
-  }
-
 }
