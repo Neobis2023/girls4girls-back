@@ -17,5 +17,5 @@ export class Content extends BaseEntity {
   @OneToMany(() => AskingQuestions, (questions) => questions.content, {
     cascade: true,
   })
-  questions: AskingQuestions;
+  questions: AskingQuestions[];
 }

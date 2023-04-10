@@ -6,7 +6,6 @@ import { Content } from './content.entity';
 export class AskingQuestions extends BaseEntity {
   @ManyToOne(() => Content, (content) => content.questions, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
   content: Content[];
 
