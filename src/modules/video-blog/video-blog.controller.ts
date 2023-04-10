@@ -49,7 +49,10 @@ export class VideoBlogController {
     );
   }
 
-  @ApiOperation({ summary: 'Найти один видеоблог по id' })
+  @ApiOperation({
+    summary:
+      'Найти один видеоблог по id и вывести 3 рандомных блога этой же категории',
+  })
   @Get(':id')
   async getBlog(@Param('id') id: number) {
     return await this.videoBlogService.getWithRandomBlogs(id);
