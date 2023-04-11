@@ -16,9 +16,6 @@ export class UserToForum extends BaseEntity {
   @ManyToOne(() => User, (user) => user.userToForum, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Forum, (forum) => forum.userToForum, {
-    cascade: true,
-  })
+  @ManyToOne(() => Forum, (forum) => forum.userToForum, { onDelete: 'CASCADE' })
   forum: Forum;
-  
 }

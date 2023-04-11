@@ -85,7 +85,7 @@ export class TrainingsController {
         questionnaireId: {
           type: 'string',
           example: 3,
-          description: 'ID of a training',
+          description: 'ID of questionnaire to training',
         },
       },
     },

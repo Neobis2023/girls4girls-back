@@ -48,7 +48,9 @@ export class Forum extends BaseEntity {
   @JoinColumn()
   questionnaire: Questionnaire;
 
-  @OneToMany(() => UserToForum, (userToForum) => userToForum.forum)
+  @OneToMany(() => UserToForum, (userToForum) => userToForum.forum, {
+    cascade: true,
+  })
   @JoinTable()
   userToForum: UserToForum[];
 }
