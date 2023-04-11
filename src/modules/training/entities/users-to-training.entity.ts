@@ -23,7 +23,7 @@ export class UserToTraining extends BaseEntity {
   user: User;
 
   @ManyToOne(() => Training, (training) => training.userToTraining, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   training: Training;
 }

@@ -83,6 +83,11 @@ export class ForumController {
           example: 'Наарынская область',
           description: 'Локация тренинга',
         },
+        questionnaireId: {
+          type: 'string',
+          example: 3,
+          description: 'ID of questionnaire to forum',
+        },
       },
     },
   })

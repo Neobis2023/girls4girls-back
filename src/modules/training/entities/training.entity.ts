@@ -9,9 +9,9 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { TrainingRuEntity } from './training-ru.entity';
 import { UserToTraining } from './users-to-training.entity';
 import { Questionnaire } from '../../questionnaire/entities/questionnaire.entity';
+import { TrainingKg } from './training-kg.entity';
 
 @Entity()
 export class Training extends BaseEntity {
@@ -42,6 +42,12 @@ export class Training extends BaseEntity {
   })
   location: string;
 
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isDeleted: boolean;
+
   @OneToMany(() => Image, (image) => image.training, {
     cascade: true,
   })
@@ -51,10 +57,11 @@ export class Training extends BaseEntity {
   @JoinColumn()
   questionnaire: Questionnaire;
 
-  @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
-  ru: TrainingRuEntity[];
-
   @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.training)
   @JoinTable()
   userToTraining: UserToTraining[];
+
+  @OneToOne(() => TrainingKg)
+  @JoinColumn()
+  kg: TrainingKg;
 }
