@@ -38,7 +38,9 @@ export class QuestionService extends BaseService<Question> {
     const question = await this.questionRepository.findOne({
       where: { id: id },
     });
-    if (question) return await this.questionRepository.remove(question);
-    return;
+    if (!question) {
+      return;
+    }
+    return await this.questionRepository.remove(question);
   }
 }
