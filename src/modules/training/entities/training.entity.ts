@@ -54,7 +54,7 @@ export class Training extends BaseEntity {
   @OneToOne(() => TrainingRuEntity, (ru) => ru.training)
   ru: TrainingRuEntity[];
 
-  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.training)
+  @OneToMany(() => UserToTraining, (userToTraining) => userToTraining.training,{cascade:true})
   @JoinTable()
   userToTraining: UserToTraining[];
 }
