@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -32,7 +33,6 @@ import { UserRoleEnum } from '../user/enums/user-role.enum';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlogService } from './video-blog.service';
-import { log } from 'console';
 
 @ApiTags('Видеоблоги')
 @Controller('video-blog')
@@ -49,14 +49,13 @@ export class VideoBlogController {
     );
   }
 
-  @ApiOperation({ summary: 'Найти один видеоблог по id' })
+  @ApiOperation({
+    summary:
+      'Найти один видеоблог по id и вывести 3 рандомных блога этой же категории',
+  })
   @Get(':id')
   async getBlog(@Param('id') id: number) {
-    return await this.videoBlogService.getWithRelations(id, 'VideoBlog', [
-      'lecturerImage',
-      'category',
-      'quiz',
-    ]);
+    return await this.videoBlogService.getWithRandomBlogs(id);
   }
 
   // @Roles(UserRoleEnum.ADMIN)
@@ -138,5 +137,11 @@ export class VideoBlogController {
   @Delete(':blogId')
   async deleteBlog(@Param('blogId') blogId: number) {
     return await this.videoBlogService.deleteOne(blogId);
+  }
+
+  @ApiOperation({ summary: 'Увеличить количество просмотров видеоблога на 1' })
+  @Patch(':id')
+  async addView(@Param('id') id: number) {
+    return await this.videoBlogService.addView(id);
   }
 }

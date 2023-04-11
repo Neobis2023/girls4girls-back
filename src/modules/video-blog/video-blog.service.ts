@@ -7,6 +7,7 @@ import { ImageService } from '../image/image.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlog } from './entities/video-blog.entity';
+import { ListParamsDto } from 'src/base/dto/list-params.dto';
 
 @Injectable()
 export class VideoBlogService extends BaseService<VideoBlog> {
@@ -46,8 +47,11 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     const category = await this.categoryRepo.findOne({
       where: { name: newBlog.category },
     });
-    if (!category)
-      throw new BadRequestException('Введите название категории правильно');
+    if (!category) {
+      throw new BadRequestException(
+        `Категория '${newBlog.category}' не найдена`,
+      );
+    }
     const newImage = await this.imageService.createImage(newBlog.lecturerImage);
     blog.category = category;
     blog.videoUrl = newBlog.videoUrl;
@@ -63,5 +67,46 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     const blog = await this.get(blogId);
     if (blog) return await this.blogRepo.remove(blog);
     return;
+  }
+
+  async addView(id: number) {
+    const videoBlog = await this.get(id);
+    videoBlog.postViewCount++;
+    return await this.blogRepo.save(videoBlog);
+  }
+
+  async getWithRandomBlogs(id: number) {
+    const videoBlog = await this.getWithRelations(id, 'videoBlog', [
+      'category',
+    ]);
+    if (!videoBlog) {
+      throw new BadRequestException('Категории с таким id нет в базе данных');
+    }
+    const blogs = await this.listWithRelations(
+      new ListParamsDto(),
+      'videoblog',
+      ['category'],
+    );
+    const categoryName = videoBlog.category.name;
+    const arr = blogs.data;
+    const randomBlogs = await this.randomVideoBlogs(id, arr, categoryName);
+    const data = { videoBlog: videoBlog, randomThreeVideoBlogs: randomBlogs };
+    return data;
+  }
+
+  async randomVideoBlogs(id: number, arr, categoryName: string) {
+    const index = arr.findIndex((obj) => obj.id === id);
+    if (index !== -1) {
+      arr.splice(index, 1);
+    }
+    const objects = arr.filter((obj) => obj.category.name === categoryName);
+    if (objects.length <= 3) {
+      return objects;
+    }
+    for (let i = objects.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [objects[i], objects[j]] = [objects[j], objects[i]];
+    }
+    return objects.slice(0, 3);
   }
 }
