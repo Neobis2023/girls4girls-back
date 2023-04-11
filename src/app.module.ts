@@ -19,6 +19,7 @@ import { CategoryModule } from './modules/categories/category.module';
 import { QuizModule } from './modules/quiz/quiz.module';
 import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
 import { CharacterModule } from './modules/character/character.module';
+import { ContentModule } from './modules/content/content.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { CharacterModule } from './modules/character/character.module';
     QuizModule,
     QuestionnaireModule,
     CharacterModule,
+    ContentModule,
   ],
   controllers: [],
 })
