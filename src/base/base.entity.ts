@@ -1,7 +1,8 @@
 import {
+  Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { BaseDto } from './dto/base.dto';
 
