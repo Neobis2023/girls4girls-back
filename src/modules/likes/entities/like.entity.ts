@@ -5,7 +5,10 @@ import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Likes extends BaseEntity {
-  @ManyToOne(() => VideoBlog, (blog) => blog.likes)
+  @ManyToOne(() => VideoBlog, (blog) => blog.likes, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'blogId', referencedColumnName: 'id' })
   blog: VideoBlog;
 
