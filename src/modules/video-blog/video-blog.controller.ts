@@ -45,7 +45,7 @@ export class VideoBlogController {
     return await this.videoBlogService.listWithRelations(
       listParamsDto,
       'VideoBlog',
-      ['category', 'lecturerImage'],
+      ['category', 'lecturerImage', 'quiz'],
     );
   }
 

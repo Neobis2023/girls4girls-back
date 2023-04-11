@@ -22,11 +22,11 @@ import { Jeton } from '../../jeton/entities/jeton.entity';
 import { Likes } from 'src/modules/likes/entities/like.entity';
 import { Mentee } from 'src/modules/mentee/entities/mentee.entity';
 import { Image } from '../../image/entities/image.entity';
-import { UserToTraining } from '../../training/entities/users-to-training.entity';
 import { RegionEnum } from 'src/utils/enum/region.enum';
-import { QuestionnaireResponse } from '../../questionnaire/entities/questionnaire-response.entity';
 import { UserToForum } from 'src/modules/forum/entities/users-to-forum.entity';
 import { Character } from '../../character/entities/character.entity';
+import { UserToTraining } from '../../training/entities/users-to-training.entity';
+import { QuestionnaireResponse } from '../../questionnaire/entities/questionnaire-response.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -147,5 +147,4 @@ export class User extends BaseEntity {
   })
   @JoinColumn()
   userToForum: UserToForum[];
-
 }
