@@ -16,6 +16,13 @@ export class CreateQuestionnaireQuestionDto {
   text: string;
 
   @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @ApiProperty({
     type: 'enum',
     enum: QuestionType,
     default: QuestionType.TEXT,

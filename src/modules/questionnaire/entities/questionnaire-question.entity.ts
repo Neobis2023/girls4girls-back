@@ -10,6 +10,9 @@ export class QuestionnaireQuestion extends BaseEntity {
   @Column()
   text: string;
 
+  @Column({ nullable: true })
+  description: string;
+
   @Column({
     type: 'enum',
     enum: QuestionType,
