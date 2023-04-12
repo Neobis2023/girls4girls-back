@@ -9,10 +9,20 @@ export class News extends BaseEntity {
   @IsString()
   title: string;
 
+  @Column({
+    nullable: true,
+  })
+  titleKG: string;
+
   @Column()
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @Column({
+    nullable: true,
+  })
+  descriptionKG: string;
 
   @Column()
   @IsNotEmpty()

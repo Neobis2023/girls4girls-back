@@ -84,6 +84,15 @@ export class CreateTrainingDto extends BaseDto {
   location: string;
 
   @ApiProperty({
+    description: 'Location of a training',
+    example: 'Наарын областы',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  locationKG: string;
+
+  @ApiProperty({
     example: 3,
     description: 'ID of a questionnaire',
   })

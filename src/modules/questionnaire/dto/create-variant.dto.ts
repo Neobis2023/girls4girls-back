@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateVariantDto {
@@ -6,4 +6,9 @@ export class CreateVariantDto {
   @IsString()
   @IsOptional()
   text: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  textKG: string;
 }

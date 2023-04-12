@@ -49,6 +49,11 @@ export class Training extends BaseEntity {
   location: string;
 
   @Column({
+    nullable: true,
+  })
+  locationKG: string;
+
+  @Column({
     type: 'boolean',
     default: false,
   })

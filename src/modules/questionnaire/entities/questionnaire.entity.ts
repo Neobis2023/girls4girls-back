@@ -9,6 +9,19 @@ export class Questionnaire extends BaseEntity {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  nameKG: string;
+
+  @Column({
+    nullable: true,
+  })
+  description: string;
+
+  @Column({
+    nullable: true,
+  })
+  descriptionKG: string;
+
   @OneToMany(
     () => QuestionnaireQuestion,
     (question) => question.questionnaire,
