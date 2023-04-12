@@ -18,10 +18,16 @@ export class Training extends BaseEntity {
   @Column({ type: 'varchar' })
   title: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  titleKG: string;
+
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
+  descriptionKG: string;
+
+  @Column({ type: 'text', nullable: true })
   address: string;
 
   @CreateDateColumn()
