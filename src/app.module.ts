@@ -21,6 +21,7 @@ import { QuestionnaireModule } from './modules/questionnaire/questionnaire.modul
 import { CharacterModule } from './modules/character/character.module';
 import { ContentModule } from './modules/content/content.module';
 import { TranslateModule } from './modules/translate/translate.module';
+import { LecturerModule } from './modules/lecturers/lecturers.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { TranslateModule } from './modules/translate/translate.module';
     CharacterModule,
     ContentModule,
     TranslateModule,
+    LecturerModule
   ],
   controllers: [],
 })
