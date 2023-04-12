@@ -17,8 +17,14 @@ export class Forum extends BaseEntity {
   @Column()
   title: string;
 
+  @Column({ nullable: true })
+  titleKG: string;
+
   @Column()
   description: string;
+
+  @Column({ nullable: true })
+  descriptionKG: string;
 
   @Column()
   address: string;
@@ -43,6 +49,16 @@ export class Forum extends BaseEntity {
     nullable: true,
   })
   location: string;
+
+  @Column({
+    nullable: true,
+  })
+  locationKG: string;
+
+  @Column({
+    default: false,
+  })
+  isDeleted: boolean;
 
   @OneToOne(() => Questionnaire, (questionnaire) => questionnaire.training)
   @JoinColumn()

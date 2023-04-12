@@ -15,10 +15,10 @@ export class CategoryService extends BaseService<Categories> {
   }
 
   async createOne(category: CreateCategoryDto) {
-    const excists = await this.categoryRepo.findOne({
+    const exists = await this.categoryRepo.findOne({
       where: { name: category.name },
     });
-    if (excists)
+    if (exists)
       throw new BadRequestException(
         'Категория с таким названием уже существует',
       );

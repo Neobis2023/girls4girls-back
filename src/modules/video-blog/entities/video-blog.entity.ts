@@ -24,10 +24,20 @@ export class VideoBlog extends BaseEntity {
   @IsString()
   title: string;
 
+  @Column({
+    nullable: true,
+  })
+  titleKG: string;
+
   @Column()
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @Column({
+    nullable: true,
+  })
+  descriptionKG: string;
 
   @Column({ default: 0 })
   @IsNotEmpty()
@@ -45,6 +55,9 @@ export class VideoBlog extends BaseEntity {
   @IsNotEmpty()
   @IsString()
   lecturerInfo: string;
+
+  @Column({ nullable: true })
+  lecturerInfoKG: string;
 
   @OneToOne(() => Image, (image) => image.videoBlog, { cascade: true })
   @IsNotEmpty()

@@ -9,6 +9,11 @@ export class Variant extends BaseEntity {
   })
   text: string;
 
+  @Column({
+    nullable: true,
+  })
+  textKG: string;
+
   @ManyToOne(() => QuestionnaireQuestion, (question) => question.variants)
   question: QuestionnaireQuestion;
 }

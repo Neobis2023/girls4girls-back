@@ -93,7 +93,8 @@ export class ForumService extends BaseService<Forum> {
   async deleteForumById(forum_id: number) {
     const forum = await this.forumRepo.findOneBy({ id: forum_id });
     if (forum) {
-      await this.forumRepo.delete({ id: forum?.id });
+      forum.isDeleted = true;
+      await this.forumRepo.save(forum);
       return `Forum is successfully removed!`;
     }
     return `Forum is not found!`;

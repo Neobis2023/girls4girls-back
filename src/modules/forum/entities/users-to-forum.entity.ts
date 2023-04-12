@@ -14,15 +14,17 @@ export class UserToForum extends BaseEntity {
   })
   applyStatus: ApplyStatus;
 
-  @OneToOne(()=>QuestionnaireResponse)
+  @OneToOne(() => QuestionnaireResponse)
   @JoinColumn()
   questionnaireResponse: QuestionnaireResponse;
 
-  @ManyToOne(() => User, (user) => user.userToForum, { 
-    onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.userToForum, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
-  @ManyToOne(() => Forum, (forum) => forum.userToForum, { 
-    onDelete: 'CASCADE' })
+  @ManyToOne(() => Forum, (forum) => forum.userToForum, {
+    onDelete: 'CASCADE',
+  })
   forum: Forum;
 }

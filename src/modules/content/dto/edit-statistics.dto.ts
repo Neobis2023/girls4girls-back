@@ -5,7 +5,7 @@ export class EditStatisticsDto {
   @ApiProperty({ example: '200+' })
   @IsNotEmpty()
   @IsString()
-  trainigs: string;
+  trainings: string;
 
   @ApiProperty({ example: '10' })
   @IsNotEmpty()
