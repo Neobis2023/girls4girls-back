@@ -206,12 +206,20 @@ export class ForumService extends BaseService<Forum> {
       relations: [
         'images',
         'userToForum',
-        'userToForum.user',
+        'userToForum.user.response.questionAnswers',
+        'userToForum.user.response.questionnaire',
         'questionnaire',
         'questionnaire.questions',
         'questionnaire.questions.variants',
       ],
     });
+    forum.userToForum.forEach((userToForum)=>{
+      const responses = userToForum.user.response
+      userToForum.user.response = responses.filter(
+        (response) =>
+        response?.questionnaire?.id === forum?.questionnaire?.id
+      )
+    })
     return forum;
   }
 }
