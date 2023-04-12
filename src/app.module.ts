@@ -20,6 +20,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
 import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
 import { CharacterModule } from './modules/character/character.module';
 import { ContentModule } from './modules/content/content.module';
+import { TranslateModule } from './modules/translate/translate.module';
 
 @Module({
   imports: [
@@ -39,9 +40,9 @@ import { ContentModule } from './modules/content/content.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        // ssl: {
+        //   rejectUnauthorized: false,
+        // },
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
@@ -63,6 +64,7 @@ import { ContentModule } from './modules/content/content.module';
     QuestionnaireModule,
     CharacterModule,
     ContentModule,
+    TranslateModule,
   ],
   controllers: [],
 })

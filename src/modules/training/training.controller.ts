@@ -33,8 +33,6 @@ export class TrainingsController {
   constructor(private readonly trainingsService: TrainingsService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -42,14 +40,23 @@ export class TrainingsController {
       properties: {
         title: {
           type: 'string',
-          example: 'Female body',
+          example: 'Женское тело',
           description: 'Название тренинга',
+        },
+        titleKG: {
+          type: 'string',
+          example: 'Аялдын денеси',
+          description: 'Название тренинга на кыргызском',
         },
         description: {
           type: 'string',
-          example:
-            'From high peaks to lush valleys, hard planes, and soft edges',
+          example: 'Тренинг на тему женского тела',
           description: 'Описание тренинга',
+        },
+        descriptionKG: {
+          type: 'string',
+          example: 'Аялдын денеси боюнча тренинг',
+          description: 'Описание тренинга на кыргызском',
         },
         address: {
           type: 'string',
@@ -84,7 +91,6 @@ export class TrainingsController {
         },
         questionnaireId: {
           type: 'string',
-          example: 3,
           description: 'ID of questionnaire to training',
         },
       },
@@ -126,8 +132,6 @@ export class TrainingsController {
     return this.trainingsService.applyUserToTraining(applyUserToTrainingDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Админ: Удаление тренинга по ID' })
   remove(@Param('id') training_id: number) {
