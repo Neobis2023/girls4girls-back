@@ -13,7 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 
-@ApiTags('lecturers')
+@ApiTags('Лекторы')
 @Controller('lecturer')
 export class LecturerController {
   constructor(private readonly lecturerService: LecturerService) {}
@@ -29,7 +29,7 @@ export class LecturerController {
         lecturerFullName: {
           type: 'string',
           example: 'Сыдыкова Айканыш',
-          description: 'Фамилия и имя ведущего лектора'
+          description: 'Фамилия и имя ведущего лектора',
         },
         jobTitle: {
           type: 'string',

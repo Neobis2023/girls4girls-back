@@ -66,7 +66,7 @@ import { LecturerModule } from './modules/lecturers/lecturers.module';
     CharacterModule,
     ContentModule,
     TranslateModule,
-    LecturerModule
+    LecturerModule,
   ],
   controllers: [],
 })
