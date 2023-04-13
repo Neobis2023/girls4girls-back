@@ -14,6 +14,7 @@ import { UserService } from '../user/user.service';
 import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
+import { LecturerService } from '../lecturers/lecturers.service';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -28,6 +29,7 @@ export class TrainingsService extends BaseService<Training> {
     private readonly questionnaireRepository: Repository<Questionnaire>,
     private readonly imageService: ImageService,
     private readonly userService: UserService,
+    private readonly lecturerService: LecturerService,
   ) {
     super(trainingRepo);
   }
@@ -50,6 +52,24 @@ export class TrainingsService extends BaseService<Training> {
       });
       training.questionnaire = questionnaire;
     }
+
+    if (createTrainingDto.lecturers) {
+      try {
+        const lecturersArr = JSON.parse(createTrainingDto.lecturers);
+        if (Array.isArray(lecturersArr)) {
+          const lecturers = [];
+          for await (const id of lecturersArr) {
+            const lecturer = await this.lecturerService.get(id);
+            if (!lecturer) continue;
+            lecturers.push(lecturer);
+          }
+          training.lecturers = lecturers;
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+    delete createTrainingDto.lecturers;
 
     training.absorbFromDto(createTrainingDto);
     return await this.trainingRepo.save(training);
@@ -88,6 +108,7 @@ export class TrainingsService extends BaseService<Training> {
         'questionnaire',
         'questionnaire.questions',
         'questionnaire.questions.variants',
+        'lecturers.image',
       ],
     });
 
