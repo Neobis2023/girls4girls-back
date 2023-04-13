@@ -10,14 +10,11 @@ import { ImageModule } from '../image/image.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Lecturer,
-      Image
-    ]),
+    TypeOrmModule.forFeature([Lecturer, Image]),
     ImageModule,
-    CloudinaryModule
+    CloudinaryModule,
   ],
   controllers: [LecturerController],
-  providers: [LecturerService]
+  providers: [LecturerService],
 })
 export class LecturerModule {}

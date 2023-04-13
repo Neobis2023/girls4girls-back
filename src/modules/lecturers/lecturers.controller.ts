@@ -1,7 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UploadedFile,
+  UseInterceptors,
+  Query,
+} from '@nestjs/common';
 import { LecturerService } from './lecturers.service';
 import { CreateLecturerDto } from './dto/create-lecturer.dto';
-import { UpdateLecturerDto } from './dto/update-lecturer.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
@@ -12,7 +19,7 @@ export class LecturerController {
   constructor(private readonly lecturerService: LecturerService) {}
 
   @Post()
-  @ApiOperation({summary:'Создание нового лектора'})
+  @ApiOperation({ summary: 'Создание нового лектора' })
   @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -27,29 +34,37 @@ export class LecturerController {
         jobTitle: {
           type: 'string',
           example: 'Mentor ,Co-Founder',
-          description: 'Должность'
+          description: 'Должность',
         },
-        lecturerInfo:{
+        lecturerInfo: {
           type: 'string',
           example: 'Доктор медицинских наук, профессор и т.д.',
-          description: 'Информация о лекторе , где работает , стаж работы , опыт и т.д.'
+          description:
+            'Информация о лекторе , где работает , стаж работы , опыт и т.д.',
+        },
+        lecturerInfoKG: {
+          type: 'string',
+          example: 'Медицина илимдеринин доктору, профессор',
+          description:
+            'Лектор жөнүндө маалымат, анын иштеген жери, иш стажы, тажрыйбасы ж.б.',
         },
         image: {
           type: 'string',
-          format: 'binary'
-        }
-      }
-    }
+          format: 'binary',
+        },
+      },
+    },
   })
-  create(@Body() createLecturerDto: CreateLecturerDto,
-  @UploadedFile() file: Express.Multer.File,) {
-    return this.lecturerService.createLecturer(createLecturerDto,file)
+  create(
+    @Body() createLecturerDto: CreateLecturerDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.lecturerService.createLecturer(createLecturerDto, file);
   }
 
   @Get()
-  @ApiOperation({summary: 'Получить список всех лекторов'})
+  @ApiOperation({ summary: 'Получить список всех лекторов' })
   findAll(@Query() listParamsDto: ListParamsDto) {
-    return this.lecturerService.listLecturers(listParamsDto)
+    return this.lecturerService.listLecturers(listParamsDto);
   }
-
 }

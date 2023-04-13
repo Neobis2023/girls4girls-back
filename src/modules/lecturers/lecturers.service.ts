@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateLecturerDto } from './dto/create-lecturer.dto';
-import { UpdateLecturerDto } from './dto/update-lecturer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lecturer } from './entities/lecturer.entity';
 import { Repository } from 'typeorm';
@@ -11,29 +10,29 @@ import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { ListDto } from 'src/base/dto/list.dto';
 
 @Injectable()
-export class LecturerService extends BaseService<Lecturer>{
+export class LecturerService extends BaseService<Lecturer> {
   constructor(
     @InjectRepository(Lecturer)
     private readonly lecturerRepository: Repository<Lecturer>,
     @InjectRepository(Image)
     private readonly imageRepository: Repository<Image>,
-    private readonly imageService: ImageService
-  ){
-    super(lecturerRepository)
+    private readonly imageService: ImageService,
+  ) {
+    super(lecturerRepository);
   }
 
   async createLecturer(
     createLecturerDto: CreateLecturerDto,
     file: Express.Multer.File,
-  ){
-    const lecturer = new Lecturer()
-    if(!file){
-      throw new BadRequestException('Image is not provided!')
+  ) {
+    const lecturer = new Lecturer();
+    if (!file) {
+      throw new BadRequestException('Image is not provided!');
     }
-    const image = await this.imageService.createImage(file)
-    lecturer.absorbFromDto(createLecturerDto)
-    lecturer.image = image
-    return await this.lecturerRepository.save(lecturer)
+    const image = await this.imageService.createImage(file);
+    lecturer.absorbFromDto(createLecturerDto);
+    lecturer.image = image;
+    return await this.lecturerRepository.save(lecturer);
   }
 
   async listLecturers(listParamsDto: ListParamsDto) {
@@ -56,6 +55,4 @@ export class LecturerService extends BaseService<Lecturer>{
       orderField: listParamsDto.orderField,
     });
   }
-
-  
 }
