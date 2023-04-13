@@ -12,6 +12,7 @@ import {
 import { UserToTraining } from './users-to-training.entity';
 import { Questionnaire } from '../../questionnaire/entities/questionnaire.entity';
 import { TrainingKg } from './training-kg.entity';
+import { Lecturer } from 'src/modules/lecturers/entities/lecturer.entity';
 
 @Entity()
 export class Training extends BaseEntity {
@@ -75,4 +76,10 @@ export class Training extends BaseEntity {
   @OneToOne(() => TrainingKg)
   @JoinColumn()
   kg: TrainingKg;
+
+  @OneToMany(()=>Lecturer,(lecturer)=>lecturer.training , {
+    cascade:true
+  })
+  @JoinColumn()
+  lecturers: Lecturer[]
 }
