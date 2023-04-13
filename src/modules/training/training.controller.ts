@@ -93,6 +93,12 @@ export class TrainingsController {
           type: 'string',
           description: 'ID of questionnaire to training',
         },
+        lecturers: {
+          type: 'string',
+          example: '[1, 2]',
+          description:
+            'Массив айдишек лекоторов, надо обычный массив превращать в строку черерз JSON.stringify()',
+        },
       },
     },
   })
