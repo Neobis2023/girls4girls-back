@@ -55,7 +55,7 @@ export class LikeController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Добавить видео-блог в избранные' })
   async like(@Param('blogId') blogId: number, @Req() req) {
-    return await this.likeServise.like(blogId, req.user.email);
+    return await this.likeServise.like(blogId, req.user);
   }
 
   @Delete(':blogId')
@@ -63,6 +63,6 @@ export class LikeController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Удалить видео-блог из избранных' })
   async dislike(@Param('blogId') blogId: number, @Req() req) {
-    return await this.likeServise.dislike(blogId, req.user.email);
+    return await this.likeServise.dislike(blogId, req.user);
   }
 }
