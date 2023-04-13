@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsUrl,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 import { BaseDto } from 'src/base/dto/base.dto';
 
 export class CreateBlogDto extends BaseDto {
@@ -15,10 +9,15 @@ export class CreateBlogDto extends BaseDto {
   @IsUrl()
   videoUrl: string;
 
-  @ApiProperty({ example: 'Менторская программа и тренинги' })
+  @ApiProperty({ example: 'Название видео-блога' })
   @IsNotEmpty()
   @IsString()
   title: string;
+
+  @ApiProperty({ example: 'Видео-блогдун аты' })
+  @IsString()
+  @IsOptional()
+  titleKG: string;
 
   @ApiProperty({
     example:
@@ -27,6 +26,14 @@ export class CreateBlogDto extends BaseDto {
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @ApiProperty({
+    example:
+      'Бул видеодон сиз Кыздар үчүн Кыздар программасынын тең негиздөөчүлөрүнөн долбоордун тарыхы, насаатчылык программасы, тренингдер жана иштин ар кандай нюанстары тууралуу биле аласыз.',
+  })
+  @IsString()
+  @IsOptional()
+  descriptionKG: string;
 
   @ApiProperty({ example: 'Имя Фамилия' })
   @IsNotEmpty()
@@ -37,6 +44,11 @@ export class CreateBlogDto extends BaseDto {
   @IsNotEmpty()
   @IsString()
   lecturerInfo: string;
+
+  @ApiProperty({ example: 'Ментор' })
+  @IsString()
+  @IsOptional()
+  lecturerInfoKG: string;
 
   @ApiProperty()
   lecturerImage: Express.Multer.File;

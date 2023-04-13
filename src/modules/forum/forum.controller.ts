@@ -47,14 +47,23 @@ export class ForumController {
         },
         title: {
           type: 'string',
-          example: 'Female body',
+          example: 'Женское тело',
           description: 'Тема форума',
+        },
+        titleKG: {
+          type: 'string',
+          example: 'Аял денеси',
+          description: 'Тема форума на кыргызском',
         },
         description: {
           type: 'string',
-          example:
-            'From high peaks to lush valleys, hard planes, and soft edges',
+          example: 'Описание форума женское тело',
           description: 'Описание форума',
+        },
+        descriptionKG: {
+          type: 'string',
+          example: 'Аял денеси форумунун суроттомосу',
+          description: 'Описание форума на кыргызском',
         },
         address: {
           type: 'string',
@@ -86,7 +95,7 @@ export class ForumController {
         questionnaireId: {
           type: 'string',
           example: 3,
-          description: 'ID of questionnaire to forum',
+          description: 'ID анкеты для форума',
         },
       },
     },

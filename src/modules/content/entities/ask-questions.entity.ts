@@ -12,6 +12,12 @@ export class AskingQuestions extends BaseEntity {
   @Column()
   question: string;
 
+  @Column({ nullable: true })
+  questionKG: string;
+
   @Column()
   answer: string;
+
+  @Column({ nullable: true })
+  answerKG: string;
 }

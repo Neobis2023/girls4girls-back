@@ -59,6 +59,7 @@ export class TrainingsService extends BaseService<Training> {
     const array = await this.trainingRepo
       .createQueryBuilder('training')
       .leftJoinAndSelect('training.images', 'images')
+      .where('training.isDeleted != true')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(
@@ -84,21 +85,19 @@ export class TrainingsService extends BaseService<Training> {
       relations: [
         'images',
         'userToTraining',
-        'userToTraining.user.response.questionAnswers',
-        'userToTraining.user.response.questionnaire',
         'questionnaire',
         'questionnaire.questions',
         'questionnaire.questions.variants',
       ],
     });
 
-    training.userToTraining.forEach((userToTraining) => {
-      const responses = userToTraining.user.response;
-      userToTraining.user.response = responses.filter(
-        (response) =>
-          response?.questionnaire?.id === training?.questionnaire?.id,
-      );
-    });
+    // training.userToTraining.forEach((userToTraining) => {
+    //   const responses = userToTraining.user.response;
+    //   userToTraining.user.response = responses.filter(
+    //     (response) =>
+    //       response?.questionnaire?.id === training?.questionnaire?.id,
+    //   );
+    // });
     return training;
   }
 
@@ -123,7 +122,8 @@ export class TrainingsService extends BaseService<Training> {
   async deleteTraining(training_id: number) {
     const training = await this.trainingRepo.findOneBy({ id: training_id });
     if (training) {
-      await this.trainingRepo.delete({ id: training?.id });
+      training.isDeleted = true;
+      await this.trainingRepo.save(training);
       return `Training is successfully removed! `;
     }
     return `Training is not found!`;
@@ -160,7 +160,12 @@ export class TrainingsService extends BaseService<Training> {
       relations: [
         'userToTraining',
         'userToTraining.user',
+        'userToTraining.user.response.questionAnswers',
+        'userToTraining.user.response.questionnaire',
         'userToTraining.user.image',
+        'questionnaire',
+        'questionnaire.questions',
+        'questionnaire.questions.variants',
       ],
     });
 
@@ -169,6 +174,14 @@ export class TrainingsService extends BaseService<Training> {
         `Training with id ${trainingId} is not found!`,
       );
     }
+
+    training.userToTraining.forEach((userToTraining) => {
+      const responses = userToTraining.user.response;
+      userToTraining.user.response = responses.filter(
+        (response) =>
+          response?.questionnaire?.id === training?.questionnaire?.id,
+      );
+    });
 
     return training.userToTraining;
   }
@@ -206,6 +219,7 @@ export class TrainingsService extends BaseService<Training> {
     const pastTrainings = await this.repository
       .createQueryBuilder('training')
       .where('training.eventDate < :currentDate', { currentDate: new Date() })
+      .andWhere('training.isDeleted != true')
       .leftJoinAndSelect('training.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
@@ -229,6 +243,7 @@ export class TrainingsService extends BaseService<Training> {
     const futureTrainings = await this.repository
       .createQueryBuilder('training')
       .where('training.eventDate > :currentDate', { currentDate: new Date() })
+      .andWhere('training.isDeleted != true')
       .leftJoinAndSelect('training.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())

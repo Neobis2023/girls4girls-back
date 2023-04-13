@@ -4,7 +4,7 @@ import { Column, Entity } from 'typeorm';
 @Entity()
 export class ContentStatistics extends BaseEntity {
   @Column()
-  trainigs: string;
+  trainings: string;
 
   @Column()
   graduates: string;

@@ -20,6 +20,8 @@ import { QuizModule } from './modules/quiz/quiz.module';
 import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
 import { CharacterModule } from './modules/character/character.module';
 import { ContentModule } from './modules/content/content.module';
+import { TranslateModule } from './modules/translate/translate.module';
+import { LecturerModule } from './modules/lecturers/lecturers.module';
 
 @Module({
   imports: [
@@ -63,6 +65,8 @@ import { ContentModule } from './modules/content/content.module';
     QuestionnaireModule,
     CharacterModule,
     ContentModule,
+    TranslateModule,
+    LecturerModule
   ],
   controllers: [],
 })

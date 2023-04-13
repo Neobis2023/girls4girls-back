@@ -93,7 +93,8 @@ export class ForumService extends BaseService<Forum> {
   async deleteForumById(forum_id: number) {
     const forum = await this.forumRepo.findOneBy({ id: forum_id });
     if (forum) {
-      await this.forumRepo.delete({ id: forum?.id });
+      forum.isDeleted = true;
+      await this.forumRepo.save(forum);
       return `Forum is successfully removed!`;
     }
     return `Forum is not found!`;
@@ -206,12 +207,20 @@ export class ForumService extends BaseService<Forum> {
       relations: [
         'images',
         'userToForum',
-        'userToForum.user',
+        'userToForum.user.response.questionAnswers',
+        'userToForum.user.response.questionnaire',
         'questionnaire',
         'questionnaire.questions',
         'questionnaire.questions.variants',
       ],
     });
+    forum.userToForum.forEach((userToForum)=>{
+      const responses = userToForum.user.response
+      userToForum.user.response = responses.filter(
+        (response) =>
+        response?.questionnaire?.id === forum?.questionnaire?.id
+      )
+    })
     return forum;
   }
 }

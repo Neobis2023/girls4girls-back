@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseDto } from 'src/base/dto/base.dto';
 
 export class CreateNewsDto extends BaseDto {
@@ -6,9 +6,17 @@ export class CreateNewsDto extends BaseDto {
   @IsString()
   title: string;
 
+  @IsString()
+  @IsOptional()
+  titleKG?: string;
+
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @IsString()
+  @IsOptional()
+  descriptionKG?: string;
 
   @IsNotEmpty()
   @IsNumber()

@@ -15,6 +15,11 @@ export class CreateQuestionnaireQuestionDto {
   @IsString()
   text: string;
 
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  textKG: string;
+
   @ApiProperty({
     required: false,
   })

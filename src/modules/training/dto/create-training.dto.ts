@@ -6,7 +6,7 @@ import { Type } from 'class-transformer';
 
 export class CreateTrainingDto extends BaseDto {
   @ApiProperty({
-    example: 'Female body',
+    example: 'Название тренинга',
     description: 'Title of training',
   })
   @IsString()
@@ -14,12 +14,28 @@ export class CreateTrainingDto extends BaseDto {
   title: string;
 
   @ApiProperty({
-    example: 'From high peaks to lush valleys, hard planes, and soft edges',
+    example: 'Название тренинга на кыргызском',
+    description: 'Title of training',
+  })
+  @IsString()
+  @IsNotEmpty()
+  titleKG: string;
+
+  @ApiProperty({
+    example: 'Описание тренинга',
     description: 'Training description',
   })
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  @ApiProperty({
+    example: 'Описание тренинга на кыргызском',
+    description: 'Training description',
+  })
+  @IsString()
+  @IsNotEmpty()
+  descriptionKG: string;
 
   @ApiProperty({
     example: 'Bokonbaeva 101',
@@ -66,6 +82,15 @@ export class CreateTrainingDto extends BaseDto {
   @IsString()
   @IsOptional()
   location: string;
+
+  @ApiProperty({
+    description: 'Location of a training',
+    example: 'Наарын областы',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  locationKG: string;
 
   @ApiProperty({
     example: 3,
