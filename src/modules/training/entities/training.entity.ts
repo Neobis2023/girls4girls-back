@@ -77,9 +77,9 @@ export class Training extends BaseEntity {
   @JoinColumn()
   kg: TrainingKg;
 
-  @OneToMany(()=>Lecturer,(lecturer)=>lecturer.training , {
-    cascade:true
+  @OneToMany(() => Lecturer, (lecturer) => lecturer.training, {
+    cascade: true,
   })
   @JoinColumn()
-  lecturers: Lecturer[]
+  lecturers: Lecturer[];
 }
