@@ -68,7 +68,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     ContentModule,
     TranslateModule,
     LecturerModule,
-    FeedbackModule
+    FeedbackModule,
   ],
   controllers: [],
 })

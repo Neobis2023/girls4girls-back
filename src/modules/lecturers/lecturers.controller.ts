@@ -29,7 +29,7 @@ export class LecturerController {
         lecturerFullName: {
           type: 'string',
           example: 'Сыдыкова Айканыш',
-          description: 'Фамилия и имя ведущего лектора'
+          description: 'Фамилия и имя ведущего лектора',
         },
         jobTitle: {
           type: 'string',

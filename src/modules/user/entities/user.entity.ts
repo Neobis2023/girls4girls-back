@@ -149,7 +149,7 @@ export class User extends BaseEntity {
   @JoinColumn()
   userToForum: UserToForum[];
 
-  @OneToMany(()=>Feedback,(feedback)=>feedback.user)
+  @OneToMany(() => Feedback, (feedback) => feedback.user)
   @JoinColumn()
-  feedback: Feedback[]
+  feedback: Feedback[];
 }

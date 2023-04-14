@@ -7,8 +7,8 @@ import { User } from '../user/entities/user.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Feedback,User]), UserModule],
+  imports: [TypeOrmModule.forFeature([Feedback, User]), UserModule],
   controllers: [FeedbackController],
-  providers: [FeedbackService]
+  providers: [FeedbackService],
 })
 export class FeedbackModule {}

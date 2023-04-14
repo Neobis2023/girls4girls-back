@@ -3,8 +3,7 @@ import { LecturerService } from './lecturers.service';
 import { LecturerController } from './lecturers.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Lecturer } from './entities/lecturer.entity';
-import { Image } from '../image/entities/image.entity'
-import { ImageService } from '../image/image.service';
+import { Image } from '../image/entities/image.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
 
