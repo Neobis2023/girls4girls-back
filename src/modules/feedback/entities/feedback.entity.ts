@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { FeedbackStatusEnum } from '../enum/feedback-status.enum';
 import { User } from 'src/modules/user/entities/user.entity';
 import { BaseEntity } from 'src/base/base.entity';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 @Entity()
 export class Feedback extends BaseEntity {
@@ -16,6 +17,7 @@ export class Feedback extends BaseEntity {
     enum: FeedbackStatusEnum,
     nullable: true,
   })
+  @IsNotEmpty()
   status: FeedbackStatusEnum;
 
   @ManyToOne(() => User, (user) => user.feedback, {

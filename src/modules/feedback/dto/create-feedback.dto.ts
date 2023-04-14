@@ -5,7 +5,7 @@ import { BaseDto } from 'src/base/dto/base.dto';
 export class CreateFeedbackDto extends BaseDto {
   @ApiProperty({
     example: 'Тренинг на тему Материнство',
-    description: 'Title of feedback'
+    description: 'Title of feedback',
   })
   @IsNotEmpty()
   @IsString()
@@ -13,7 +13,7 @@ export class CreateFeedbackDto extends BaseDto {
 
   @ApiProperty({
     example: 'Всё было супер , побольше бы таких мероприятий',
-    description: 'Body of your message'
+    description: 'Body of your message',
   })
   @IsNotEmpty()
   @IsString()

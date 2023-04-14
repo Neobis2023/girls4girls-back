@@ -40,17 +40,18 @@ export class FeedbackService extends BaseService<Feedback> {
   async markAsStatus(feedback_id: number, status: FeedbackStatusEnum) {
     const feedback = await this.feedbackRepo.findOne({
       where: { id: feedback_id },
-      relations: ['user'],
+      relations: ['user', 'user.image'],
     });
     switch (status) {
       case FeedbackStatusEnum.isRead:
         feedback.status = FeedbackStatusEnum.isRead;
-        return feedback;
+        return this.feedbackRepo.save(feedback);
       case FeedbackStatusEnum.isFavorite:
         feedback.status = FeedbackStatusEnum.isFavorite;
-        return feedback;
+        return this.feedbackRepo.save(feedback);
       case FeedbackStatusEnum.isDeleted:
-        return await this.feedbackRepo.remove(feedback);
+        feedback.status = FeedbackStatusEnum.isDeleted;
+        return await this.feedbackRepo.save(feedback);
       default:
         throw new BadRequestException(`Invalid status: ${status}`);
     }
@@ -61,6 +62,7 @@ export class FeedbackService extends BaseService<Feedback> {
       .createQueryBuilder('feedback')
       .where('feedback.status = :status', { status })
       .leftJoinAndSelect('feedback.user', 'user')
+      .leftJoinAndSelect('user.image', 'image')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(
@@ -78,5 +80,27 @@ export class FeedbackService extends BaseService<Feedback> {
       orderField: listParamsDto.orderField,
     });
   }
-  
+
+  async getAllFeedbacks(listParamsDto: ListParamsDto) {
+    const feedbacks = await this.feedbackRepo
+      .createQueryBuilder('feedback')
+      .leftJoinAndSelect('feedback.user', 'user')
+      .leftJoinAndSelect('user.image', 'image')
+      .limit(listParamsDto.limit)
+      .offset(listParamsDto.countOffset())
+      .orderBy(
+        `feedback.${listParamsDto.getOrderedField()}`,
+        listParamsDto.order,
+      )
+      .getMany();
+
+    const itemsCount = await this.repository.createQueryBuilder().getCount();
+    return new ListDto(feedbacks, {
+      page: listParamsDto.page,
+      itemsCount,
+      limit: listParamsDto.limit,
+      order: listParamsDto.order,
+      orderField: listParamsDto.orderField,
+    });
+  }
 }
