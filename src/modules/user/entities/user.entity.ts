@@ -113,11 +113,7 @@ export class User extends BaseEntity {
   @JoinColumn()
   image: Image;
 
-  @OneToOne(() => Character, (character) => character.user, {
-    cascade: true,
-    eager: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => Character, (character) => character.user, { cascade: true })
   @JoinColumn()
   character: Character;
 
