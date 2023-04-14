@@ -3,9 +3,10 @@ import {
   Controller,
   Post,
   Req,
-  UploadedFile, UploadedFiles,
+  UploadedFile,
+  UploadedFiles,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { CharacterService } from './character.service';
 import {
