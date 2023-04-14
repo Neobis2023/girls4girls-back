@@ -8,8 +8,11 @@ export class CharacterImage extends BaseEntity {
   @Column()
   title: string;
 
-  @ManyToOne(() => Character, (character) => character.characterImage)
-  character: Character;
+  @Column({ default: false })
+  isDeleted: boolean;
+
+  @OneToMany(() => Character, (character) => character.characterImage)
+  characters: Character[];
 
   @OneToMany(() => Image, (image) => image.characterImage, { cascade: true })
   images: Image[];
