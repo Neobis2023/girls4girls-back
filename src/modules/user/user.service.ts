@@ -48,10 +48,9 @@ export class UserService extends BaseService<User> {
   }
 
   async getProfile(id: number): Promise<User> {
-    console.log(id);
     const user = await this.usersRepository.findOne({
       where: { id },
-      relations: ['jetons', 'image', 'character.characterImage'],
+      relations: ['jetons', 'image', 'character.characterImage.images'],
     });
 
     if (!user || !id) {
