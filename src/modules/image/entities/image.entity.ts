@@ -33,7 +33,7 @@ export class Image extends BaseEntity {
   })
   videoBlog: VideoBlog[];
 
-  @ManyToOne(() => CharacterImage, (characterImage) => characterImage.images , {
+  @ManyToOne(() => CharacterImage, (characterImage) => characterImage.images, {
     onDelete: 'CASCADE',
   })
   characterImage: CharacterImage;
