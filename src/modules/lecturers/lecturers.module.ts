@@ -15,5 +15,6 @@ import { ImageModule } from '../image/image.module';
   ],
   controllers: [LecturerController],
   providers: [LecturerService],
+  exports: [LecturerService],
 })
 export class LecturerModule {}
