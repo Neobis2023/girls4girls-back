@@ -6,9 +6,9 @@ import { BaseService } from '../../base/base.service';
 import { CharacterImage } from './entities/character-image.entity';
 import { CreateCharacterImageDto } from './dto/create-character-image.dto';
 import { ImageService } from '../image/image.service';
-import { AddCharacterToUserDto } from './dto/add-character-to-user.dto';
 import { UserService } from '../user/user.service';
 import { Image } from '../image/entities/image.entity';
+import { AddCharacterToUserDto } from './dto/add-character-to-user.dto';
 
 @Injectable()
 export class CharacterService extends BaseService<Character> {
@@ -23,35 +23,47 @@ export class CharacterService extends BaseService<Character> {
     super(characterRepository);
   }
 
+  async getCharacterImages() {
+    return this.characterImageRepository.find({
+      where: {
+        isDeleted: false,
+      },
+      relations: ['images'],
+    });
+  }
+
+  async findCharacterImage(id: number): Promise<CharacterImage> {
+    const characterImage = await this.characterImageRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!characterImage) {
+      throw new BadRequestException('Not found!');
+    }
+
+    return characterImage;
+  }
+
+  async softDeleteCharacterImage(id: number) {
+    const characterImage = await this.findCharacterImage(id);
+    characterImage.isDeleted = true;
+    return this.characterImageRepository.save(characterImage);
+  }
+
   async addCharacterToUser(
     addCharacterToUser: AddCharacterToUserDto,
     userId: number,
   ) {
     const { name, characterImageId } = addCharacterToUser;
 
-    console.log(addCharacterToUser);
-
     const user = await this.userService.getProfile(userId);
+    const characterImage = await this.findCharacterImage(characterImageId);
 
-    const characterImage = await this.characterImageRepository.findOneBy({
-      id: characterImageId,
-    });
-
-    console.log(characterImage);
-    if (!characterImage) {
-      throw new BadRequestException(
-        `CharacterImage with ID ${characterImageId} is not found!`,
-      );
-    }
-    console.log(user);
-    let character = new Character();
+    const character = new Character();
     character.name = name;
-    character.characterImage = [characterImage];
-    character = await this.characterRepository.save(character);
-    if (user.character) {
-      const result = await this.characterRepository.delete(user.character.id);
-      console.log('deleted', result);
-    }
+    character.characterImage = characterImage;
     character.user = user;
     return this.characterRepository.save(character);
   }

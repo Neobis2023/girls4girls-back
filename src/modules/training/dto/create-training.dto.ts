@@ -99,4 +99,9 @@ export class CreateTrainingDto extends BaseDto {
   @Type(() => Number)
   @IsNumber()
   questionnaireId: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  lecturers: string;
 }

@@ -23,6 +23,7 @@ import { ContentModule } from './modules/content/content.module';
 import { TranslateModule } from './modules/translate/translate.module';
 import { LecturerModule } from './modules/lecturers/lecturers.module';
 import { MentorshipModule } from './modules/mentorship/mentorship.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { MentorshipModule } from './modules/mentorship/mentorship.module';
     TranslateModule,
     LecturerModule,
     MentorshipModule,
+    FeedbackModule,
   ],
   controllers: [],
 })

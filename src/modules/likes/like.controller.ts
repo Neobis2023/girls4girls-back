@@ -12,6 +12,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { LikeService } from './like.service';
+import { log } from 'console';
 
 @ApiTags('Лайки')
 @Controller('like')
@@ -47,6 +48,7 @@ export class LikeController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Вывести все ваши избранные видео-блоги' })
   async getAllYour(@Req() req) {
+    log(req);
     return await this.likeServise.getLikes(req.user.email);
   }
 
