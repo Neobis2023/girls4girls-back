@@ -58,13 +58,13 @@ export class FeedbackService extends BaseService<Feedback> {
 
   async listByStatus(status: FeedbackStatusEnum, listParamsDto: ListParamsDto) {
     const array = await this.repository
-      .createQueryBuilder('feedbacks')
-      .where('feedbacks.status = :status', { status })
-      .leftJoinAndSelect('feedbacks.user', 'user')
+      .createQueryBuilder('feedback')
+      .where('feedback.status = :status', { status })
+      .leftJoinAndSelect('feedback.user', 'user')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(
-        `feedbacks.${listParamsDto.getOrderedField()}`,
+        `feedback.${listParamsDto.getOrderedField()}`,
         listParamsDto.order,
       )
       .getMany();
