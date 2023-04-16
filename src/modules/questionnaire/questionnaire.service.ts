@@ -46,10 +46,21 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     questionnaire = await this.questionnaireRepository.save(questionnaire);
 
     for await (const createQuestionDto of questions) {
-      const { text, variants, type, correctVariantIndex } = createQuestionDto;
+      const {
+        text,
+        textKG = null,
+        description,
+        descriptionKG = null,
+        variants,
+        type,
+        correctVariantIndex,
+      } = createQuestionDto;
 
       let question = new QuestionnaireQuestion();
       question.text = text;
+      question.textKG = textKG;
+      question.description = description;
+      question.descriptionKG = descriptionKG;
       question.questionnaire = questionnaire;
       question.type = type;
       question = await this.questionRepository.save(question);
@@ -69,6 +80,16 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
       }
     }
 
+    return questionnaire;
+  }
+
+  async getQuestionnaireById(id: number) {
+    const questionnaire = this.questionnaireRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['questions.variants'],
+    });
     return questionnaire;
   }
 
