@@ -15,6 +15,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { ApplyToMentorshipDto } from './dto/apply-to-mentorship.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { log } from 'console';
 
 @ApiTags('Редактирование ментороской программы')
 @Controller('mentorship')
@@ -33,16 +34,12 @@ export class MentorshipController {
     );
   }
 
+  @Post('/apply')
   @ApiOperation({ summary: 'Подать заявку на менторскую программу' })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Post('/apply')
-  async applyToMentorship(
-    @Req() req: any,
-    @Query() applyToMentorshipDto: ApplyToMentorshipDto,
-  ) {
-    applyToMentorshipDto.userId = req.user?.id;
-    return await this.mentorshipService.applyToMentorship(applyToMentorshipDto);
+  async applyUserToMentorship(@Req() req: any) {
+    log(req.user);
   }
 
   @ApiOperation({ summary: 'Вывести все потоки менторской программы' })

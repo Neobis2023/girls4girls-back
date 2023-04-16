@@ -28,6 +28,8 @@ import { Character } from '../../character/entities/character.entity';
 import { UserToTraining } from '../../training/entities/users-to-training.entity';
 import { QuestionnaireResponse } from '../../questionnaire/entities/questionnaire-response.entity';
 import { Feedback } from 'src/modules/feedback/entities/feedback.entity';
+import { UserToMentorship } from 'src/modules/mentorship/entities/user-to-mentor.entity';
+import { QuizResult } from 'src/modules/quiz/entities/quiz-results.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -148,4 +150,19 @@ export class User extends BaseEntity {
   @OneToMany(() => Feedback, (feedback) => feedback.user)
   @JoinColumn()
   feedback: Feedback[];
+
+  @OneToMany(
+    () => UserToMentorship,
+    (userToMentorship) => userToMentorship.mentorship,
+    {
+      cascade: true,
+    },
+  )
+  @JoinTable()
+  userToMentorship: UserToMentorship[];
+
+  @OneToMany(() => QuizResult, (quizResult) => quizResult.user, {
+    cascade: true,
+  })
+  quizResults: QuizResult[];
 }

@@ -13,7 +13,7 @@ import { QuestionService } from '../services/question.service';
 import { QuizService } from '../services/quiz.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Квизы')
+@ApiTags('Квизы для админа')
 @Controller('question')
 export class QuestionController {
   constructor(

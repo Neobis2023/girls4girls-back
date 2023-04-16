@@ -7,12 +7,15 @@ import { CreateMentorshipDto } from './dto/create-mentorship.dto';
 import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 import { ApplyToMentorshipDto } from './dto/apply-to-mentorship.dto';
 import { UserService } from '../user/user.service';
+import { UserToMentorship } from './entities/user-to-mentor.entity';
 
 @Injectable()
 export class MentorshipService extends BaseService<MentorShip> {
   constructor(
     @InjectRepository(MentorShip)
     private readonly mentorshipRepo: Repository<MentorShip>,
+    @InjectRepository(UserToMentorship)
+    private readonly userToMentorshipRepo: Repository<UserToMentorship>,
     @InjectRepository(Questionnaire)
     private readonly questionnaireRepo: Repository<Questionnaire>,
     private readonly userService: UserService,
@@ -44,7 +47,18 @@ export class MentorshipService extends BaseService<MentorShip> {
     const user = await this.userService.get(userId);
     const mentorship = await this.get(mentorshipId);
     if (!mentorship) {
-      throw new BadRequestException('Поток с таким id не найден');
+      throw new BadRequestException('Поток не найден');
     }
+
+    const appliedUser = await this.userToMentorshipRepo.findOne({
+      where: { user: { id: userId }, mentorship: { id: mentorshipId } },
+    });
+    if (appliedUser) {
+      throw new BadRequestException('Вы уже подали заяввку на этот поток');
+    }
+    const apply = new UserToMentorship();
+    apply.user = user;
+    apply.mentorship = mentorship;
+    return await this.userToMentorshipRepo.save(apply);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
@@ -33,6 +33,9 @@ export class LikeService extends BaseService<Likes> {
     const blog = await this.videoBlogRepo.findOne({
       where: { id: blogId },
     });
+    if (!blog) {
+      throw new BadRequestException('Блог не найден');
+    }
     const newLike = new Likes();
     newLike.user = user;
     newLike.blog = blog;
@@ -48,6 +51,7 @@ export class LikeService extends BaseService<Likes> {
       relations: ['blog', 'blog.category'],
     });
     if (liked) return await this.likesRepo.remove(liked);
+    return;
   }
 
   async getLikes(reqUser: any) {
