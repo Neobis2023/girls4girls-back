@@ -214,13 +214,12 @@ export class ForumService extends BaseService<Forum> {
         'questionnaire.questions.variants',
       ],
     });
-    forum.userToForum.forEach((userToForum)=>{
-      const responses = userToForum.user.response
+    forum.userToForum.forEach((userToForum) => {
+      const responses = userToForum.user.response;
       userToForum.user.response = responses.filter(
-        (response) =>
-        response?.questionnaire?.id === forum?.questionnaire?.id
-      )
-    })
+        (response) => response?.questionnaire?.id === forum?.questionnaire?.id,
+      );
+    });
     return forum;
   }
 }
