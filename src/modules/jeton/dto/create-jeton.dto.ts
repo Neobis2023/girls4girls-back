@@ -1,6 +1,8 @@
 import { Image } from '../../image/entities/image.entity';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { JetonType } from '../enums/jeton-type.enum';
+import { Type } from 'class-transformer';
 
 export class CreateJetonDto {
   @ApiProperty({
@@ -32,6 +34,25 @@ export class CreateJetonDto {
   @IsString()
   @IsOptional()
   descriptionKG: string;
+
+  @ApiProperty({
+    example: JetonType.CARD,
+    enum: JetonType,
+    required: false,
+  })
+  @IsEnum(JetonType)
+  @IsOptional()
+  type: JetonType;
+
+  @ApiProperty({
+    example: 10,
+    description: 'Количество активностей чтобы получить ачивку',
+    required: false,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  quantityToGet: number;
 
   @IsOptional()
   image?: Image;

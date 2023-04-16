@@ -64,4 +64,6 @@ export class UpdateProfileDto extends BaseDto {
   })
   @IsEnum(RegionEnum)
   region: RegionEnum;
+
+  updatedAt?: Date;
 }

@@ -187,4 +187,8 @@ export class UserService extends BaseService<User> {
       orderField: listParamsDto.orderField,
     });
   }
+
+  async justSaveUser(user: User) {
+    return this.usersRepository.save(user);
+  }
 }

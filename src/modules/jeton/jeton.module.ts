@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Jeton } from './entities/jeton.entity';
 import { ImageModule } from '../image/image.module';
 import { Image } from '../image/entities/image.entity';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Jeton]), ImageModule],
+  imports: [TypeOrmModule.forFeature([Jeton]), ImageModule, UserModule],
   controllers: [JetonController],
   providers: [JetonService],
 })

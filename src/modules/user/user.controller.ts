@@ -80,6 +80,7 @@ export class UserController {
   })
   @UseInterceptors(FileInterceptor('image'))
   addProfileImage(@Req() req: any, @UploadedFile() file: Express.Multer.File) {
+    console.log(req.user);
     return this.userService.addProfileImage(req.user?.id, file);
   }
 
