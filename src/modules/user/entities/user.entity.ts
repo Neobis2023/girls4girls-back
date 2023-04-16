@@ -27,6 +27,7 @@ import { UserToForum } from 'src/modules/forum/entities/users-to-forum.entity';
 import { Character } from '../../character/entities/character.entity';
 import { UserToTraining } from '../../training/entities/users-to-training.entity';
 import { QuestionnaireResponse } from '../../questionnaire/entities/questionnaire-response.entity';
+import { Feedback } from 'src/modules/feedback/entities/feedback.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -112,11 +113,7 @@ export class User extends BaseEntity {
   @JoinColumn()
   image: Image;
 
-  @OneToOne(() => Character, (character) => character.user, {
-    cascade: true,
-    eager: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => Character, (character) => character.user, { cascade: true })
   @JoinColumn()
   character: Character;
 
@@ -147,4 +144,8 @@ export class User extends BaseEntity {
   })
   @JoinColumn()
   userToForum: UserToForum[];
+
+  @OneToMany(() => Feedback, (feedback) => feedback.user)
+  @JoinColumn()
+  feedback: Feedback[];
 }

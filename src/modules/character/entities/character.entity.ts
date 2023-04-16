@@ -16,13 +16,15 @@ export class Character extends BaseEntity {
   name: string;
 
   @Column({
-    default: 10,
+    default: 1,
   })
   age: number;
 
-  @OneToMany(() => CharacterImage, (characterImage) => characterImage.character)
-  @JoinColumn()
-  characterImage: CharacterImage[];
+  @ManyToOne(
+    () => CharacterImage,
+    (characterImage) => characterImage.characters,
+  )
+  characterImage: CharacterImage;
 
   @OneToOne(() => User, (user) => user.character, { onDelete: 'CASCADE' })
   user: User;

@@ -9,6 +9,7 @@ import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
 import { UserToTraining } from './entities/users-to-training.entity';
 import { UserModule } from '../user/user.module';
+import { LecturerModule } from '../lecturers/lecturers.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserModule } from '../user/user.module';
     CloudinaryModule,
     ImageModule,
     UserModule,
+    LecturerModule,
   ],
   controllers: [TrainingsController],
   providers: [TrainingsService],

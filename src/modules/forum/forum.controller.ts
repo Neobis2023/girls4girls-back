@@ -24,7 +24,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { ApplyUserToTrainingDto } from '../training/dto/apply-user-to-training.dto';
 import { ApplyUserToForumDto } from './dto/apply-user-to-forum.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 
@@ -34,8 +33,8 @@ export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
