@@ -13,6 +13,11 @@ export class CreateQuestionnaireDto {
   @IsOptional()
   nameKG: string;
 
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  description: string;
+
   @ApiProperty({ type: () => [CreateQuestionnaireQuestionDto] })
   @IsArray()
   @ValidateNested({ each: true })
