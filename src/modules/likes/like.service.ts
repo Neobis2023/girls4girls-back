@@ -20,6 +20,8 @@ export class LikeService extends BaseService<Likes> {
   }
 
   async like(blogId: number, userEmail: string) {
+    console.log('blogId', blogId);
+    console.log(typeof blogId);
     const liked = await this.likesRepo.findOne({
       where: {
         blog: { id: blogId },
@@ -40,6 +42,8 @@ export class LikeService extends BaseService<Likes> {
   }
 
   async dislike(blogId: number, userEmail: string) {
+    console.log('blogId', blogId);
+    console.log(typeof blogId);
     const liked = await this.likesRepo.findOne({
       where: {
         blog: { id: blogId },
