@@ -54,7 +54,7 @@ export class LikeController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Добавить видео-блог в избранные' })
-  async like(@Param('blogId') blogId, @Req() req) {
+  async like(@Param('blogId') blogId: number, @Req() req) {
     return await this.likeServise.like(blogId, req.user.email);
   }
 
