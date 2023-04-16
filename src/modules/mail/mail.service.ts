@@ -19,12 +19,4 @@ export class MailService {
       // },
     });
   }
-
-  async sendResponseForFeedback(email: string, content: string) {
-    await this.mailerService.sendMail({
-      to: `${email}`,
-      subject: 'Ответ за ваш отзыв от Girl4Girls',
-      html: `<p>${content}</p>`,
-    });
-  }
 }
