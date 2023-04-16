@@ -50,6 +50,8 @@ export class JetonService extends BaseService<Jeton> {
   }
 
   async delete(id: number) {
+    const jeton = await this.get(id);
+    jeton.isDeleted = true;
     return await this.jetonsRepository.delete({ id });
   }
 
