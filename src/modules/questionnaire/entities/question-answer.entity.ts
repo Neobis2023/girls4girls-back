@@ -16,6 +16,16 @@ export class QuestionAnswer extends BaseEntity {
   question: QuestionnaireQuestion;
 
   @Column({
+    nullable: true,
+  })
+  questionText: string;
+
+  @Column({
+    nullable: true,
+  })
+  questionTextKG: string;
+
+  @Column({
     type: 'enum',
     enum: QuestionType,
     default: QuestionType.TEXT,
@@ -27,11 +37,16 @@ export class QuestionAnswer extends BaseEntity {
   })
   answerIndex: number;
 
-  @Column('integer', {
+  @Column({
+    nullable: true,
+  })
+  answerText: string;
+
+  @Column('varchar', {
     array: true,
     nullable: true,
   })
-  multipleChoices: number[];
+  multipleChoices: string[];
 
   @Column({
     nullable: true,

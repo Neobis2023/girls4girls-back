@@ -37,6 +37,11 @@ export class Jeton extends BaseEntity {
   })
   quantityToGet: number;
 
+  @Column({
+    default: false,
+  })
+  isDeleted: boolean;
+
   @OneToOne(() => Image, { cascade: true })
   @JoinColumn()
   image: Image;

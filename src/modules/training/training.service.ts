@@ -181,7 +181,7 @@ export class TrainingsService extends BaseService<Training> {
       relations: [
         'userToTraining',
         'userToTraining.user',
-        'userToTraining.user.response.questionAnswers',
+        'userToTraining.user.response.questionAnswers.question',
         'userToTraining.user.response.questionnaire',
         'userToTraining.user.image',
         'questionnaire',
