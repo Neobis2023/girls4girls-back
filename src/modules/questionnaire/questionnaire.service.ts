@@ -46,10 +46,21 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     questionnaire = await this.questionnaireRepository.save(questionnaire);
 
     for await (const createQuestionDto of questions) {
-      const { text, variants, type, correctVariantIndex } = createQuestionDto;
+      const {
+        text,
+        textKG = null,
+        description,
+        descriptionKG = null,
+        variants,
+        type,
+        correctVariantIndex,
+      } = createQuestionDto;
 
       let question = new QuestionnaireQuestion();
       question.text = text;
+      question.textKG = textKG;
+      question.description = description;
+      question.descriptionKG = descriptionKG;
       question.questionnaire = questionnaire;
       question.type = type;
       question = await this.questionRepository.save(question);
@@ -72,6 +83,16 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
     return questionnaire;
   }
 
+  async getQuestionnaireById(id: number) {
+    const questionnaire = this.questionnaireRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['questions.variants'],
+    });
+    return questionnaire;
+  }
+
   async responseToQuestionnaire(
     responseToQuestionnaire: ResponseToQuestionnaireDto,
   ) {
@@ -91,8 +112,9 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
 
     for await (const answer of answers) {
       const { questionId, type, answerIndex, multipleChoices, text } = answer;
-      const question = await this.questionRepository.findOneBy({
-        id: questionId,
+      const question = await this.questionRepository.findOne({
+        where: { id: questionId },
+        relations: ['variants'],
       });
 
       if (!question) {
@@ -104,6 +126,8 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
       let questionAnswer = new QuestionAnswer();
       questionAnswer.question = question;
       questionAnswer.response = response;
+      questionAnswer.questionText = question.text;
+      questionAnswer.questionTextKG = question.textKG;
       questionAnswer.type = type;
       if (type === QuestionType.TEXT) {
         if (!text) {
@@ -116,19 +140,24 @@ export class QuestionnaireService extends BaseService<Questionnaire> {
         type === QuestionType.VARIANTS ||
         type === QuestionType.DROP_DOWN
       ) {
-        if (!answerIndex) {
+        if (answerIndex == null) {
           throw new BadRequestException(
             `Question with ID ${questionId} is of type ${type}, but answerIndex is not provided!`,
           );
         }
         questionAnswer.answerIndex = answerIndex;
+        questionAnswer.answerText = question?.variants[answerIndex]?.text;
       } else if (type === QuestionType.CHECK_BOX) {
         if (!multipleChoices) {
           throw new BadRequestException(
             `Question with ID ${questionId} is of type ${type}, but multipleChoices is not provided!`,
           );
         }
-        questionAnswer.multipleChoices = multipleChoices;
+        const choices = [];
+        for (const index of multipleChoices) {
+          choices.push(question?.variants[index]?.text);
+        }
+        questionAnswer.multipleChoices = choices;
       }
 
       questionAnswer = await this.questionAnswerRepository.save(questionAnswer);

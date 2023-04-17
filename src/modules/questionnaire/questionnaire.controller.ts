@@ -33,6 +33,12 @@ export class QuestionnaireController {
     );
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Получение анкеты по id' })
+  getQuestionnaireById(@Param('id') id: number) {
+    return this.questionnaireService.getQuestionnaireById(id);
+  }
+
   @Post('response')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
