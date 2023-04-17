@@ -53,23 +53,23 @@ export class ForumService extends BaseService<Forum> {
       forum.questionnaire = questionnare;
     }
 
-    if(createForumDto.lecturers) {
+    if (createForumDto.lecturers) {
       try {
-        const lecturersArray = JSON.parse(createForumDto.lecturers)
-        if(Array.isArray(lecturersArray)){
-          const lecturers = []
-          for await (const id of lecturersArray){
-            const lecturer = await this.lecturerService.get(id)
-            if(!lecturer)continue
-            lecturers.push(lecturer)
+        const lecturersArray = JSON.parse(createForumDto.lecturers);
+        if (Array.isArray(lecturersArray)) {
+          const lecturers = [];
+          for await (const id of lecturersArray) {
+            const lecturer = await this.lecturerService.get(id);
+            if (!lecturer) continue;
+            lecturers.push(lecturer);
           }
-          forum.lecturers = lecturers
+          forum.lecturers = lecturers;
         }
-      }catch(e){
-        console.log(e.message)
+      } catch (e) {
+        console.log(e.message);
       }
     }
-    delete createForumDto.lecturers
+    delete createForumDto.lecturers;
 
     forum.absorbFromDto(createForumDto);
     return await this.forumRepo.save(forum);
@@ -158,8 +158,8 @@ export class ForumService extends BaseService<Forum> {
         id: forumId,
       },
       relations: [
-        'userToForum', 
-        'userToForum.user', 
+        'userToForum',
+        'userToForum.user',
         'userToForum.user.response.questionAnswers.question',
         'userToForum.user.response.questionnaire',
         'userToForum.user.image',
@@ -173,13 +173,12 @@ export class ForumService extends BaseService<Forum> {
       throw new BadRequestException(`Forum with id ${forumId} is not found!`);
     }
 
-    forum.userToForum.forEach((userToForum)=>{
-      const response = userToForum.user.response
+    forum.userToForum.forEach((userToForum) => {
+      const response = userToForum.user.response;
       userToForum.user.response = response.filter(
-        (response) =>
-        response?.questionnaire?.id === forum?.questionnaire?.id
-      )
-    })
+        (response) => response?.questionnaire?.id === forum?.questionnaire?.id,
+      );
+    });
 
     return forum.userToForum;
   }
@@ -209,8 +208,7 @@ export class ForumService extends BaseService<Forum> {
       .leftJoinAndSelect('forum.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(`forum.${listParamsDto.getOrderedField()}`, 
-      'ASC')
+      .orderBy(`forum.${listParamsDto.getOrderedField()}`, 'ASC')
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
     return new ListDto(future, {
@@ -229,8 +227,7 @@ export class ForumService extends BaseService<Forum> {
       .leftJoinAndSelect('forum.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(`forum.${listParamsDto.getOrderedField()}`,
-      'DESC')
+      .orderBy(`forum.${listParamsDto.getOrderedField()}`, 'DESC')
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
     return new ListDto(past, {

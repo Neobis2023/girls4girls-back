@@ -18,7 +18,7 @@ import { LecturerModule } from '../lecturers/lecturers.module';
     ImageModule,
     CloudinaryModule,
     UserModule,
-    LecturerModule
+    LecturerModule,
   ],
   controllers: [ForumController],
   providers: [ForumService, ImageService],

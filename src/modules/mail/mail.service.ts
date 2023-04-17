@@ -25,7 +25,7 @@ export class MailService {
       const mailOptions = {
         to: email,
         subject: 'Ответ за ваш отзыв от GirlsForGirls',
-        html: content
+        html: content,
       };
       await this.mailerService.sendMail(mailOptions);
     } catch (error) {

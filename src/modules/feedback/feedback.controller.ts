@@ -24,7 +24,8 @@ import { MailService } from '../mail/mail.service';
 export class FeedbackController {
   constructor(
     private readonly feedbackService: FeedbackService,
-    private readonly mailerService: MailService) {}
+    private readonly mailerService: MailService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -61,7 +62,9 @@ export class FeedbackController {
   }
 
   @Get('/get/list/by/status')
-  @ApiOperation({ summary: 'Получить список отзывов пользователей по их статусу' })
+  @ApiOperation({
+    summary: 'Получить список отзывов пользователей по их статусу',
+  })
   async getBystatus(
     @Query('status') status: FeedbackStatusEnum,
     @Query() listParamsDto: ListParamsDto,
