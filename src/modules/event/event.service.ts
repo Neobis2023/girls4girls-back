@@ -17,12 +17,12 @@ export class EventService {
     const pastForum = await this.forumRepo.find({
       where: { eventDate: LessThan(new Date()) },
       order: { eventDate: 'DESC' },
-      take: 5,
+      relations: ['images'],
     });
     const pastTrainings = await this.trainingRepo.find({
       where: { eventDate: LessThan(new Date()) },
       order: { eventDate: 'DESC' },
-      take: 5,
+      relations: ['images'],
     });
     return [...pastForum, ...pastTrainings];
   }
@@ -31,12 +31,12 @@ export class EventService {
     const upcomingForum = await this.forumRepo.find({
       where: { eventDate: MoreThan(new Date()) },
       order: { eventDate: 'ASC' },
-      take: 5,
+      relations: ['images'],
     });
     const upcomingTraining = await this.trainingRepo.find({
       where: { eventDate: MoreThan(new Date()) },
       order: { eventDate: 'ASC' },
-      take: 5,
+      relations: ['images'],
     });
     return [...upcomingForum, ...upcomingTraining];
   }

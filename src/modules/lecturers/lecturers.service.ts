@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateLecturerDto } from './dto/create-lecturer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lecturer } from './entities/lecturer.entity';
@@ -54,5 +58,17 @@ export class LecturerService extends BaseService<Lecturer> {
       order: listParamsDto.order,
       orderField: listParamsDto.orderField,
     });
+  }
+
+  async softDeleteLecturer(lecturer_id: number) {
+    const lecturer = await this.lecturerRepository.findOne({
+      where: { id: lecturer_id },
+    });
+    if (!lecturer) {
+      throw new NotFoundException('Lecturer was not found!');
+    }
+    lecturer.isDeleted = true;
+    await this.lecturerRepository.save(lecturer);
+    return 'Lecturer was successfully removed!';
   }
 }

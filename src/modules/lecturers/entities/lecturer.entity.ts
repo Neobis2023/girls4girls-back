@@ -25,4 +25,9 @@ export class Lecturer extends BaseEntity {
   @OneToOne(() => Image, { cascade: true })
   @JoinColumn()
   image: Image;
+
+  @Column({
+    default: false,
+  })
+  isDeleted: boolean;
 }

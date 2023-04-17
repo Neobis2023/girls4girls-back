@@ -90,7 +90,7 @@ export class ForumService extends BaseService<Forum> {
     });
   }
 
-  async deleteForumById(forum_id: number) {
+  async softDeleteForumById(forum_id: number) {
     const forum = await this.forumRepo.findOneBy({ id: forum_id });
     if (forum) {
       forum.isDeleted = true;
