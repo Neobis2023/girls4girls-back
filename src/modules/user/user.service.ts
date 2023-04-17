@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -190,5 +194,33 @@ export class UserService extends BaseService<User> {
 
   async justSaveUser(user: User) {
     return this.usersRepository.save(user);
+  }
+
+  async changeUsersStatus(user_id: number, status: StatusEnum): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id: user_id },
+    });
+    if (!user)
+      throw new NotFoundException(`User with id ${user_id} not found!`);
+    user.status = status;
+    return await this.usersRepository.save(user);
+  }
+
+  async blockUser(user_id: number) {
+    const blockUserById = await this.usersRepository.findOne({
+      where: { id: user_id },
+    });
+    blockUserById.isBlocked = true;
+    await this.usersRepository.save(blockUserById);
+    return `Пользователь заблокирован!`;
+  }
+
+  async unblockUser(user_id: number) {
+    const unblockUserById = await this.usersRepository.findOne({
+      where: { id: user_id },
+    });
+    unblockUserById.isBlocked = false;
+    await this.usersRepository.save(unblockUserById);
+    return `Пользователь ${unblockUserById} успешно разблокирован`;
   }
 }

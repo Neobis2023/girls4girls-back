@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateQuizDto } from '../dto/create-quiz.dto';
@@ -7,18 +7,25 @@ import { BaseService } from 'src/base/base.service';
 import { Question } from '../entities/question.entity';
 import { Option } from '../entities/option.entity';
 import { VideoBlog } from 'src/modules/video-blog/entities/video-blog.entity';
+import { CreateOptionDto } from '../dto/create-option.dto';
+import { User } from 'src/modules/user/entities/user.entity';
+import { QuizResult } from '../entities/quiz-results.entity';
 
 @Injectable()
 export class QuizService extends BaseService<Quiz> {
   constructor(
     @InjectRepository(Quiz)
     private quizRepository: Repository<Quiz>,
+    @InjectRepository(QuizResult)
+    private quizResultRepository: Repository<QuizResult>,
     @InjectRepository(Question)
     private questionRepository: Repository<Question>,
     @InjectRepository(Quiz)
     private optionRepository: Repository<Option>,
     @InjectRepository(VideoBlog)
     private readonly blogRepo: Repository<VideoBlog>,
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
   ) {
     super(quizRepository);
   }
@@ -61,5 +68,59 @@ export class QuizService extends BaseService<Quiz> {
       relations: ['questions', 'questions.options', 'videoBlog'],
     });
     return await this.quizRepository.remove(quiz);
+  }
+
+  async takeQuiz(
+    userId: number,
+    quizId: number,
+    selectedOptionsIds: CreateOptionDto[],
+  ) {
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: ['quizResults'],
+    });
+    if (!user) {
+      throw new BadRequestException('Пользователь не найден');
+    }
+    const quiz = await this.quizRepository.findOne({
+      where: { id: quizId },
+      relations: ['questions'],
+    });
+    if (!quiz) {
+      throw new BadRequestException('Квиз не найден');
+    }
+    const allQuestions = quiz.questions.length;
+    if (allQuestions != selectedOptionsIds.length) {
+      throw new BadRequestException(
+        'Количество ответов не равняется количеству выбранных вариантов',
+      );
+    }
+    let correctAnswers = 0;
+    for (let i = 0; i < selectedOptionsIds.length; i++) {
+      if (selectedOptionsIds[i].isCorrect) {
+        correctAnswers++;
+      }
+    }
+    const isPassed = await this.quizResultRepository.findOne({
+      where: { quiz: { id: quizId }, user: { id: userId } },
+    });
+    if (isPassed) {
+      return isPassed;
+    }
+    const result = new QuizResult();
+    result.quiz = quiz;
+    result.correctAnwers = correctAnswers;
+    result.questions = allQuestions;
+    user.quizResults.push(result);
+    await this.userRepo.save(user);
+    return await this.quizResultRepository.save(result);
+    // return `Questions number: ${allQuestions}, correct answers: ${correctAnswers}`;
+  }
+
+  async getAllResults(userId: number) {
+    return await this.quizResultRepository.find({
+      where: { user: { id: userId } },
+      relations: ['quiz'],
+    });
   }
 }

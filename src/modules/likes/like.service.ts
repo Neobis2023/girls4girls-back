@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
@@ -19,52 +19,44 @@ export class LikeService extends BaseService<Likes> {
     super(likesRepo);
   }
 
-  async like(blogId: number, userEmail: string) {
-    try {
-      const liked = await this.likesRepo.findOne({
-        where: {
-          blog: { id: blogId },
-          user: { email: userEmail },
-        },
-      });
-      if (liked) return;
-      const user = await this.userRepo.findOne({
-        where: { email: userEmail },
-      });
-      const blog = await this.videoBlogRepo.findOne({
-        where: { id: blogId },
-      });
-      const newLike = new Likes();
-      newLike.user = user;
-      newLike.blog = blog;
-      return await this.likesRepo.save(newLike);
-    } catch (e) {
-      return {
-        message: e.message,
-      };
+  async like(blogId: number, reqUser: any) {
+    const liked = await this.likesRepo.findOne({
+      where: {
+        blog: { id: blogId },
+        user: { id: reqUser.id },
+      },
+    });
+    if (liked) return;
+    const user = await this.userRepo.findOne({
+      where: { id: reqUser.id },
+    });
+    const blog = await this.videoBlogRepo.findOne({
+      where: { id: blogId },
+    });
+    if (!blog) {
+      throw new BadRequestException('Блог не найден');
     }
+    const newLike = new Likes();
+    newLike.user = user;
+    newLike.blog = blog;
+    return await this.likesRepo.save(newLike);
   }
 
-  async dislike(blogId: number, userEmail: string) {
-    try {
-      const liked = await this.likesRepo.findOne({
-        where: {
-          blog: { id: blogId },
-          user: { email: userEmail },
-        },
-        relations: ['blog', 'blog.category'],
-      });
-      if (liked) return await this.likesRepo.remove(liked);
-    } catch (e) {
-      return {
-        message: e.messge,
-      };
-    }
+  async dislike(blogId: number, reqUser: any) {
+    const liked = await this.likesRepo.findOne({
+      where: {
+        blog: { id: blogId },
+        user: { id: reqUser.id },
+      },
+      relations: ['blog', 'blog.category'],
+    });
+    if (liked) return await this.likesRepo.remove(liked);
+    return;
   }
 
-  async getLikes(userEmail: string) {
+  async getLikes(reqUser: any) {
     return await this.likesRepo.find({
-      where: { user: { email: userEmail } },
+      where: { user: { id: reqUser.id } },
       relations: ['blog', 'blog.category'],
     });
   }
