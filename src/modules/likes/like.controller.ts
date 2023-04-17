@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -13,6 +14,7 @@ import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { LikeService } from './like.service';
 import { log } from 'console';
+import { ToggleLikeDto } from './dto/toggle-like.dto';
 
 @ApiTags('Лайки')
 @Controller('like')
@@ -50,6 +52,14 @@ export class LikeController {
   async getAllYour(@Req() req) {
     log(req);
     return await this.likeServise.getLikes(req.user.email);
+  }
+
+  @Put('toggle')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Лайк видео-блога' })
+  async toggleLike(@Req() req: any, @Query() toggleLikeDto: ToggleLikeDto) {
+    return this.likeServise.toggleLike(req.user.id, toggleLikeDto);
   }
 
   @Post(':blogId')
