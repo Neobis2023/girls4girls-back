@@ -14,6 +14,7 @@ import { UserService } from '../user/user.service';
 import { UserToForum } from './entities/users-to-forum.entity';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
+import { LecturerService } from '../lecturers/lecturers.service';
 
 @Injectable()
 export class ForumService extends BaseService<Forum> {
@@ -28,6 +29,7 @@ export class ForumService extends BaseService<Forum> {
     @InjectRepository(Questionnaire)
     private readonly questionnaireRepository: Repository<Questionnaire>,
     private readonly userService: UserService,
+    private readonly lecturerService: LecturerService,
   ) {
     super(forumRepo);
   }
@@ -50,6 +52,25 @@ export class ForumService extends BaseService<Forum> {
       });
       forum.questionnaire = questionnare;
     }
+
+    if (createForumDto.lecturers) {
+      try {
+        const lecturersArray = JSON.parse(createForumDto.lecturers);
+        if (Array.isArray(lecturersArray)) {
+          const lecturers = [];
+          for await (const id of lecturersArray) {
+            const lecturer = await this.lecturerService.get(id);
+            if (!lecturer) continue;
+            lecturers.push(lecturer);
+          }
+          forum.lecturers = lecturers;
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+    delete createForumDto.lecturers;
+
     forum.absorbFromDto(createForumDto);
     return await this.forumRepo.save(forum);
   }
@@ -90,7 +111,7 @@ export class ForumService extends BaseService<Forum> {
     });
   }
 
-  async deleteForumById(forum_id: number) {
+  async softDeleteForumById(forum_id: number) {
     const forum = await this.forumRepo.findOneBy({ id: forum_id });
     if (forum) {
       forum.isDeleted = true;
@@ -136,12 +157,29 @@ export class ForumService extends BaseService<Forum> {
       where: {
         id: forumId,
       },
-      relations: ['userToForum', 'userToForum.user', 'userToForum.user.image'],
+      relations: [
+        'userToForum',
+        'userToForum.user',
+        'userToForum.user.response.questionAnswers.question',
+        'userToForum.user.response.questionnaire',
+        'userToForum.user.image',
+        'questionnaire',
+        'questionnaire.questions',
+        'questionnaire.questions.variants',
+      ],
     });
 
     if (!forum) {
       throw new BadRequestException(`Forum with id ${forumId} is not found!`);
     }
+
+    forum.userToForum.forEach((userToForum) => {
+      const response = userToForum.user.response;
+      userToForum.user.response = response.filter(
+        (response) => response?.questionnaire?.id === forum?.questionnaire?.id,
+      );
+    });
+
     return forum.userToForum;
   }
 
@@ -170,7 +208,7 @@ export class ForumService extends BaseService<Forum> {
       .leftJoinAndSelect('forum.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(`forum.${listParamsDto.getOrderedField()}`, listParamsDto.order)
+      .orderBy(`forum.${listParamsDto.getOrderedField()}`, 'ASC')
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
     return new ListDto(future, {
@@ -189,7 +227,7 @@ export class ForumService extends BaseService<Forum> {
       .leftJoinAndSelect('forum.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(`forum.${listParamsDto.getOrderedField()}`, listParamsDto.order)
+      .orderBy(`forum.${listParamsDto.getOrderedField()}`, 'DESC')
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
     return new ListDto(past, {
@@ -207,19 +245,18 @@ export class ForumService extends BaseService<Forum> {
       relations: [
         'images',
         'userToForum',
-        'userToForum.user.response.questionAnswers',
-        'userToForum.user.response.questionnaire',
         'questionnaire',
         'questionnaire.questions',
         'questionnaire.questions.variants',
+        'lecturers.image',
       ],
     });
-    forum.userToForum.forEach((userToForum) => {
-      const responses = userToForum.user.response;
-      userToForum.user.response = responses.filter(
-        (response) => response?.questionnaire?.id === forum?.questionnaire?.id,
-      );
-    });
+    // forum.userToForum.forEach((userToForum) => {
+    //   const responses = userToForum.user.response;
+    //   userToForum.user.response = responses.filter(
+    //     (response) => response?.questionnaire?.id === forum?.questionnaire?.id,
+    //   );
+    // });
     return forum;
   }
 }

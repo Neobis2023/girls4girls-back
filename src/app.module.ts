@@ -24,6 +24,7 @@ import { TranslateModule } from './modules/translate/translate.module';
 import { LecturerModule } from './modules/lecturers/lecturers.module';
 import { MentorshipModule } from './modules/mentorship/mentorship.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     LecturerModule,
     MentorshipModule,
     FeedbackModule,
+    EventModule,
   ],
   controllers: [],
 })

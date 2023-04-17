@@ -1,5 +1,11 @@
 import { Image } from '../../image/entities/image.entity';
-import { IsEmail, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { JetonType } from '../enums/jeton-type.enum';
 import { Type } from 'class-transformer';

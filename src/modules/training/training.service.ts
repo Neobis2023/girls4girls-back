@@ -244,10 +244,7 @@ export class TrainingsService extends BaseService<Training> {
       .leftJoinAndSelect('training.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(
-        `training.${listParamsDto.getOrderedField()}`,
-        listParamsDto.order,
-      )
+      .orderBy(`training.${listParamsDto.getOrderedField()}`, 'DESC')
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
 
@@ -268,10 +265,7 @@ export class TrainingsService extends BaseService<Training> {
       .leftJoinAndSelect('training.images', 'images')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
-      .orderBy(
-        `training.${listParamsDto.getOrderedField()}`,
-        listParamsDto.order,
-      )
+      .orderBy(`training.${listParamsDto.getOrderedField()}`, 'ASC')
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
 

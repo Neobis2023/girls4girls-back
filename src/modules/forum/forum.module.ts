@@ -10,6 +10,7 @@ import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { UserToForum } from './entities/users-to-forum.entity';
 import { UserModule } from '../user/user.module';
 import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
+import { LecturerModule } from '../lecturers/lecturers.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
     ImageModule,
     CloudinaryModule,
     UserModule,
+    LecturerModule,
   ],
   controllers: [ForumController],
   providers: [ForumService, ImageService],

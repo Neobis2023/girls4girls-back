@@ -111,6 +111,12 @@ export class User extends BaseEntity {
   })
   isDeleted: boolean;
 
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isBlocked: boolean;
+
   @OneToOne(() => Image, { cascade: true })
   @JoinColumn()
   image: Image;

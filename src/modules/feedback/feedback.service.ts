@@ -49,9 +49,6 @@ export class FeedbackService extends BaseService<Feedback> {
       case FeedbackStatusEnum.isFavorite:
         feedback.status = FeedbackStatusEnum.isFavorite;
         return this.feedbackRepo.save(feedback);
-      case FeedbackStatusEnum.isDeleted:
-        feedback.status = FeedbackStatusEnum.isDeleted;
-        return await this.feedbackRepo.save(feedback);
       default:
         throw new BadRequestException(`Invalid status: ${status}`);
     }
@@ -102,5 +99,17 @@ export class FeedbackService extends BaseService<Feedback> {
       order: listParamsDto.order,
       orderField: listParamsDto.orderField,
     });
+  }
+
+  async softDelete(feedback_id: number) {
+    const feedback = await this.feedbackRepo.findOne({
+      where: { id: feedback_id },
+    });
+    if (feedback) {
+      feedback.isDeleted = true;
+      await this.feedbackRepo.save(feedback);
+      return `Feedback with ID ${feedback} was successfully removed!`;
+    }
+    return `Feedback with ID ${feedback} was not found!`;
   }
 }

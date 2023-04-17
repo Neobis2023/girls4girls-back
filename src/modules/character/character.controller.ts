@@ -1,12 +1,16 @@
 import {
   Body,
-  Controller, Delete, Get, Param,
-  Post, Query,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
   Req,
   UploadedFile,
   UploadedFiles,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { CharacterService } from './character.service';
 import {
