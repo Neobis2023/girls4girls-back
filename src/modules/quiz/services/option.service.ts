@@ -29,7 +29,6 @@ export class OptionService extends BaseService<Option> {
     });
     excistingQuestion.options = [...excistingQuestion.options, newOption];
     await this.questionRepository.save(excistingQuestion);
-    console.log(excistingQuestion);
     return newOption;
   }
 

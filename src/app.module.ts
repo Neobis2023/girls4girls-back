@@ -22,6 +22,7 @@ import { CharacterModule } from './modules/character/character.module';
 import { ContentModule } from './modules/content/content.module';
 import { TranslateModule } from './modules/translate/translate.module';
 import { LecturerModule } from './modules/lecturers/lecturers.module';
+import { MentorshipModule } from './modules/mentorship/mentorship.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
 
 @Module({
@@ -68,6 +69,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     ContentModule,
     TranslateModule,
     LecturerModule,
+    MentorshipModule,
     FeedbackModule,
   ],
   controllers: [],

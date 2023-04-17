@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UsePipes,
@@ -11,9 +12,10 @@ import { CreateOptionDto } from '../dto/create-option.dto';
 import { OptionService } from '../services/option.service';
 import { QuestionService } from '../services/question.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ListParamsDto } from 'src/base/dto/list-params.dto';
 
-@ApiTags('Квизы')
-@Controller('question/option')
+@ApiTags('Квизы для админа')
+@Controller('question/options')
 export class OptionController {
   constructor(
     private optionService: OptionService,
