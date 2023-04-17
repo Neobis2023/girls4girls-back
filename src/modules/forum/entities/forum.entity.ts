@@ -11,6 +11,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { UserToForum } from './users-to-forum.entity';
+import { Lecturer } from 'src/modules/lecturers/entities/lecturer.entity';
 
 @Entity()
 export class Forum extends BaseEntity {
@@ -69,4 +70,10 @@ export class Forum extends BaseEntity {
   })
   @JoinTable()
   userToForum: UserToForum[];
+
+  @OneToMany(() => Lecturer, (lecturer) => lecturer.forum, {
+    cascade: true,
+  })
+  @JoinColumn()
+  lecturers: Lecturer[];
 }

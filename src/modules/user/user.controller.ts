@@ -24,6 +24,7 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StatusEnum } from './enums/user-status.enum';
+import { User } from './entities/user.entity';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -111,5 +112,26 @@ export class UserController {
     @Query() listParamsDto: ListParamsDto,
   ) {
     return await this.userService.listByStatus(listParamsDto, status);
+  }
+
+  @Patch('status/:id')
+  @ApiOperation({ summary: 'Админ : Поменять статус пользователя ' })
+  async changeStatus(
+    @Query('id') user_id: number,
+    @Query('status') status: StatusEnum,
+  ): Promise<User> {
+    return this.userService.changeUsersStatus(user_id, status);
+  }
+
+  @Patch('block/:id')
+  @ApiOperation({ summary: 'Админ : Блокировать пользователя' })
+  async blockUser(@Query('user_id') user_id: number) {
+    return this.userService.blockUser(user_id);
+  }
+
+  @Patch('unlock/:id')
+  @ApiOperation({ summary: 'Админ : Разблокировать пользователя' })
+  async unlockUser(@Query('id') user_id: number) {
+    await this.userService.unblockUser(user_id);
   }
 }

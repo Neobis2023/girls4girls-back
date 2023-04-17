@@ -1,7 +1,14 @@
 import { BaseEntity } from '../../../base/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
-import { CharacterImage } from './character-image.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { CharacterImage } from './character-image.entity';
 
 @Entity()
 export class Character extends BaseEntity {

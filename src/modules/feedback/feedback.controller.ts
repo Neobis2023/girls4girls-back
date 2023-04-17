@@ -8,6 +8,8 @@ import {
   ValidationPipe,
   Put,
   Query,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
@@ -15,11 +17,15 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FeedbackStatusEnum } from './enum/feedback-status.enum';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
+import { MailService } from '../mail/mail.service';
 
-@ApiTags('Feedback')
+@ApiTags('Обратная связь/Отзывы')
 @Controller('feedback')
 export class FeedbackController {
-  constructor(private readonly feedbackService: FeedbackService) {}
+  constructor(
+    private readonly feedbackService: FeedbackService,
+    private readonly mailerService: MailService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -56,11 +62,33 @@ export class FeedbackController {
   }
 
   @Get('/get/list/by/status')
-  @ApiOperation({ summary: 'Получить список пользователей по их статусу' })
+  @ApiOperation({
+    summary: 'Получить список отзывов пользователей по их статусу',
+  })
   async getBystatus(
     @Query('status') status: FeedbackStatusEnum,
     @Query() listParamsDto: ListParamsDto,
   ) {
     return await this.feedbackService.listByStatus(status, listParamsDto);
+  }
+
+  @Delete('soft/remove')
+  @ApiOperation({
+    summary: 'Удаление отзыва , поменять статус isDeleted на true',
+  })
+  async remove(@Query('feedback_id') feedback_id: number) {
+    return await this.feedbackService.softDelete(feedback_id);
+  }
+
+  @Post('post/response')
+  async sendResponseForFeedback(
+    @Param('email') email: string,
+    @Body() content: string,
+  ) {
+    const response = await this.mailerService.sendResponseForUsersFeedback(
+      email,
+      content,
+    );
+    return response;
   }
 }

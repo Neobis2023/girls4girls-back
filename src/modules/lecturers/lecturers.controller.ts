@@ -6,6 +6,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { LecturerService } from './lecturers.service';
 import { CreateLecturerDto } from './dto/create-lecturer.dto';
@@ -66,5 +67,11 @@ export class LecturerController {
   @ApiOperation({ summary: 'Получить список всех лекторов' })
   findAll(@Query() listParamsDto: ListParamsDto) {
     return this.lecturerService.listLecturers(listParamsDto);
+  }
+
+  @Delete('soft/delete')
+  @ApiOperation({ summary: 'Удаление пользователя' })
+  async remove(@Query('id') lecturer_id: number) {
+    return await this.lecturerService.softDeleteLecturer(lecturer_id);
   }
 }

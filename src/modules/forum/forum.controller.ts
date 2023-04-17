@@ -24,7 +24,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { ApplyUserToTrainingDto } from '../training/dto/apply-user-to-training.dto';
 import { ApplyUserToForumDto } from './dto/apply-user-to-forum.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 
@@ -97,6 +96,12 @@ export class ForumController {
           example: 3,
           description: 'ID анкеты для форума',
         },
+        lecturers: {
+          type: 'string',
+          example: '[1, 2]',
+          description:
+            'Массив айдишек лекоторов, надо обычный массив превращать в строку черерз JSON.stringify()',
+        },
       },
     },
   })
@@ -138,7 +143,7 @@ export class ForumController {
   @Delete(':id')
   @ApiOperation({ summary: 'Админ: Удаление форума по его ID' })
   remove(@Param('id') forum_id: number) {
-    return this.forumService.deleteForumById(forum_id);
+    return this.forumService.softDeleteForumById(forum_id);
   }
 
   @Get('apply/:id')

@@ -10,9 +10,20 @@ import { QuizService } from './services/quiz.service';
 import { OptionService } from './services/option.service';
 import { OptionController } from './controllers/option.controller';
 import { VideoBlog } from '../video-blog/entities/video-blog.entity';
+import { User } from '../user/entities/user.entity';
+import { QuizResult } from './entities/quiz-results.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Quiz, Question, Option, VideoBlog])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Quiz,
+      Question,
+      Option,
+      VideoBlog,
+      User,
+      QuizResult,
+    ]),
+  ],
   controllers: [QuizController, QuestionController, OptionController],
   providers: [QuizService, QuestionService, OptionService],
 })
