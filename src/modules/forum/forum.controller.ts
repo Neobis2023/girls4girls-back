@@ -96,6 +96,12 @@ export class ForumController {
           example: 3,
           description: 'ID анкеты для форума',
         },
+        lecturers: {
+          type: 'string',
+          example: '[1, 2]',
+          description:
+            'Массив айдишек лекоторов, надо обычный массив превращать в строку черерз JSON.stringify()',
+        },
       },
     },
   })

@@ -26,4 +26,10 @@ export class Feedback extends BaseEntity {
   })
   @JoinColumn()
   user: User;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isDeleted: boolean;
 }

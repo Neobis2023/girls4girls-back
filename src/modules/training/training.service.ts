@@ -246,7 +246,7 @@ export class TrainingsService extends BaseService<Training> {
       .offset(listParamsDto.countOffset())
       .orderBy(
         `training.${listParamsDto.getOrderedField()}`,
-        listParamsDto.order,
+        'DESC'
       )
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
@@ -270,7 +270,7 @@ export class TrainingsService extends BaseService<Training> {
       .offset(listParamsDto.countOffset())
       .orderBy(
         `training.${listParamsDto.getOrderedField()}`,
-        listParamsDto.order,
+        'ASC'
       )
       .getMany();
     const itemsCount = await this.repository.createQueryBuilder().getCount();
