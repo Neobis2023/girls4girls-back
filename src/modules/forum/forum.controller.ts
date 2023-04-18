@@ -122,7 +122,7 @@ export class ForumController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Получить форум по ID' })
-  async getById(@Query('id') id: number) {
+  async getById(@Param('id') id: number) {
     return await this.forumService.getForumById(id);
   }
 
@@ -138,11 +138,9 @@ export class ForumController {
     return this.forumService.applyUserToForum(applyUserToForumDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Админ: Удаление форума по его ID' })
-  remove(@Query('id') forum_id: number) {
+  remove(@Param('id') forum_id: number) {
     return this.forumService.softDeleteForumById(forum_id);
   }
 
