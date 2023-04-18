@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { Mentee } from './entities/mentee.entity';
-import { CreateMenteeDto } from './dto/create-mentee.dto';
 
 @Injectable()
 export class MenteeService extends BaseService<Mentee> {
