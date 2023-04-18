@@ -93,6 +93,7 @@ export class JetonService extends BaseService<Jeton> {
       order: {
         quantityToGet: 'DESC',
       },
+      relations: ['image'],
     });
     const isUserAlreadyHaveJeton = user.jetons.find(
       (jeton) => jeton.id === jetonForActivity.id,
