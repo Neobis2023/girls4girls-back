@@ -32,7 +32,9 @@ export abstract class BaseService<T extends BaseEntity> {
     entity: string,
     relations?: string[],
   ) {
-    const query = this.repository.createQueryBuilder(entity);
+    const query = this.repository
+      .createQueryBuilder(entity)
+      .where(`${entity}.isDeleted != true`);
 
     if (relations) {
       for (const relation of relations) {
@@ -69,7 +71,8 @@ export abstract class BaseService<T extends BaseEntity> {
   async getWithRelations(id: number, entity: string, relations?: string[]) {
     const query = this.repository
       .createQueryBuilder(entity)
-      .where(`${entity}.id = :id`, { id });
+      .where(`${entity}.id = :id`, { id })
+      .andWhere(`${entity}.isDeleted != true`);
 
     if (relations) {
       for (const relation of relations) {

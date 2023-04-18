@@ -21,17 +21,12 @@ export class MailService {
     });
   }
 
-  async sendResponseForUsersFeedback(email: string, content: string) {
-    try {
-      const mailOptions = {
-        to: email,
-        subject: 'Ответ за ваш отзыв от GirlsForGirls',
-        html: content,
-      };
-      await this.mailerService.sendMail(mailOptions);
-    } catch (error) {
-      throw new Error('Error');
-    }
+  async respondToFeedback(email: string, message: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Ответ за ваш отзыв от GirlsForGirls',
+      html: `<p>${message}</p>`,
+    });
   }
 
   async sendResponseEmailForApplication(

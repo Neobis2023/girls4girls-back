@@ -33,8 +33,8 @@ export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -138,8 +138,6 @@ export class ForumController {
     return this.forumService.applyUserToForum(applyUserToForumDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Админ: Удаление форума по его ID' })
   remove(@Param('id') forum_id: number) {
