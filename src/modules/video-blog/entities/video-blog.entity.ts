@@ -59,6 +59,11 @@ export class VideoBlog extends BaseEntity {
   @Column({ nullable: true })
   lecturerInfoKG: string;
 
+  @Column({
+    default: false,
+  })
+  isDeleted: boolean;
+
   @OneToOne(() => Image, (image) => image.videoBlog, { cascade: true })
   @IsNotEmpty()
   lecturerImage: Image;

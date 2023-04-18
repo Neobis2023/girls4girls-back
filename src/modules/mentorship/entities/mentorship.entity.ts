@@ -15,6 +15,11 @@ export class MentorShip extends BaseEntity {
   @Column()
   name: string;
 
+  @Column({
+    default: false,
+  })
+  isDeleted: boolean;
+
   @OneToMany(
     () => UserToMentorship,
     (userToMentorship) => userToMentorship.mentorship,

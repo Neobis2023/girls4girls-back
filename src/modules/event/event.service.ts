@@ -38,6 +38,6 @@ export class EventService {
       order: { eventDate: 'ASC' },
       relations: ['images'],
     });
-    return [...upcomingForum, ...upcomingTraining];
+    return [...upcomingForum, ...upcomingTraining].sort((a, b) => 0.5 - Math.random());
   }
 }

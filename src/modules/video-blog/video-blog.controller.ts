@@ -171,4 +171,10 @@ export class VideoBlogController {
   ) {
     return this.videoBlogService.addToWatched(req.user.id, addToWatchedDto);
   }
+
+  @Get('views/:videoId')
+  @ApiOperation({ summary: 'Получить количество просмотров у видео' })
+  getVideosViews(@Param('videoId') id: string) {
+    return this.videoBlogService.getViewsCount(id);
+  }
 }
