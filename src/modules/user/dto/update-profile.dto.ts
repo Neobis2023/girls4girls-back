@@ -54,15 +54,19 @@ export class UpdateProfileDto extends BaseDto {
 
   @ApiProperty({
     enum: Object.keys(UserGenderEnum),
+    required: false,
   })
   @IsEnum(UserGenderEnum)
+  @IsOptional()
   gender: UserGenderEnum;
 
   @ApiProperty({
     example: RegionEnum.CHUI,
     enum: RegionEnum,
+    required: false,
   })
   @IsEnum(RegionEnum)
+  @IsOptional()
   region: RegionEnum;
 
   updatedAt?: Date;
