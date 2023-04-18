@@ -85,6 +85,7 @@ export class FeedbackService extends BaseService<Feedback> {
       .createQueryBuilder('feedback')
       .leftJoinAndSelect('feedback.user', 'user')
       .leftJoinAndSelect('user.image', 'image')
+      .where('feedback.isDeleted !=true')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(
