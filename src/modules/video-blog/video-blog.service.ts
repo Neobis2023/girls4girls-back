@@ -10,6 +10,8 @@ import { VideoBlog } from './entities/video-blog.entity';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { AddToWatchedDto } from './dto/add-to-watched.dto';
 import { UserService } from '../user/user.service';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { google } = require('googleapis');
 
 @Injectable()
 export class VideoBlogService extends BaseService<VideoBlog> {
@@ -31,10 +33,14 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     });
     if (!category)
       throw new BadRequestException('Введите название категории правильно');
+
+    const videoId: string = blog.videoUrl.split(/[=/]/).pop();
+    const viewsCount = await this.getViewsCount(videoId);
     const image = await this.imageService.createImage(blog.lecturerImage);
     Object.assign(videoBlog, blog);
     videoBlog.lecturerImage = image;
     videoBlog.category = category;
+    videoBlog.postViewCount = viewsCount;
     return await this.blogRepo.save(videoBlog);
   }
 
@@ -68,8 +74,13 @@ export class VideoBlogService extends BaseService<VideoBlog> {
 
   async deleteOne(blogId: number) {
     const blog = await this.get(blogId);
-    if (blog) return await this.blogRepo.remove(blog);
-    return;
+    if (!blog) {
+      throw new BadRequestException(
+        `Video blog with id ${blogId} is not found!`,
+      );
+    }
+    blog.isDeleted = true;
+    return this.blogRepo.save(blog);
   }
 
   async addView(id: number) {
@@ -130,5 +141,20 @@ export class VideoBlogService extends BaseService<VideoBlog> {
 
     user.videoBlogs.push(videoBlog);
     return this.userService.justSaveUser(user);
+  }
+
+  async getViewsCount(videoId: string) {
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: 'AIzaSyBDo9AJP15u0UhpwiPgBQWqBixuS6DKzaQ',
+    });
+
+    const response = await youtube.videos.list({
+      id: videoId,
+      part: 'statistics',
+    });
+
+    const viewCount = response.data.items[0].statistics.viewCount;
+    return viewCount;
   }
 }
