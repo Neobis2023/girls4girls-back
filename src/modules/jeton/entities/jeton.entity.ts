@@ -4,6 +4,7 @@ import { Image } from '../../image/entities/image.entity';
 import { IsString } from 'class-validator';
 import { User } from '../../user/entities/user.entity';
 import { JetonType } from '../enums/jeton-type.enum';
+import { CardInfo } from './card-info.entity';
 
 @Entity()
 export class Jeton extends BaseEntity {
@@ -48,4 +49,8 @@ export class Jeton extends BaseEntity {
 
   @ManyToMany(() => User, (user) => user.jetons)
   users: User[];
+
+  @OneToOne(() => CardInfo)
+  @JoinColumn()
+  cardInfo: CardInfo;
 }

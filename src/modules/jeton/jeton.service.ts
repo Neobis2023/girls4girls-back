@@ -10,12 +10,16 @@ import { Image } from '../image/entities/image.entity';
 import { ImageService } from '../image/image.service';
 import { UserService } from '../user/user.service';
 import { UpdateProfileDto } from '../user/dto/update-profile.dto';
+import { CreateCardInfoDto } from './dto/create-card-info.dto';
+import { CardInfo } from './entities/card-info.entity';
 
 @Injectable()
 export class JetonService extends BaseService<Jeton> {
   constructor(
     @InjectRepository(Jeton)
     private readonly jetonsRepository: Repository<Jeton>,
+    @InjectRepository(CardInfo)
+    private readonly cardInfoRepository: Repository<CardInfo>,
     private readonly imageService: ImageService,
     private readonly userService: UserService,
   ) {
@@ -35,7 +39,29 @@ export class JetonService extends BaseService<Jeton> {
       newJeton.image = image;
     }
 
+    if (createJetonDto.cardInfoId) {
+      const card = await this.cardInfoRepository.findOneBy({
+        id: createJetonDto.cardInfoId,
+      });
+      if (card) {
+        newJeton.cardInfo = card;
+      }
+    }
+
     return this.jetonsRepository.save(newJeton);
+  }
+
+  async createCardInfo(
+    createCardInfoDto: CreateCardInfoDto,
+    file: Express.Multer.File,
+  ) {
+    const newCardInfo = this.cardInfoRepository.create(createCardInfoDto);
+    if (file) {
+      const image: Image = await this.imageService.createImage(file);
+      newCardInfo.image = image;
+    }
+
+    return this.cardInfoRepository.save(newCardInfo);
   }
 
   async update(id: number, updateJetonDto: UpdateJetonDto) {
