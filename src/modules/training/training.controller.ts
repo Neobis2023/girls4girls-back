@@ -122,7 +122,7 @@ export class TrainingsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Получить трейнинг по ID' })
-  async getById(@Param('id') id: number) {
+  async getById(@Query('id') id: number) {
     return await this.trainingsService.getTrainingById(id);
   }
 
@@ -140,7 +140,7 @@ export class TrainingsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Админ: Удаление тренинга по ID' })
-  remove(@Param('id') training_id: number) {
+  remove(@Query('id') training_id: number) {
     return this.trainingsService.deleteTraining(training_id);
   }
 
