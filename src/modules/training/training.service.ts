@@ -81,6 +81,8 @@ export class TrainingsService extends BaseService<Training> {
     const array = await this.trainingRepo
       .createQueryBuilder('training')
       .leftJoinAndSelect('training.images', 'images')
+      .leftJoinAndSelect('training.questionnaire', 'questionnaire')
+      .leftJoinAndSelect('training.lecturers', 'lecturers')
       .where('training.isDeleted != true')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
