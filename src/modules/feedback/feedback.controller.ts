@@ -8,13 +8,12 @@ import {
   ValidationPipe,
   Put,
   Query,
-  Param,
   Delete,
 } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FeedbackStatusEnum } from './enum/feedback-status.enum';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { MailService } from '../mail/mail.service';
@@ -80,15 +79,31 @@ export class FeedbackController {
     return await this.feedbackService.softDelete(feedback_id);
   }
 
-  @Post('post/response')
-  async sendResponseForFeedback(
-    @Param('email') email: string,
-    @Body() content: string,
-  ) {
-    const response = await this.mailerService.sendResponseForUsersFeedback(
-      email,
-      content,
-    );
-    return response;
+  @Post('respond')
+  @ApiOperation({
+    summary: 'Админ : Написать обратное сообщение для отзыва пользователя',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          description: 'Адрес электронной почты получателя',
+          example: 'player@gmail.com',
+        },
+        message: {
+          type: 'string',
+          description: 'Обратная связь ответное сообщение',
+          example:
+            'Мы благодарны за ваш отзыв. Мы будем работать над улучшением нашей работы/услуги, чтобы удовлетворить ваши потребности.',
+        },
+      },
+    },
+  })
+  async respondToFeedback(@Body() data: { email: string; message: string }) {
+    const { email, message } = data;
+    await this.mailerService.respondToFeedback(email, message);
+    return 'Сообщение было успешно отправлено!';
   }
 }

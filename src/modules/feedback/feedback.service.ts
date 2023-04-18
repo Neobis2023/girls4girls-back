@@ -8,6 +8,7 @@ import { User } from '../user/entities/user.entity';
 import { FeedbackStatusEnum } from './enum/feedback-status.enum';
 import { ListDto } from 'src/base/dto/list.dto';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class FeedbackService extends BaseService<Feedback> {
@@ -16,6 +17,7 @@ export class FeedbackService extends BaseService<Feedback> {
     private readonly feedbackRepo: Repository<Feedback>,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    private readonly mailService: MailService,
   ) {
     super(feedbackRepo);
   }

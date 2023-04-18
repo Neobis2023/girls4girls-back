@@ -97,6 +97,9 @@ export class ForumService extends BaseService<Forum> {
     const array = await this.forumRepo
       .createQueryBuilder('forum')
       .leftJoinAndSelect('forum.images', 'images')
+      .leftJoinAndSelect('forum.questionnaire', 'questionnaire')
+      .leftJoinAndSelect('forum.lecturers', 'lecturers')
+      .where('forum.isDeleted != true')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(`forum.${listParamsDto.getOrderedField()}`, listParamsDto.order)
