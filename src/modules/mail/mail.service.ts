@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ApplyStatus } from '../../utils/enum/apply-status.enum';
 
 @Injectable()
 export class MailService {
@@ -26,5 +27,36 @@ export class MailService {
       subject: 'Ответ за ваш отзыв от GirlsForGirls',
       html: `<p>${message}</p>`,
     });
+  }
+
+  async sendResponseEmailForApplication(
+    email: string,
+    applyStatus: string,
+    program: string,
+  ) {
+    let response;
+    if (applyStatus === ApplyStatus.APPROVED) {
+      response = `
+        <h2>Поздравляем вас!</h2>
+        <p>Ваша подача на программу ${program} одобрена 🎉🎉🎉</p>
+      `;
+    } else {
+      response = `
+        <h3>Добрый день!</h3>
+        <p>К сожалению ваша подача на программу ${program} была отклонена</p>
+        <p>Попробуйте податься на следующий 💪</p>
+      `;
+    }
+
+    try {
+      const mailOptions = {
+        to: email,
+        subject: 'Ответ на вашу подачу от Girls4Girls',
+        html: response,
+      };
+      await this.mailerService.sendMail(mailOptions);
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
 }

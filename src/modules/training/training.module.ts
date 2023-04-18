@@ -10,6 +10,7 @@ import { ImageModule } from '../image/image.module';
 import { UserToTraining } from './entities/users-to-training.entity';
 import { UserModule } from '../user/user.module';
 import { LecturerModule } from '../lecturers/lecturers.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LecturerModule } from '../lecturers/lecturers.module';
     ImageModule,
     UserModule,
     LecturerModule,
+    MailModule,
   ],
   controllers: [TrainingsController],
   providers: [TrainingsService],

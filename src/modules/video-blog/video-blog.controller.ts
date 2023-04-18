@@ -33,6 +33,7 @@ import { UserRoleEnum } from '../user/enums/user-role.enum';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlogService } from './video-blog.service';
+import { AddToWatchedDto } from './dto/add-to-watched.dto';
 
 @ApiTags('Видеоблоги')
 @Controller('video-blog')
@@ -69,10 +70,19 @@ export class VideoBlogController {
       type: 'object',
       properties: {
         videoUrl: { type: 'string', example: 'https://youtu.be/dQw4w9WgXcQ' },
-        title: { type: 'string', example: 'Название видео ' },
-        description: { type: 'string', example: 'Это лекция про здоровье' },
+        title: { type: 'string', example: 'Новое название видео' },
+        titleKG: { type: 'string', example: 'Видео блогдун аты' },
+        description: {
+          type: 'string',
+          example: 'Описание видео блога',
+        },
+        descriptionKG: {
+          type: 'string',
+          example: 'Видео блогдун суроттомосу',
+        },
         lecturerName: { type: 'string', example: 'Имя Фамилия' },
-        lecturerInfo: { type: 'string', example: 'Ментор' },
+        lecturerInfo: { type: 'string', example: 'Информация о лекторе' },
+        lecturerInfoKG: { type: 'string', example: 'Лектор жонундо маалымат' },
         lecturerImage: {
           type: 'string',
           format: 'binary',
@@ -105,13 +115,19 @@ export class VideoBlogController {
       type: 'object',
       properties: {
         videoUrl: { type: 'string', example: 'https://youtu.be/JojwHc1MKag' },
-        title: { type: 'string', example: 'Новое название видео ' },
+        title: { type: 'string', example: 'Новое название видео' },
+        titleKG: { type: 'string', example: 'Видео блогдун аты' },
         description: {
           type: 'string',
-          example: 'Это лекция про тайм менеджмент',
+          example: 'Описание видео блога',
+        },
+        descriptionKG: {
+          type: 'string',
+          example: 'Видео блогдун суроттомосу',
         },
         lecturerName: { type: 'string', example: 'Новое Имя и Фамилия' },
-        lecturerInfo: { type: 'string', example: 'Бизнес-вумен' },
+        lecturerInfo: { type: 'string', example: 'Информация о лекторе' },
+        lecturerInfoKG: { type: 'string', example: 'Лектор жонундо маалымат' },
         lecturerImage: {
           type: 'string',
           format: 'binary',
@@ -143,5 +159,16 @@ export class VideoBlogController {
   @Patch(':id')
   async addView(@Param('id') id: number) {
     return await this.videoBlogService.addView(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Добавить видео-блог в просмотренные' })
+  @Put('add-to-watched')
+  async addToWatched(
+    @Req() req: any,
+    @Query() addToWatchedDto: AddToWatchedDto,
+  ) {
+    return this.videoBlogService.addToWatched(req.user.id, addToWatchedDto);
   }
 }

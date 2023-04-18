@@ -8,6 +8,8 @@ import { CreateBlogDto } from './dto/create-blog.dto';
 import { EditBlogDto } from './dto/edit-blog.dto';
 import { VideoBlog } from './entities/video-blog.entity';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
+import { AddToWatchedDto } from './dto/add-to-watched.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class VideoBlogService extends BaseService<VideoBlog> {
@@ -17,6 +19,7 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     @InjectRepository(Categories)
     private readonly categoryRepo: Repository<Categories>,
     private readonly imageService: ImageService,
+    private readonly userService: UserService,
   ) {
     super(blogRepo);
   }
@@ -108,5 +111,24 @@ export class VideoBlogService extends BaseService<VideoBlog> {
       [objects[i], objects[j]] = [objects[j], objects[i]];
     }
     return objects.slice(0, 3);
+  }
+
+  async addToWatched(userId: number, addToWatchedDto: AddToWatchedDto) {
+    const { blogId } = addToWatchedDto;
+    const user = await this.userService.getWithRelations(userId, 'user', [
+      'videoBlogs',
+    ]);
+    const videoBlog = await this.get(blogId);
+
+    if (!videoBlog) {
+      throw new BadRequestException(`Видео блог с id ${blogId} не найден!`);
+    }
+
+    if (user.videoBlogs.find((blog) => blog.id === blogId)) {
+      return user.videoBlogs;
+    }
+
+    user.videoBlogs.push(videoBlog);
+    return this.userService.justSaveUser(user);
   }
 }
