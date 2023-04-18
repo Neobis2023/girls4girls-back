@@ -10,6 +10,8 @@ import { VideoBlog } from './entities/video-blog.entity';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { AddToWatchedDto } from './dto/add-to-watched.dto';
 import { UserService } from '../user/user.service';
+import { JetonService } from '../jeton/jeton.service';
+import { JetonType } from '../jeton/enums/jeton-type.enum';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { google } = require('googleapis');
 
@@ -22,6 +24,7 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     private readonly categoryRepo: Repository<Categories>,
     private readonly imageService: ImageService,
     private readonly userService: UserService,
+    private readonly jetonService: JetonService,
   ) {
     super(blogRepo);
   }
@@ -136,11 +139,18 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     }
 
     if (user.videoBlogs.find((blog) => blog.id === blogId)) {
-      return user.videoBlogs;
+      return {
+        message: 'Already watched this video!',
+      };
     }
 
     user.videoBlogs.push(videoBlog);
-    return this.userService.justSaveUser(user);
+    await this.userService.justSaveUser(user);
+    return this.jetonService.assignJetonForActivity(
+      userId,
+      user.videoBlogs.length,
+      JetonType.VIDEO,
+    );
   }
 
   async getViewsCount(videoId: string) {

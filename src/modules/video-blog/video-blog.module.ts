@@ -8,6 +8,7 @@ import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
 import { Image } from '../image/entities/image.entity';
 import { UserModule } from '../user/user.module';
+import { JetonModule } from '../jeton/jeton.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from '../user/user.module';
     CloudinaryModule,
     ImageModule,
     UserModule,
+    JetonModule,
   ],
   providers: [VideoBlogService],
   controllers: [VideoBlogController],
