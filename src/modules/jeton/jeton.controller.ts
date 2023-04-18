@@ -17,6 +17,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateJetonDto } from './dto/update-jeton.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JetonType } from './enums/jeton-type.enum';
+import { CreateCardInfoDto } from './dto/create-card-info.dto';
 
 @ApiTags('Жетоны')
 @Controller('jeton')
@@ -69,6 +70,11 @@ export class JetonController {
           type: 'string',
           format: 'binary',
         },
+        cardInfoId: {
+          type: 'number',
+          example: 3,
+          description: 'ID карточки с детальной информацией',
+        },
       },
     },
   })
@@ -79,6 +85,43 @@ export class JetonController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.jetonService.create(createJetonDto, file);
+  }
+
+  @Post('card-info')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          example: 'Имя человека на карточке',
+          description: 'Название достижения',
+        },
+        info: {
+          type: 'string',
+          example: 'Информация о человеке на карточке',
+          description: 'Описание достижения',
+        },
+        infoKG: {
+          type: 'string',
+          example: 'Карточкадагы адам жонундо маалымат',
+          description: 'Жетишкендиктин суроттомосу',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiOperation({ summary: 'Создание карточки для жетона' })
+  async createCardInfo(
+    @Body() createCardInfoDto: CreateCardInfoDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.jetonService.createCardInfo(createCardInfoDto, file);
   }
 
   @Patch(':id')

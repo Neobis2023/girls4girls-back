@@ -62,4 +62,14 @@ export class CreateJetonDto {
 
   @IsOptional()
   image?: Image;
+
+  @ApiProperty({
+    example: 3,
+    description: 'ID карточки детальная информация',
+    required: false,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  cardInfoId: number;
 }

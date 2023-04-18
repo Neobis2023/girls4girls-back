@@ -30,6 +30,7 @@ import { QuestionnaireResponse } from '../../questionnaire/entities/questionnair
 import { Feedback } from 'src/modules/feedback/entities/feedback.entity';
 import { UserToMentorship } from 'src/modules/mentorship/entities/user-to-mentor.entity';
 import { QuizResult } from 'src/modules/quiz/entities/quiz-results.entity';
+import { VideoBlog } from '../../video-blog/entities/video-blog.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -171,4 +172,8 @@ export class User extends BaseEntity {
     cascade: true,
   })
   quizResults: QuizResult[];
+
+  @ManyToMany(() => VideoBlog)
+  @JoinTable()
+  videoBlogs: VideoBlog[];
 }

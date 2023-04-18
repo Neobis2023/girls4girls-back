@@ -7,12 +7,14 @@ import { Categories } from '../categories/entities/category.entity';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { ImageModule } from '../image/image.module';
 import { Image } from '../image/entities/image.entity';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([VideoBlog, Categories, Image]),
     CloudinaryModule,
     ImageModule,
+    UserModule,
   ],
   providers: [VideoBlogService],
   controllers: [VideoBlogController],

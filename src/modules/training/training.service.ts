@@ -15,6 +15,7 @@ import { ApplyUserToTrainingDto } from './dto/apply-user-to-training.dto';
 import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 import { LecturerService } from '../lecturers/lecturers.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -30,6 +31,7 @@ export class TrainingsService extends BaseService<Training> {
     private readonly imageService: ImageService,
     private readonly userService: UserService,
     private readonly lecturerService: LecturerService,
+    private readonly mailService: MailService,
   ) {
     super(trainingRepo);
   }
@@ -211,8 +213,11 @@ export class TrainingsService extends BaseService<Training> {
     updateUserApplication: UpdateUserApplicationDto,
   ): Promise<UserToTraining> {
     const { applicationId, applyStatus } = updateUserApplication;
-    const application = await this.userToTrainingRepository.findOneBy({
-      id: applicationId,
+    const application = await this.userToTrainingRepository.findOne({
+      where: {
+        id: applicationId,
+      },
+      relations: ['training', 'user'],
     });
 
     if (!application) {
@@ -220,6 +225,13 @@ export class TrainingsService extends BaseService<Training> {
         `Application to training with id ${applicationId} is not found!`,
       );
     }
+
+    const program = application.training?.title || 'тренинга';
+    await this.mailService.sendResponseEmailForApplication(
+      application.user.email,
+      applyStatus,
+      program,
+    );
 
     application.applyStatus = applyStatus;
     return this.userToTrainingRepository.save(application);
