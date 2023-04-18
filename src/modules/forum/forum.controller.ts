@@ -138,8 +138,6 @@ export class ForumController {
     return this.forumService.applyUserToForum(applyUserToForumDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Админ: Удаление форума по его ID' })
   remove(@Param('id') forum_id: number) {
