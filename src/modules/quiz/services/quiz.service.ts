@@ -10,6 +10,8 @@ import { VideoBlog } from 'src/modules/video-blog/entities/video-blog.entity';
 import { CreateOptionDto } from '../dto/create-option.dto';
 import { User } from 'src/modules/user/entities/user.entity';
 import { QuizResult } from '../entities/quiz-results.entity';
+import { JetonService } from '../../jeton/jeton.service';
+import { JetonType } from '../../jeton/enums/jeton-type.enum';
 
 @Injectable()
 export class QuizService extends BaseService<Quiz> {
@@ -26,6 +28,7 @@ export class QuizService extends BaseService<Quiz> {
     private readonly blogRepo: Repository<VideoBlog>,
     @InjectRepository(User)
     private userRepo: Repository<User>,
+    private readonly jetonService: JetonService,
   ) {
     super(quizRepository);
   }
@@ -105,15 +108,24 @@ export class QuizService extends BaseService<Quiz> {
       where: { quiz: { id: quizId }, user: { id: userId } },
     });
     if (isPassed) {
-      return isPassed;
+      return this.jetonService.assignJetonForActivity(
+        userId,
+        user.quizResults.length,
+        JetonType.TEST,
+      );
     }
     const result = new QuizResult();
     result.quiz = quiz;
     result.correctAnwers = correctAnswers;
     result.questions = allQuestions;
     user.quizResults.push(result);
-    await this.userRepo.save(user);
-    return await this.quizResultRepository.save(result);
+    const savedUser = await this.userRepo.save(user);
+    await this.quizResultRepository.save(result);
+    return this.jetonService.assignJetonForActivity(
+      userId,
+      savedUser.quizResults.length,
+      JetonType.TEST,
+    );
     // return `Questions number: ${allQuestions}, correct answers: ${correctAnswers}`;
   }
 

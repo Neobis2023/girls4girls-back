@@ -59,7 +59,7 @@ export class UserService extends BaseService<User> {
         'image',
         'character.characterImage.images',
         'videoBlogs',
-        'passedQuizzes',
+        'quizResults',
       ],
     });
 
