@@ -153,6 +153,18 @@ export class VideoBlogService extends BaseService<VideoBlog> {
     );
   }
 
+  async getWatchedVideoBlogs(userId: number) {
+    const user = await this.userService.getWithRelations(userId, 'user', [
+      'videoBlogs',
+    ]);
+
+    if (!user) {
+      throw new BadRequestException('Пользователь не найден!');
+    }
+
+    return user.videoBlogs;
+  }
+
   async getViewsCount(videoId: string) {
     const youtube = google.youtube({
       version: 'v3',
