@@ -165,11 +165,11 @@ export class TrainingsService extends BaseService<Training> {
     }
 
     const isUserApplied = await this.findAppliedUserById(trainingId, userId);
-    if (isUserApplied) {
-      throw new BadRequestException(
-        `User with id ${userId} already applied to this training!`,
-      );
-    }
+    // if (isUserApplied) {
+    //   throw new BadRequestException(
+    //     `User with id ${userId} already applied to this training!`,
+    //   );
+    // }
 
     const apply = new UserToTraining();
     apply.user = user;
