@@ -14,30 +14,44 @@ export class EventService {
   ) {}
 
   async getRecentPastEvents(): Promise<(Forum | Training)[]> {
-    const pastForum = await this.forumRepo.find({
-      where: { eventDate: LessThan(new Date()) },
-      order: { eventDate: 'DESC' },
-      relations: ['images'],
-    });
-    const pastTrainings = await this.trainingRepo.find({
-      where: { eventDate: LessThan(new Date()) },
-      order: { eventDate: 'DESC' },
-      relations: ['images'],
-    });
-    return [...pastForum, ...pastTrainings];
+    const pastEvents = await Promise.all([
+      this.forumRepo.find({
+        where: { eventDate: LessThan(new Date()) },
+        order: { eventDate: 'DESC' },
+        relations: ['images'],
+      }),
+      this.trainingRepo.find({
+        where: { eventDate: LessThan(new Date()) },
+        order: { eventDate: 'DESC' },
+        relations: ['images'],
+      }),
+    ]);
+
+    const allEvents = pastEvents
+      .flat()
+      .sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime());
+
+    return allEvents;
   }
 
-  async getUpcominEvents(): Promise<(Forum | Training)[]> {
-    const upcomingForum = await this.forumRepo.find({
-      where: { eventDate: MoreThan(new Date()) },
-      order: { eventDate: 'ASC' },
-      relations: ['images'],
-    });
-    const upcomingTraining = await this.trainingRepo.find({
-      where: { eventDate: MoreThan(new Date()) },
-      order: { eventDate: 'ASC' },
-      relations: ['images'],
-    });
-    return [...upcomingForum, ...upcomingTraining].sort((a, b) => 0.5 - Math.random());
+  async getUpcomingEvents(): Promise<(Forum | Training)[]> {
+    const upcomingEvents = await Promise.all([
+      this.forumRepo.find({
+        where: { eventDate: MoreThan(new Date()) },
+        order: { eventDate: 'ASC' },
+        relations: ['images'],
+      }),
+      this.trainingRepo.find({
+        where: { eventDate: MoreThan(new Date()) },
+        order: { eventDate: 'ASC' },
+        relations: ['images'],
+      }),
+    ]);
+
+    const allEvents = upcomingEvents
+      .flat()
+      .sort((a, b) => a.eventDate.getTime() - b.eventDate.getTime());
+
+    return allEvents;
   }
 }
