@@ -27,7 +27,10 @@ export class JetonController {
   @Get()
   @ApiOperation({ summary: 'Получение списка жетонов' })
   async list(@Query() listParams: ListParamsDto) {
-    return this.jetonService.listWithRelations(listParams, 'jeton', ['image']);
+    return this.jetonService.listWithRelations(listParams, 'jeton', [
+      'image',
+      'cardInfo',
+    ]);
   }
 
   @Post()
