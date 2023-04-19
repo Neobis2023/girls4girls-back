@@ -18,6 +18,6 @@ export class EventController {
   @Get('upcoming/events')
   @ApiOperation({ summary: 'Получить предстоящие события (главная старница)' })
   async getUpcomingEvents(): Promise<(Forum | Training)[]> {
-    return await this.eventService.getUpcominEvents();
+    return await this.eventService.getUpcomingEvents();
   }
 }
