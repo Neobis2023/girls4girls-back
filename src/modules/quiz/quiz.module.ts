@@ -12,6 +12,7 @@ import { OptionController } from './controllers/option.controller';
 import { VideoBlog } from '../video-blog/entities/video-blog.entity';
 import { User } from '../user/entities/user.entity';
 import { QuizResult } from './entities/quiz-results.entity';
+import { JetonModule } from '../jeton/jeton.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { QuizResult } from './entities/quiz-results.entity';
       User,
       QuizResult,
     ]),
+    JetonModule,
   ],
   controllers: [QuizController, QuestionController, OptionController],
   providers: [QuizService, QuestionService, OptionService],
