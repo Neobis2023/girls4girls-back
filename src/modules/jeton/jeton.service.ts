@@ -3,7 +3,7 @@ import { CreateJetonDto } from './dto/create-jeton.dto';
 import { BaseService } from '../../base/base.service';
 import { Jeton } from './entities/jeton.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, Repository } from 'typeorm';
+import { In, LessThanOrEqual, Not, Repository } from 'typeorm';
 import { SearchJetonDto } from './dto/search-jeton.dto';
 import { UpdateJetonDto } from './dto/update-jeton.dto';
 import { Image } from '../image/entities/image.entity';
@@ -12,6 +12,7 @@ import { UserService } from '../user/user.service';
 import { CreateCardInfoDto } from './dto/create-card-info.dto';
 import { CardInfo } from './entities/card-info.entity';
 import { JetonType } from './enums/jeton-type.enum';
+import { serializeUser } from 'passport';
 
 @Injectable()
 export class JetonService extends BaseService<Jeton> {
@@ -66,10 +67,10 @@ export class JetonService extends BaseService<Jeton> {
 
   async update(id: number, updateJetonDto: UpdateJetonDto) {
     const jeton = await this.get(id);
+
     if (!jeton) {
       throw new BadRequestException(`Jeton with id: ${id} not found`);
     }
-
     return await this.jetonsRepository.update({ id }, updateJetonDto);
   }
 
@@ -107,6 +108,25 @@ export class JetonService extends BaseService<Jeton> {
     console.log(isUserAlreadyHaveJeton);
 
     return jetonForActivity;
+  }
+
+  async assignCardForApplying(userId: number) {
+    const user = await this.userService.getProfile(userId);
+    const userCardIds = user.jetons.map((jeton) => jeton.id);
+    const cardJeton = await this.jetonsRepository.findOne({
+      where: {
+        type: JetonType.CARD,
+        id: Not(In(userCardIds)),
+        isDeleted: false,
+      },
+      relations: ['image'],
+    });
+    if (!cardJeton) return null;
+    user.jetons.push(cardJeton);
+    await this.userService.justSaveUser(user);
+    console.log(user);
+    console.log(cardJeton);
+    return cardJeton;
   }
 
   async findBy(searchJetonDto: SearchJetonDto) {

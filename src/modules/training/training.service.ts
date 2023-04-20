@@ -16,6 +16,7 @@ import { UpdateUserApplicationDto } from './dto/update-user-application.dto';
 import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 import { LecturerService } from '../lecturers/lecturers.service';
 import { MailService } from '../mail/mail.service';
+import { JetonService } from '../jeton/jeton.service';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -32,6 +33,7 @@ export class TrainingsService extends BaseService<Training> {
     private readonly userService: UserService,
     private readonly lecturerService: LecturerService,
     private readonly mailService: MailService,
+    private readonly jetonService: JetonService,
   ) {
     super(trainingRepo);
   }
@@ -165,11 +167,9 @@ export class TrainingsService extends BaseService<Training> {
     }
 
     const isUserApplied = await this.findAppliedUserById(trainingId, userId);
-    // if (isUserApplied) {
-    //   throw new BadRequestException(
-    //     `User with id ${userId} already applied to this training!`,
-    //   );
-    // }
+    if (!isUserApplied) {
+      await this.jetonService.assignCardForApplying(userId);
+    }
 
     const apply = new UserToTraining();
     apply.user = user;
