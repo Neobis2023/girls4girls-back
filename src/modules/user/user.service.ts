@@ -57,7 +57,6 @@ export class UserService extends BaseService<User> {
       relations: [
         'jetons',
         'image',
-        'character.characterImage.images',
         'videoBlogs',
         'quizResults',
       ],

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseDto } from 'src/base/dto/base.dto';
 import { Image } from 'src/modules/image/entities/image.entity';
 
@@ -18,6 +18,13 @@ export class CreateLecturerDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
   lecturerInfo: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  lecturerInfoKG: string;
 
   @ApiProperty()
   image: Image;
