@@ -119,6 +119,16 @@ export class User extends BaseEntity {
   })
   isBlocked: boolean;
 
+  @Column({
+    nullable: true,
+  })
+  review: string;
+
+  @Column({
+    nullable: true,
+  })
+  info: string;
+
   @OneToOne(() => Image, { cascade: true })
   @JoinColumn()
   image: Image;
