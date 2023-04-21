@@ -1,25 +1,19 @@
 import {
-  Controller,
-  Get,
-  Query,
-  Delete,
-  Req,
-  UseGuards,
-  Patch,
   Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
   Post,
-  UseInterceptors,
+  Query,
+  Req,
   UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -133,5 +127,17 @@ export class UserController {
   @ApiOperation({ summary: 'Админ : Разблокировать пользователя' })
   async unlockUser(@Query('id') user_id: number) {
     await this.userService.unblockUser(user_id);
+  }
+
+  @Get('mentors/list')
+  @ApiOperation({ summary: 'Получить список менторов' })
+  async getMentors() {
+    return this.userService.getUsersByStatus(StatusEnum.MENTOR);
+  }
+
+  @Get('graduate/list')
+  @ApiOperation({ summary: 'Получить список выпускников' })
+  async getGraduates() {
+    return this.userService.getUsersByStatus(StatusEnum.GRADUATE);
   }
 }
