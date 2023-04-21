@@ -73,11 +73,7 @@ export class QuizService extends BaseService<Quiz> {
     return await this.quizRepository.remove(quiz);
   }
 
-  async takeQuiz(
-    userId: number,
-    quizId: number,
-    selectedOptionsIds: CreateOptionDto[],
-  ) {
+  async takeQuiz(userId: number, quizId: number) {
     const user = await this.userRepo.findOne({
       where: { id: userId },
       relations: ['quizResults'],
@@ -92,18 +88,18 @@ export class QuizService extends BaseService<Quiz> {
     if (!quiz) {
       throw new BadRequestException('Квиз не найден');
     }
-    const allQuestions = quiz.questions.length;
-    if (allQuestions != selectedOptionsIds.length) {
-      throw new BadRequestException(
-        'Количество ответов не равняется количеству выбранных вариантов',
-      );
-    }
-    let correctAnswers = 0;
-    for (let i = 0; i < selectedOptionsIds.length; i++) {
-      if (selectedOptionsIds[i].isCorrect) {
-        correctAnswers++;
-      }
-    }
+    // const allQuestions = quiz.questions.length;
+    // if (allQuestions != selectedOptionsIds.length) {
+    //   throw new BadRequestException(
+    //     'Количество ответов не равняется количеству выбранных вариантов',
+    //   );
+    // }
+    // let correctAnswers = 0;
+    // for (let i = 0; i < selectedOptionsIds.length; i++) {
+    //   if (selectedOptionsIds[i].isCorrect) {
+    //     correctAnswers++;
+    //   }
+    // }
     const isPassed = await this.quizResultRepository.findOne({
       where: { quiz: { id: quizId }, user: { id: userId } },
     });
@@ -116,8 +112,6 @@ export class QuizService extends BaseService<Quiz> {
     }
     const result = new QuizResult();
     result.quiz = quiz;
-    result.correctAnwers = correctAnswers;
-    result.questions = allQuestions;
     user.quizResults.push(result);
     const savedUser = await this.userRepo.save(user);
     await this.quizResultRepository.save(result);
