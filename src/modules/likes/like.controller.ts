@@ -51,7 +51,7 @@ export class LikeController {
   @ApiOperation({ summary: 'Вывести все ваши избранные видео-блоги' })
   async getAllYour(@Req() req) {
     log(req);
-    return await this.likeServise.getLikes(req.user.email);
+    return await this.likeServise.getLikes(req.user);
   }
 
   @Put('toggle')
