@@ -4,8 +4,7 @@ import { BaseService } from 'src/base/base.service';
 import { Repository } from 'typeorm';
 import { Image } from '../image/entities/image.entity';
 import { ImageService } from '../image/image.service';
-import { CreateTrainingDto } from './dto';
-import { SearchTrainingDto } from './dto';
+import { CreateTrainingDto, SearchTrainingDto } from './dto';
 import { Training } from './entities';
 import { ListParamsDto } from '../../base/dto/list-params.dto';
 import { ListDto } from '../../base/dto/list.dto';
@@ -17,6 +16,8 @@ import { Questionnaire } from '../questionnaire/entities/questionnaire.entity';
 import { LecturerService } from '../lecturers/lecturers.service';
 import { MailService } from '../mail/mail.service';
 import { JetonService } from '../jeton/jeton.service';
+import { ApplyStatus } from '../../utils/enum/apply-status.enum';
+import { sendSMSTo } from '../../utils/sendSMSTo';
 
 @Injectable()
 export class TrainingsService extends BaseService<Training> {
@@ -167,9 +168,7 @@ export class TrainingsService extends BaseService<Training> {
     }
 
     const isUserApplied = await this.findAppliedUserById(trainingId, userId);
-    if (!isUserApplied) {
-      await this.jetonService.assignCardForApplying(userId);
-    }
+    await this.jetonService.assignCardForApplying(userId);
 
     const apply = new UserToTraining();
     apply.user = user;
@@ -234,6 +233,17 @@ export class TrainingsService extends BaseService<Training> {
       applyStatus,
       program,
     );
+
+    if (application.user?.phoneNumber) {
+      let content: string;
+      if (applyStatus === ApplyStatus.APPROVED) {
+        content = `Поздравляем вас! Ваша подача на программу ${program} одобрена!`;
+      } else if (applyStatus === ApplyStatus.DECLINED) {
+        content = `К сожалению ваша подача на прогармму ${program} отклонена, попробуйде подать снова.`;
+      }
+
+      await sendSMSTo(application.user?.phoneNumber, content);
+    }
 
     application.applyStatus = applyStatus;
     return this.userToTrainingRepository.save(application);
