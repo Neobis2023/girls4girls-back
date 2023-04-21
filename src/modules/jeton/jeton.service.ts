@@ -124,8 +124,6 @@ export class JetonService extends BaseService<Jeton> {
     if (!cardJeton) return null;
     user.jetons.push(cardJeton);
     await this.userService.justSaveUser(user);
-    console.log(user);
-    console.log(cardJeton);
     return cardJeton;
   }
 
