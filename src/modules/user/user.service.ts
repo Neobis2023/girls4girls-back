@@ -229,4 +229,15 @@ export class UserService extends BaseService<User> {
     await this.usersRepository.save(unblockUserById);
     return `Пользователь ${unblockUserById} успешно разблокирован`;
   }
+
+  async getUsersByStatus(status: StatusEnum) {
+    const users = await this.usersRepository.find({
+      where: {
+        status,
+      },
+      relations: ['image'],
+    });
+
+    return users;
+  }
 }
