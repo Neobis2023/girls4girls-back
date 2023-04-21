@@ -71,12 +71,8 @@ export class QuizController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  async passQuiz(
-    @Req() req: any,
-    @Param('quizId') quizId: number,
-    @Body() selectedOptionsIds: CreateOptionDto[],
-  ) {
+  async passQuiz(@Req() req: any, @Param('quizId') quizId: number) {
     const user = req.user;
-    return this.quizService.takeQuiz(user.id, quizId, selectedOptionsIds);
+    return this.quizService.takeQuiz(user.id, quizId);
   }
 }

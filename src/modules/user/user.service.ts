@@ -17,14 +17,12 @@ import { RegionEnum } from '../../utils/enum/region.enum';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { StatusEnum } from './enums/user-status.enum';
 import { ListDto } from 'src/base/dto/list.dto';
-import { JetonService } from '../jeton/jeton.service';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly imageService: ImageService,
-    private readonly jetonService: JetonService,
   ) {
     super(usersRepository);
   }
@@ -155,10 +153,6 @@ export class UserService extends BaseService<User> {
     }
 
     user.absorbFromDto(updateProfileDto);
-
-    if (region && dateOfBirth) {
-      await this.jetonService.assignCardForApplying(user.id);
-    }
 
     return this.usersRepository.save(user);
   }

@@ -5,10 +5,14 @@ import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity()
 export class QuizResult extends BaseEntity {
-  @Column()
+  @Column({
+    nullable: true,
+  })
   questions: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   correctAnwers: number;
 
   @OneToOne(() => Quiz)
