@@ -207,7 +207,10 @@ export class TrainingsService extends BaseService<Training> {
       );
     });
 
-    return training.userToTraining;
+    return training.userToTraining.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
   }
 
   async updateUserApplication(
