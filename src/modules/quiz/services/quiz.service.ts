@@ -7,11 +7,11 @@ import { BaseService } from 'src/base/base.service';
 import { Question } from '../entities/question.entity';
 import { Option } from '../entities/option.entity';
 import { VideoBlog } from 'src/modules/video-blog/entities/video-blog.entity';
-import { CreateOptionDto } from '../dto/create-option.dto';
 import { User } from 'src/modules/user/entities/user.entity';
 import { QuizResult } from '../entities/quiz-results.entity';
 import { JetonService } from '../../jeton/jeton.service';
 import { JetonType } from '../../jeton/enums/jeton-type.enum';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class QuizService extends BaseService<Quiz> {
@@ -29,6 +29,7 @@ export class QuizService extends BaseService<Quiz> {
     @InjectRepository(User)
     private userRepo: Repository<User>,
     private readonly jetonService: JetonService,
+    private readonly userService: UserService,
   ) {
     super(quizRepository);
   }
@@ -121,6 +122,19 @@ export class QuizService extends BaseService<Quiz> {
       JetonType.TEST,
     );
     // return `Questions number: ${allQuestions}, correct answers: ${correctAnswers}`;
+  }
+
+  async getJetonForQuiz(userId: number) {
+    const user = await this.userService.getProfile(userId);
+    if (!user) {
+      throw new BadRequestException('User not found!');
+    }
+
+    return this.jetonService.assignJetonForActivity(
+      userId,
+      user.jetons.filter((jeton) => jeton.type === JetonType.TEST).length || 1,
+      JetonType.TEST,
+    );
   }
 
   async getAllResults(userId: number) {
