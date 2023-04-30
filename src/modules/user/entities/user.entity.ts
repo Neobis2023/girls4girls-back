@@ -191,4 +191,9 @@ export class User extends BaseEntity {
   @ManyToMany(() => Quiz)
   @JoinTable()
   passedQuizzes: Quiz[];
+
+  @Column({
+    nullable: true,
+  })
+  refresh_token: string;
 }

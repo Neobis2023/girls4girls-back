@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 import { RoleGuard } from './roles/role.guard';
 import { Roles } from './roles/roles.decorator';
@@ -79,5 +79,22 @@ export class AuthController {
   @ApiOperation({ summary: 'Получение профиля пользователя' })
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Post('/refresh')
+  @ApiOperation({ summary: 'Обновить access токен' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        refresh_token: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async refreshToken(@Body('refresh_token') refresh_token: string) {
+    const token = await this.authService.refreshAccessToken(refresh_token);
+    return token;
   }
 }
