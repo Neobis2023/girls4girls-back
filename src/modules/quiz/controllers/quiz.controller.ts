@@ -18,12 +18,19 @@ import { QuizService } from '../services/quiz.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListParamsDto } from 'src/base/dto/list-params.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/jwt-auth.guard';
-import { log } from 'console';
-import { CreateOptionDto } from '../dto/create-option.dto';
 
 @Controller('quiz')
 export class QuizController {
   constructor(private quizService: QuizService) {}
+
+  @ApiTags('Квизы для пользователей')
+  @Get('get-jeton')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Получить жетон за пройденный квиз' })
+  async getJetonForQuiz(@Req() req: any) {
+    return this.quizService.getJetonForQuiz(req.user.id);
+  }
 
   @ApiTags('Квизы для пользователей')
   @ApiBearerAuth()
@@ -71,12 +78,8 @@ export class QuizController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  async passQuiz(
-    @Req() req: any,
-    @Param('quizId') quizId: number,
-    @Body() selectedOptionsIds: CreateOptionDto[],
-  ) {
+  async passQuiz(@Req() req: any, @Param('quizId') quizId: number) {
     const user = req.user;
-    return this.quizService.takeQuiz(user.id, quizId, selectedOptionsIds);
+    return this.quizService.takeQuiz(user.id, quizId);
   }
 }

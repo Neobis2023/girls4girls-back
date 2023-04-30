@@ -55,9 +55,9 @@ export class UserService extends BaseService<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
       relations: [
-        'jetons',
+        'jetons.image',
+        'jetons.cardInfo',
         'image',
-        'character.characterImage.images',
         'videoBlogs',
         'quizResults',
       ],
@@ -132,7 +132,7 @@ export class UserService extends BaseService<User> {
   }
 
   async updateProfile(id: number, updateProfileDto: UpdateProfileDto) {
-    const { email, phoneNumber } = updateProfileDto;
+    const { email, phoneNumber, dateOfBirth, region } = updateProfileDto;
 
     const user = await this.get(id);
 
@@ -228,5 +228,16 @@ export class UserService extends BaseService<User> {
     unblockUserById.isBlocked = false;
     await this.usersRepository.save(unblockUserById);
     return `Пользователь ${unblockUserById} успешно разблокирован`;
+  }
+
+  async getUsersByStatus(status: StatusEnum) {
+    const users = await this.usersRepository.find({
+      where: {
+        status,
+      },
+      relations: ['image'],
+    });
+
+    return users;
   }
 }

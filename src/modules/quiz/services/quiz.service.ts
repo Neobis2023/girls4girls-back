@@ -7,11 +7,11 @@ import { BaseService } from 'src/base/base.service';
 import { Question } from '../entities/question.entity';
 import { Option } from '../entities/option.entity';
 import { VideoBlog } from 'src/modules/video-blog/entities/video-blog.entity';
-import { CreateOptionDto } from '../dto/create-option.dto';
 import { User } from 'src/modules/user/entities/user.entity';
 import { QuizResult } from '../entities/quiz-results.entity';
 import { JetonService } from '../../jeton/jeton.service';
 import { JetonType } from '../../jeton/enums/jeton-type.enum';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class QuizService extends BaseService<Quiz> {
@@ -29,6 +29,7 @@ export class QuizService extends BaseService<Quiz> {
     @InjectRepository(User)
     private userRepo: Repository<User>,
     private readonly jetonService: JetonService,
+    private readonly userService: UserService,
   ) {
     super(quizRepository);
   }
@@ -73,11 +74,7 @@ export class QuizService extends BaseService<Quiz> {
     return await this.quizRepository.remove(quiz);
   }
 
-  async takeQuiz(
-    userId: number,
-    quizId: number,
-    selectedOptionsIds: CreateOptionDto[],
-  ) {
+  async takeQuiz(userId: number, quizId: number) {
     const user = await this.userRepo.findOne({
       where: { id: userId },
       relations: ['quizResults'],
@@ -92,18 +89,18 @@ export class QuizService extends BaseService<Quiz> {
     if (!quiz) {
       throw new BadRequestException('Квиз не найден');
     }
-    const allQuestions = quiz.questions.length;
-    if (allQuestions != selectedOptionsIds.length) {
-      throw new BadRequestException(
-        'Количество ответов не равняется количеству выбранных вариантов',
-      );
-    }
-    let correctAnswers = 0;
-    for (let i = 0; i < selectedOptionsIds.length; i++) {
-      if (selectedOptionsIds[i].isCorrect) {
-        correctAnswers++;
-      }
-    }
+    // const allQuestions = quiz.questions.length;
+    // if (allQuestions != selectedOptionsIds.length) {
+    //   throw new BadRequestException(
+    //     'Количество ответов не равняется количеству выбранных вариантов',
+    //   );
+    // }
+    // let correctAnswers = 0;
+    // for (let i = 0; i < selectedOptionsIds.length; i++) {
+    //   if (selectedOptionsIds[i].isCorrect) {
+    //     correctAnswers++;
+    //   }
+    // }
     const isPassed = await this.quizResultRepository.findOne({
       where: { quiz: { id: quizId }, user: { id: userId } },
     });
@@ -116,8 +113,6 @@ export class QuizService extends BaseService<Quiz> {
     }
     const result = new QuizResult();
     result.quiz = quiz;
-    result.correctAnwers = correctAnswers;
-    result.questions = allQuestions;
     user.quizResults.push(result);
     const savedUser = await this.userRepo.save(user);
     await this.quizResultRepository.save(result);
@@ -127,6 +122,19 @@ export class QuizService extends BaseService<Quiz> {
       JetonType.TEST,
     );
     // return `Questions number: ${allQuestions}, correct answers: ${correctAnswers}`;
+  }
+
+  async getJetonForQuiz(userId: number) {
+    const user = await this.userService.getProfile(userId);
+    if (!user) {
+      throw new BadRequestException('User not found!');
+    }
+
+    return this.jetonService.assignJetonForActivity(
+      userId,
+      user.jetons.filter((jeton) => jeton.type === JetonType.TEST).length || 1,
+      JetonType.TEST,
+    );
   }
 
   async getAllResults(userId: number) {

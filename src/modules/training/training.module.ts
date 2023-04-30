@@ -11,6 +11,7 @@ import { UserToTraining } from './entities/users-to-training.entity';
 import { UserModule } from '../user/user.module';
 import { LecturerModule } from '../lecturers/lecturers.module';
 import { MailModule } from '../mail/mail.module';
+import { JetonModule } from '../jeton/jeton.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailModule } from '../mail/mail.module';
     UserModule,
     LecturerModule,
     MailModule,
+    JetonModule,
   ],
   controllers: [TrainingsController],
   providers: [TrainingsService],
