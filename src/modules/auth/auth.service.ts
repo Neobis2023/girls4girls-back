@@ -21,10 +21,13 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ConfirmCodeDto } from './dto/confirm-code.dto';
 import { SearchUserDto } from '../user/dto/search-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -178,8 +181,13 @@ export class AuthService {
       phoneNumber: user.phoneNumber,
       role: user.role,
     };
+
+    const refresh_token = this.generateRefreshToken();
+    user.refresh_token = refresh_token;
+    await this.userRepo.save(user);
     return {
       access_token: this.jwtService.sign(payload),
+      refresh_token,
     };
   }
 
@@ -276,5 +284,31 @@ export class AuthService {
     } catch (e) {
       throw new UnauthorizedException();
     }
+  }
+
+  private generateRefreshToken(): string {
+    return randomBytes(40).toString('hex');
+  }
+
+  async refreshAccessToken(refresh_token: string) {
+    const user = await this.userRepo.findOne({
+      where: { refresh_token: refresh_token },
+    });
+    if (!user) {
+      throw new UnauthorizedException('Refresh token is invalid');
+    }
+    const payload = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+    };
+
+    const access_token = this.jwtService.sign(payload);
+    return {
+      access_token,
+    };
   }
 }

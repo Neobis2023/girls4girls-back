@@ -43,6 +43,7 @@ export class LecturerService extends BaseService<Lecturer> {
     const array = await this.lecturerRepository
       .createQueryBuilder('lecturer')
       .leftJoinAndSelect('lecturer.image', 'image')
+      .where('lecturer.isDeleted != true')
       .limit(listParamsDto.limit)
       .offset(listParamsDto.countOffset())
       .orderBy(
