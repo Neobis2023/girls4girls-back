@@ -22,7 +22,7 @@ import { User } from '../user/entities/user.entity';
     SmsNikitaModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '5m' },
     }),
   ],
   controllers: [AuthController],
