@@ -3,18 +3,35 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './modules/user/entities/user.entity';
 import { MailModule } from './modules/mail/mail.module';
 import { ImageModule } from './modules/image/image.module';
-import { Image } from './modules/image/entities/image.entity';
 import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
 import { SmsNikitaModule } from './services/sms-nikita/sms-nikita.module';
-import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
+import { MenteeModule } from './modules/mentee/mentee.module';
+import { MentorModule } from './modules/mentor/mentor.module';
+import { TrainingsModule } from './modules/training/training.module';
+import { NewsModule } from './modules/news/news.module';
+import { ForumModule } from './modules/forum/forum.module';
+import { JetonModule } from './modules/jeton/jeton.module';
+import { LikeModule } from './modules/likes/like.module';
+import { VideoBlogModule } from './modules/video-blog/video-blog.module';
+import { CategoryModule } from './modules/categories/category.module';
+import { QuizModule } from './modules/quiz/quiz.module';
+import { QuestionnaireModule } from './modules/questionnaire/questionnaire.module';
+import { CharacterModule } from './modules/character/character.module';
+import { ContentModule } from './modules/content/content.module';
+import { TranslateModule } from './modules/translate/translate.module';
+import { LecturerModule } from './modules/lecturers/lecturers.module';
+import { MentorshipModule } from './modules/mentorship/mentorship.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    MentorModule,
+    MenteeModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -30,7 +47,7 @@ import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
         // ssl: {
         //   rejectUnauthorized: false,
         // },
-        entities: [User, Image, ConfirmCode],
+        entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -39,6 +56,24 @@ import { ConfirmCode } from './modules/auth/entities/confirm-code.entity';
     ImageModule,
     CloudinaryModule,
     SmsNikitaModule,
+    TrainingsModule,
+    NewsModule,
+    ForumModule,
+    TrainingsModule,
+    JetonModule,
+    VideoBlogModule,
+    LikeModule,
+    CategoryModule,
+    QuizModule,
+    QuestionnaireModule,
+    CharacterModule,
+    ContentModule,
+    TranslateModule,
+    LecturerModule,
+    MentorshipModule,
+    FeedbackModule,
+    EventModule,
   ],
+  controllers: [],
 })
 export class AppModule {}

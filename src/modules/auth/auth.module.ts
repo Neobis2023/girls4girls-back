@@ -11,17 +11,18 @@ import { MailModule } from '../mail/mail.module';
 import { SmsNikitaModule } from '../../services/sms-nikita/sms-nikita.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfirmCode } from './entities/confirm-code.entity';
+import { User } from '../user/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ConfirmCode]),
+    TypeOrmModule.forFeature([ConfirmCode, User]),
     UserModule,
     PassportModule,
     MailModule,
     SmsNikitaModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '5m' },
     }),
   ],
   controllers: [AuthController],
